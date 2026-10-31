@@ -1,7 +1,7 @@
 name: kharcha
-description: "A new Flutter project."
+description: "Kharcha — a fully offline personal expense tracker."
 publish_to: 'none'
-version: 0.1.0
+version: 1.0.0+1
 
 environment:
   sdk: ^3.10.8
@@ -10,6 +10,25 @@ dependencies:
   flutter:
     sdk: flutter
 
+  # State
+  flutter_riverpod: ^3.3.2
+
+  # Local persistence (no backend anywhere in this app)
+  sqflite: ^2.4.2+1
+  path: ^1.9.1
+  path_provider: ^2.1.6
+  shared_preferences: ^2.5.5
+  flutter_secure_storage: ^11.2.0
+
+  # Security
+  local_auth: ^3.0.2
+
+  # UI / formatting
+  fl_chart: ^1.3.0
+  intl: ^0.20.3
+  uuid: ^4.6.0
+  crypto: ^3.0.8
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -17,3 +36,17 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+
+  fonts:
+    - family: Inter
+      fonts:
+        - asset: assets/fonts/Inter-Regular.ttf
+          weight: 400
+        - asset: assets/fonts/Inter-Medium.ttf
+          weight: 500
+        - asset: assets/fonts/Inter-SemiBold.ttf
+          weight: 600
+        - asset: assets/fonts/Inter-Bold.ttf
+          weight: 700
+        - asset: assets/fonts/Inter-ExtraBold.ttf
+          weight: 800
