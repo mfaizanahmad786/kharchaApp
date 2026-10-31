@@ -132,13 +132,18 @@ class _SpendBarChartState extends State<SpendBarChart>
                               const SizedBox(height: 8),
                               SizedBox(
                                 height: 14,
+                                // A day slot is only a few pixels wide, so the
+                                // two-digit labels have to paint past it.
                                 child: _shouldLabel(i)
-                                    ? Text(
-                                        '${widget.data[i].day.day}',
-                                        style: const TextStyle(
-                                          fontSize: 10,
-                                          fontWeight: FontWeight.w600,
-                                          color: AppColors.inkFaint,
+                                    ? OverflowBox(
+                                        maxWidth: 32,
+                                        child: Text(
+                                          '${widget.data[i].day.day}',
+                                          style: const TextStyle(
+                                            fontSize: 10,
+                                            fontWeight: FontWeight.w600,
+                                            color: AppColors.inkFaint,
+                                          ),
                                         ),
                                       )
                                     : null,
