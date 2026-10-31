@@ -156,16 +156,16 @@ class MonthPill extends ConsumerWidget {
     final month = ref.watch(selectedMonthProvider);
     final fg = onLight ? AppColors.ink : Colors.white;
     return Material(
-      color: onLight ? AppColors.surface : Colors.white.withValues(alpha: 0.22),
-      borderRadius: BorderRadius.circular(999),
+      color: onLight ? AppColors.surface : Colors.white.withValues(alpha: 0.18),
+      shape: const StadiumBorder(),
+      clipBehavior: Clip.antiAlias,
       child: InkWell(
-        borderRadius: BorderRadius.circular(999),
         onTap: () => MonthPickerSheet.show(context),
         child: Container(
-          padding: const EdgeInsets.fromLTRB(16, 10, 12, 10),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(999),
-            boxShadow: onLight ? AppColors.softShadow : null,
+          padding: const EdgeInsets.fromLTRB(16, 9, 10, 9),
+          decoration: ShapeDecoration(
+            shape: const StadiumBorder(),
+            shadows: onLight ? AppColors.softShadow : null,
             color: onLight ? AppColors.surface : null,
           ),
           child: Row(

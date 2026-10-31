@@ -6,14 +6,19 @@ abstract final class AppColors {
   static const purple = Color(0xFF8B5CF6);
   static const purpleDark = Color(0xFF7C4DEF);
   static const purpleLight = Color(0xFFA78BFA);
+  static const purpleLighter = Color(0xFFB79DF9);
   static const purpleSoft = Color(0xFFEDE7FE);
+
+  /// The lavender "For the Period" chip.
+  static const chipBg = Color(0xFFEFE9FD);
+  static const chipBorder = Color(0xFFDCCFFA);
+  static const chipText = Color(0xFF7C4DDB);
 
   /// The header gradient on Home — a soft diagonal violet wash.
   static const headerGradient = LinearGradient(
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
-    colors: [Color(0xFF9D7BF8), Color(0xFF8B5CF6), Color(0xFF8A63E8)],
-    stops: [0.0, 0.55, 1.0],
+    colors: [purple, purpleLight, purpleLighter],
   );
 
   // Surfaces
@@ -22,21 +27,35 @@ abstract final class AppColors {
   static const surfaceMuted = Color(0xFFF7F7F9);
   static const track = Color(0xFFEFEFF2);
   static const divider = Color(0xFFECECEF);
-  static const ink = Color(0xFF14141A);
-  static const inkSoft = Color(0xFF5B5B66);
+  static const ink = Color(0xFF111111);
+  static const inkSoft = Color(0xFF6B6B76);
   static const inkFaint = Color(0xFF9A9AA6);
+
+  /// Hairline borders carry the card edges on Home, in place of shadows.
+  static const border = Color(0xFFECECF2);
+  static const borderSoft = Color(0xFFE5E5EC);
+
+  /// The inactive tab in the bottom bar.
+  static const navInactive = Color(0xFF8E8E99);
+
+  /// The muted trailing action on the black insight banner.
+  static const onDarkMuted = Color(0xFF9A9AA5);
+
+  /// Tints behind the income and expense glyphs.
+  static const incomeTint = Color(0xFFEAF3FF);
+  static const expenseTint = Color(0xFFFDEDEC);
 
   // Semantic
   static const income = Color(0xFF2FB573);
-  static const expense = Color(0xFFF0384F);
+  static const expense = Color(0xFFE0314B);
   static const warning = Color(0xFFE8743B);
   static const badgeGreenBg = Color(0xFFE4F6EC);
   static const badgeGreenFg = Color(0xFF2FB573);
   static const badgeRedBg = Color(0xFFFDE8EB);
-  static const badgeRedFg = Color(0xFFF0384F);
+  static const badgeRedFg = Color(0xFFE0314B);
 
   /// Category accents, matched to the donut chart in the Report comp.
-  static const catPurple = Color(0xFF8B5CF6);
+  static const catPurple = purple;
   static const catBlue = Color(0xFF4A9BF0);
   static const catGreen = Color(0xFF4CBF7F);
   static const catOrange = Color(0xFFE8743B);

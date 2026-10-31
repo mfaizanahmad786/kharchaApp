@@ -2,13 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/theme/app_colors.dart';
+import '../../../core/theme/app_dimens.dart';
+import '../../../core/utils/money.dart';
 import '../../../core/widgets/amount_text.dart';
 import '../../../core/widgets/month_picker_sheet.dart';
-import '../../../core/widgets/pills.dart';
-import '../../../core/utils/money.dart';
 import '../../../providers/providers.dart';
+import 'header_sheen.dart';
 
-/// The violet balance header: avatar, month pill, bell, and the big number.
+/// The violet balance header: avatar, month pill, bell, and the balance set
+/// large with its paisa dimmed.
 class HomeHeader extends ConsumerWidget {
   const HomeHeader({
     super.key,
@@ -29,14 +31,19 @@ class HomeHeader extends ConsumerWidget {
 
     return Stack(
       children: [
-        Container(
+        Positioned.fill(
+          child: DecoratedBox(
+            decoration: const BoxDecoration(gradient: AppColors.headerGradient),
+            child: const HeaderSheen(),
+          ),
+        ),
+        Padding(
           padding: EdgeInsets.only(
-            top: topInset + 12,
-            left: 20,
-            right: 20,
+            top: topInset + AppSpacing.md,
+            left: AppSpacing.screen,
+            right: AppSpacing.screen,
             bottom: 46,
           ),
-          decoration: const BoxDecoration(gradient: AppColors.headerGradient),
           child: Column(
             children: [
               Row(
@@ -45,14 +52,8 @@ class HomeHeader extends ConsumerWidget {
                   const Spacer(),
                   const MonthPill(),
                   const Spacer(),
-                  CircleIconButton(
-                    icon: Icons.notifications_rounded,
-                    size: 44,
-                    iconSize: 21,
-                    background: Colors.white.withValues(alpha: 0.22),
-                    foreground: Colors.white,
-                    shadows: const [],
-                    badge: alerts.value?.isNotEmpty ?? false,
+                  _BellButton(
+                    hasAlerts: alerts.value?.isNotEmpty ?? false,
                     onTap: onBellTap,
                   ),
                 ],
@@ -61,42 +62,49 @@ class HomeHeader extends ConsumerWidget {
               Text(
                 'Current Balance',
                 style: TextStyle(
-                  fontSize: 15,
-                  fontWeight: FontWeight.w600,
-                  color: Colors.white.withValues(alpha: 0.85),
+                  fontSize: 16,
+                  fontWeight: FontWeight.w500,
+                  color: Colors.white.withValues(alpha: 0.7),
                 ),
               ),
-              const SizedBox(height: 6),
-              AmountText(
-                balance.value ?? 0,
-                color: Colors.white,
-                style: const TextStyle(
-                  fontSize: 42,
-                  fontWeight: FontWeight.w800,
-                  letterSpacing: -1.6,
-                  height: 1.1,
+              const SizedBox(height: 4),
+              FittedBox(
+                fit: BoxFit.scaleDown,
+                child: AmountText(
+                  balance.value ?? 0,
+                  color: Colors.white,
+                  style: const TextStyle(
+                    // The brief said ~56, but measured against the reference
+                    // the balance is ~2.7x the label above it, i.e. ~44-48.
+                    // A PKR figure also carries more digits than the comp's
+                    // dollar one, so 56 crowded both gutters.
+                    fontSize: 48,
+                    fontWeight: FontWeight.w700,
+                    letterSpacing: -1.6,
+                    height: 1.12,
+                  ),
+                  fractionOpacity: 0.5,
                 ),
-                fractionOpacity: 0.55,
               ),
-              const SizedBox(height: 14),
+              const SizedBox(height: 10),
               _DeltaPill(delta: delta.value ?? 0),
             ],
           ),
         ),
 
-        // The light sheet's rounded corners sit over the purple. They live
-        // here because a viewport paints its first sliver on top, so the
-        // following sliver could never overlap the header.
+        // The sheet's rounded corners sit over the purple. They live here
+        // because a viewport paints its first sliver on top, so the following
+        // sliver could never overlap the header.
         const Positioned(
           left: 0,
           right: 0,
           bottom: 0,
           child: SizedBox(
-            height: 28,
+            height: AppRadii.sheet,
             child: DecoratedBox(
               decoration: BoxDecoration(
-                color: AppColors.scaffold,
-                borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
+                color: AppColors.surface,
+                borderRadius: AppRadii.sheetTop,
               ),
             ),
           ),
@@ -113,20 +121,71 @@ class _DeltaPill extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final sign = delta >= 0 ? '+' : '-';
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 7),
-      decoration: BoxDecoration(
-        color: Colors.white.withValues(alpha: 0.2),
-        borderRadius: BorderRadius.circular(999),
+      decoration: ShapeDecoration(
+        color: Colors.white.withValues(alpha: 0.18),
+        shape: const StadiumBorder(),
       ),
       child: Text(
-        '$sign${Money.compact(delta.abs())} than last week',
+        '${delta >= 0 ? '+' : '-'}${Money.compact(delta.abs())} than last week',
         style: const TextStyle(
-          fontSize: 13,
-          fontWeight: FontWeight.w600,
+          fontSize: 14,
+          fontWeight: FontWeight.w500,
           color: Colors.white,
         ),
+      ),
+    );
+  }
+}
+
+/// A translucent circle with the bell, the alert dot pinned to its top-right.
+class _BellButton extends StatelessWidget {
+  const _BellButton({required this.hasAlerts, required this.onTap});
+
+  final bool hasAlerts;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    const size = AppSizes.bellButton;
+    return SizedBox(
+      width: size,
+      height: size,
+      child: Stack(
+        clipBehavior: Clip.none,
+        children: [
+          Material(
+            color: Colors.white.withValues(alpha: 0.18),
+            shape: const CircleBorder(),
+            clipBehavior: Clip.antiAlias,
+            child: InkWell(
+              onTap: onTap,
+              child: const SizedBox(
+                width: size,
+                height: size,
+                child: Icon(
+                  Icons.notifications_rounded,
+                  size: 22,
+                  color: Colors.white,
+                ),
+              ),
+            ),
+          ),
+          if (hasAlerts)
+            Positioned(
+              right: 1,
+              top: 3,
+              child: Container(
+                width: 10,
+                height: 10,
+                decoration: const BoxDecoration(
+                  color: AppColors.expense,
+                  shape: BoxShape.circle,
+                ),
+              ),
+            ),
+        ],
       ),
     );
   }
@@ -152,49 +211,38 @@ class _Avatar extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: SizedBox(
-        width: 50,
-        height: 50,
+        width: AppSizes.avatar,
+        height: AppSizes.avatar,
         child: Stack(
           clipBehavior: Clip.none,
           children: [
-            Container(
-              width: 50,
-              height: 50,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: const Color(0xFFFCD9A8),
-                border: Border.all(
-                  color: Colors.white.withValues(alpha: 0.5),
-                  width: 2,
-                ),
-              ),
-              alignment: Alignment.center,
+            CircleAvatar(
+              radius: AppSizes.avatar / 2,
+              backgroundColor: const Color(0xFFFCD9A8),
               child: Text(
                 initials,
                 style: const TextStyle(
-                  fontSize: 17,
-                  fontWeight: FontWeight.w700,
+                  fontSize: 18,
+                  fontWeight: FontWeight.w600,
                   color: Color(0xFF8A5A24),
                 ),
               ),
             ),
             Positioned(
-              right: -2,
-              bottom: -2,
+              right: -1,
+              bottom: -1,
               child: Container(
                 width: 22,
                 height: 22,
                 decoration: BoxDecoration(
+                  color: AppColors.purple,
                   shape: BoxShape.circle,
-                  color: Colors.white,
-                  border: Border.all(
-                    color: AppColors.purple.withValues(alpha: 0.2),
-                  ),
+                  border: Border.all(color: Colors.white, width: 2),
                 ),
                 child: const Icon(
                   Icons.account_balance_wallet_rounded,
-                  size: 12,
-                  color: AppColors.purple,
+                  size: 11,
+                  color: Colors.white,
                 ),
               ),
             ),

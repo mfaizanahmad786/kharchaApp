@@ -3,8 +3,9 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../core/theme/app_colors.dart';
+import '../../core/theme/app_dimens.dart';
 import '../../core/utils/app_date.dart';
-import '../../core/widgets/amount_text.dart';
+import '../../core/widgets/bordered_card.dart';
 import '../../core/widgets/pills.dart';
 import '../../providers/providers.dart';
 import '../shell/app_shell.dart';
@@ -36,7 +37,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   }
 
   void _onScroll() {
-    final dark = _scroll.offset > 180;
+    final dark = _scroll.offset > 200;
     if (dark != _darkStatusBar) setState(() => _darkStatusBar = dark);
   }
 
@@ -63,7 +64,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               statusBarColor: Colors.transparent,
             ),
       child: Scaffold(
-        backgroundColor: AppColors.scaffold,
+        backgroundColor: AppColors.surface,
         body: RefreshIndicator(
           color: AppColors.purple,
           onRefresh: () async => ref.read(revisionProvider.notifier).bump(),
@@ -80,75 +81,76 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                 ),
               ),
 
-              // The sheet's rounded lip is drawn by HomeHeader, so this is a
-              // plain continuation of it.
               SliverToBoxAdapter(
                 child: ColoredBox(
-                  color: AppColors.scaffold,
+                  color: AppColors.surface,
                   child: Padding(
-                    padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
+                    padding: const EdgeInsets.fromLTRB(
+                      AppSpacing.screen,
+                      AppSpacing.xs,
+                      AppSpacing.screen,
+                      0,
+                    ),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        SectionHeader(
+                        _SectionHeading(
                           title: 'Your Money',
-                          info: true,
-                          trailing: DetailsChip(
+                          trailing: OutlinedPill(
                             label: 'Details',
                             onTap: () => ShellNavigator.of(context)?.go(1),
                           ),
                         ),
-                        const SizedBox(height: 16),
-                        // IntrinsicHeight bounds the cross axis: a bare
-                        // stretch Row inside a sliver would be handed an
-                        // infinite height and silently break the whole layer.
-                        IntrinsicHeight(
-                          child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.stretch,
-                            children: [
-                              Expanded(
-                                child: MoneySummaryCard(
-                                  label: 'Income',
-                                  amount: totals.value?.income ?? 0,
-                                  icon: Icons.savings_rounded,
-                                  color: AppColors.catBlue,
-                                  onTap: () => TransactionsScreen.open(
-                                    context,
-                                    initial: TxFilter.income,
-                                  ),
+                        const SizedBox(height: AppSpacing.lg),
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Expanded(
+                              child: MoneySummaryCard(
+                                label: 'Income',
+                                amount: totals.value?.income ?? 0,
+                                icon: Icons.savings_rounded,
+                                tint: AppColors.incomeTint,
+                                iconColor: AppColors.catBlue,
+                                onTap: () => TransactionsScreen.open(
+                                  context,
+                                  initial: TxFilter.income,
                                 ),
                               ),
-                              const SizedBox(width: 14),
-                              Expanded(
-                                child: MoneySummaryCard(
-                                  label: 'Expenses',
-                                  amount: totals.value?.expense ?? 0,
-                                  icon: Icons.account_balance_wallet_rounded,
-                                  color: AppColors.expense,
-                                  onTap: () => TransactionsScreen.open(
-                                    context,
-                                    initial: TxFilter.expense,
-                                  ),
+                            ),
+                            const SizedBox(width: AppSpacing.cardGap),
+                            Expanded(
+                              child: MoneySummaryCard(
+                                label: 'Expenses',
+                                amount: totals.value?.expense ?? 0,
+                                icon: Icons.account_balance_wallet_rounded,
+                                tint: AppColors.expenseTint,
+                                iconColor: AppColors.expense,
+                                onTap: () => TransactionsScreen.open(
+                                  context,
+                                  initial: TxFilter.expense,
                                 ),
                               ),
-                            ],
-                          ),
+                            ),
+                          ],
                         ),
-                        const SizedBox(height: 16),
+                        const SizedBox(height: AppSpacing.lg),
                         InsightBanner(
                           message: alerts.isEmpty
                               ? 'Your insight is ready'
-                              : '${alerts.length} budget${alerts.length == 1 ? '' : 's'} need attention',
+                              : '${alerts.length} budget'
+                                    '${alerts.length == 1 ? '' : 's'} '
+                                    'need${alerts.length == 1 ? 's' : ''} attention',
                           actionLabel: alerts.isEmpty ? 'View' : 'Review',
                           onTap: () => alerts.isEmpty
                               ? ShellNavigator.of(context)?.go(1)
                               : ShellNavigator.of(context)?.go(2),
                         ),
-                        const SizedBox(height: 24),
+                        const SizedBox(height: AppSpacing.xxl),
                         _TransactionsHeader(
                           onSeeAll: () => TransactionsScreen.open(context),
                         ),
-                        const SizedBox(height: 14),
+                        const SizedBox(height: AppSpacing.lg),
                       ],
                     ),
                   ),
@@ -195,49 +197,25 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       out.add(
         SliverToBoxAdapter(
           child: Padding(
-            padding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
-            child: Row(
-              children: [
-                Expanded(
-                  child: Text(
-                    AppDate.friendlyDay(section.day),
-                    style: const TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w500,
-                      color: AppColors.inkSoft,
-                    ),
-                  ),
-                ),
-                const Text(
-                  'Total',
-                  style: TextStyle(
-                    fontSize: 12,
-                    fontWeight: FontWeight.w500,
-                    color: AppColors.inkFaint,
-                  ),
-                ),
-                const SizedBox(width: 6),
-                AmountText(
-                  section.net,
-                  showSign: true,
-                  showDecimals: false,
-                  color: section.net >= 0 ? AppColors.income : AppColors.ink,
-                  style: const TextStyle(
-                    fontSize: 15,
-                    fontWeight: FontWeight.w700,
-                  ),
-                ),
-              ],
+            padding: const EdgeInsets.fromLTRB(
+              AppSpacing.screen,
+              AppSpacing.sm,
+              AppSpacing.screen,
+              AppSpacing.md,
+            ),
+            child: DateGroupRow(
+              label: AppDate.friendlyDay(section.day),
+              net: section.net,
             ),
           ),
         ),
       );
       out.add(
         SliverPadding(
-          padding: const EdgeInsets.symmetric(horizontal: 20),
+          padding: AppSpacing.screenPadding,
           sliver: SliverList.separated(
             itemCount: section.items.length,
-            separatorBuilder: (_, _) => const SizedBox(height: 10),
+            separatorBuilder: (_, _) => const SizedBox(height: AppSpacing.md),
             itemBuilder: (context, i) {
               final view = section.items[i];
               return TransactionTile(
@@ -248,9 +226,41 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           ),
         ),
       );
-      out.add(const SliverToBoxAdapter(child: SizedBox(height: 8)));
+      out.add(const SliverToBoxAdapter(child: SizedBox(height: AppSpacing.sm)));
     }
     return out;
+  }
+}
+
+/// A 20px bold section title, optionally with the small info glyph.
+class _SectionHeading extends StatelessWidget {
+  const _SectionHeading({required this.title, this.trailing});
+
+  final String title;
+  final Widget? trailing;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        Flexible(
+          child: Text(
+            title,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: const TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.w700,
+              letterSpacing: -0.4,
+            ),
+          ),
+        ),
+        const SizedBox(width: 6),
+        const Icon(Icons.info_outline, size: 16, color: AppColors.inkFaint),
+        const Spacer(),
+        ?trailing,
+      ],
+    );
   }
 }
 
@@ -263,36 +273,63 @@ class _TransactionsHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        // Expanded, not Flexible beside a Spacer: those two would split the
-        // free space and ellipsize a title that actually fits.
-        Expanded(
+        const Expanded(
           child: Text(
             'Transactions',
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
-            style: Theme.of(context).textTheme.titleLarge,
+            style: TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.w700,
+              letterSpacing: -0.4,
+            ),
           ),
         ),
-        const SizedBox(width: 10),
+        const SizedBox(width: AppSpacing.sm),
         CircleIconButton(
           icon: Icons.push_pin_outlined,
+          iconSize: 16,
+          onTap: onSeeAll,
+        ),
+        const SizedBox(width: AppSpacing.sm),
+        CircleIconButton(
+          icon: Icons.history_rounded,
           iconSize: 17,
           onTap: onSeeAll,
         ),
-        const SizedBox(width: 8),
-        CircleIconButton(
-          icon: Icons.history_rounded,
-          iconSize: 18,
-          onTap: onSeeAll,
-        ),
-        const SizedBox(width: 8),
-        TagPill(
-          label: 'For the Period',
-          background: AppColors.purpleSoft,
-          foreground: AppColors.purpleDark,
-          onTap: onSeeAll,
-        ),
+        const SizedBox(width: AppSpacing.sm),
+        _PeriodChip(onTap: onSeeAll),
       ],
+    );
+  }
+}
+
+/// The lavender "For the Period" chip.
+class _PeriodChip extends StatelessWidget {
+  const _PeriodChip({required this.onTap});
+
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return Material(
+      color: AppColors.chipBg,
+      shape: const StadiumBorder(side: BorderSide(color: AppColors.chipBorder)),
+      clipBehavior: Clip.antiAlias,
+      child: InkWell(
+        onTap: onTap,
+        child: const Padding(
+          padding: EdgeInsets.symmetric(horizontal: 14, vertical: 9),
+          child: Text(
+            'For the Period',
+            style: TextStyle(
+              fontSize: 14,
+              fontWeight: FontWeight.w600,
+              color: AppColors.chipText,
+            ),
+          ),
+        ),
+      ),
     );
   }
 }
@@ -303,7 +340,12 @@ class _EmptyTransactions extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const Padding(
-      padding: EdgeInsets.fromLTRB(20, 30, 20, 0),
+      padding: EdgeInsets.fromLTRB(
+        AppSpacing.screen,
+        AppSpacing.xl,
+        AppSpacing.screen,
+        0,
+      ),
       child: Column(
         children: [
           Icon(Icons.receipt_long_rounded, size: 46, color: AppColors.inkFaint),

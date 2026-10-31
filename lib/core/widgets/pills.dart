@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../theme/app_colors.dart';
+import '../theme/app_dimens.dart';
 
 /// Small rounded label — "+12%", "Vacation", "For the Period".
 class TagPill extends StatelessWidget {
@@ -67,7 +68,7 @@ class CircleIconButton extends StatelessWidget {
     super.key,
     required this.icon,
     this.onTap,
-    this.size = 34,
+    this.size = AppSizes.circleButton,
     this.background = AppColors.surface,
     this.foreground = AppColors.ink,
     this.shadows = AppColors.softShadow,
@@ -103,6 +104,9 @@ class CircleIconButton extends StatelessWidget {
                   shape: BoxShape.circle,
                   boxShadow: shadows,
                   color: background,
+                  border: background == AppColors.surface
+                      ? Border.all(color: AppColors.border)
+                      : null,
                 ),
                 child: Icon(
                   icon,

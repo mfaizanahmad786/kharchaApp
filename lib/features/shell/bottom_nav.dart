@@ -1,26 +1,27 @@
 import 'package:flutter/material.dart';
 
 import '../../core/theme/app_colors.dart';
+import '../../core/theme/app_dimens.dart';
 
 /// Height of the nav sheet, excluding the device's bottom inset.
-const double kNavBarHeight = 74;
+const double kNavBarHeight = 76;
 
 /// Vertical space a scrolling screen should leave so its last row clears the
 /// floating nav bar and the FAB.
-const double kNavBarScrollPadding = 118;
+const double kNavBarScrollPadding = 124;
 
 class NavDestination {
-  const NavDestination(this.label, this.icon, this.activeIcon);
+  const NavDestination(this.label, this.icon);
   final String label;
   final IconData icon;
-  final IconData activeIcon;
 }
 
+/// Filled icons throughout: the reference never uses outlined glyphs here.
 const navDestinations = <NavDestination>[
-  NavDestination('Home', Icons.home_outlined, Icons.home_rounded),
-  NavDestination('Report', Icons.bar_chart_outlined, Icons.bar_chart_rounded),
-  NavDestination('Plan', Icons.layers_outlined, Icons.layers_rounded),
-  NavDestination('Settings', Icons.settings_outlined, Icons.settings_rounded),
+  NavDestination('Home', Icons.home_rounded),
+  NavDestination('Report', Icons.bar_chart_rounded),
+  NavDestination('Plan', Icons.layers_rounded),
+  NavDestination('Settings', Icons.settings_rounded),
 ];
 
 /// The floating white nav sheet with the purple add-button punched through it.
@@ -41,7 +42,7 @@ class KharchaBottomNav extends StatelessWidget {
     final bottomInset = MediaQuery.viewPaddingOf(context).bottom;
 
     return SizedBox(
-      height: kNavBarHeight + bottomInset + 22,
+      height: kNavBarHeight + bottomInset + 26,
       child: Stack(
         alignment: Alignment.bottomCenter,
         clipBehavior: Clip.none,
@@ -55,14 +56,20 @@ class KharchaBottomNav extends StatelessWidget {
               padding: EdgeInsets.only(bottom: bottomInset),
               decoration: const BoxDecoration(
                 color: AppColors.surface,
-                borderRadius: BorderRadius.vertical(top: Radius.circular(30)),
-                boxShadow: AppColors.navShadow,
+                borderRadius: AppRadii.navTop,
+                boxShadow: [
+                  BoxShadow(
+                    color: Color(0x14000000),
+                    blurRadius: 20,
+                    offset: Offset(0, -4),
+                  ),
+                ],
               ),
               child: Row(
                 children: [
                   _item(0),
                   _item(1),
-                  const SizedBox(width: 76),
+                  const SizedBox(width: 80),
                   _item(2),
                   _item(3),
                 ],
@@ -70,7 +77,7 @@ class KharchaBottomNav extends StatelessWidget {
             ),
           ),
           Positioned(
-            bottom: kNavBarHeight + bottomInset - 44,
+            bottom: kNavBarHeight + bottomInset - 46,
             child: _AddButton(onTap: onAdd),
           ),
         ],
@@ -88,25 +95,19 @@ class KharchaBottomNav extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            AnimatedScale(
-              scale: selected ? 1.0 : 0.94,
-              duration: const Duration(milliseconds: 200),
-              child: Icon(
-                selected ? d.activeIcon : d.icon,
-                size: 24,
-                color: selected ? AppColors.ink : AppColors.inkFaint,
-              ),
+            Icon(
+              d.icon,
+              size: 25,
+              color: selected ? AppColors.ink : AppColors.navInactive,
             ),
             const SizedBox(height: 4),
-            AnimatedDefaultTextStyle(
-              duration: const Duration(milliseconds: 200),
+            Text(
+              d.label,
               style: TextStyle(
-                fontFamily: 'Inter',
                 fontSize: 12,
-                fontWeight: selected ? FontWeight.w700 : FontWeight.w500,
-                color: selected ? AppColors.ink : AppColors.inkFaint,
+                fontWeight: selected ? FontWeight.w700 : FontWeight.w400,
+                color: selected ? AppColors.ink : AppColors.navInactive,
               ),
-              child: Text(d.label),
             ),
           ],
         ),
@@ -123,41 +124,48 @@ class _AddButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width: 84,
-      height: 84,
+      width: 92,
+      height: 92,
       child: Center(
         child: Container(
-          width: 72,
-          height: 72,
+          // The faint halo ring around the button.
+          width: AppSizes.fab + 16,
+          height: AppSizes.fab + 16,
           decoration: BoxDecoration(
             shape: BoxShape.circle,
-            color: AppColors.purple.withValues(alpha: 0.16),
+            color: AppColors.purple.withValues(alpha: 0.14),
           ),
           child: Center(
-            child: Material(
-              color: AppColors.purple,
-              shape: const CircleBorder(),
-              clipBehavior: Clip.antiAlias,
-              child: InkWell(
-                onTap: onTap,
-                child: Ink(
-                  width: 56,
-                  height: 56,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: AppColors.purple,
-                    boxShadow: [
-                      BoxShadow(
-                        color: AppColors.purple.withValues(alpha: 0.42),
-                        blurRadius: 18,
-                        offset: const Offset(0, 8),
-                      ),
-                    ],
+            child: DecoratedBox(
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                gradient: const LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: [AppColors.purple, AppColors.purpleLight],
+                ),
+                boxShadow: [
+                  BoxShadow(
+                    color: AppColors.purple.withValues(alpha: 0.45),
+                    blurRadius: 24,
+                    offset: const Offset(0, 8),
                   ),
-                  child: const Icon(
-                    Icons.add_rounded,
-                    color: Colors.white,
-                    size: 30,
+                ],
+              ),
+              child: Material(
+                color: Colors.transparent,
+                shape: const CircleBorder(),
+                clipBehavior: Clip.antiAlias,
+                child: InkWell(
+                  onTap: onTap,
+                  child: const SizedBox(
+                    width: AppSizes.fab,
+                    height: AppSizes.fab,
+                    child: Icon(
+                      Icons.add_rounded,
+                      color: Colors.white,
+                      size: 32,
+                    ),
                   ),
                 ),
               ),
