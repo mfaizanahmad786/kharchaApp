@@ -85,7 +85,7 @@ class SettingsScreen extends ConsumerWidget {
                 children: [
                   SettingsSwitch(
                     icon: Icons.lock_rounded,
-                    iconColor: AppColors.purple,
+                    iconColor: AppColors.brand,
                     title: 'App lock',
                     subtitle: security.lockEnabled
                         ? 'A PIN is required to open Kharcha'
@@ -336,7 +336,7 @@ class _ProfileCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(24),
         boxShadow: [
           BoxShadow(
-            color: AppColors.purple.withValues(alpha: 0.28),
+            color: AppColors.brand.withValues(alpha: 0.28),
             blurRadius: 22,
             offset: const Offset(0, 10),
           ),

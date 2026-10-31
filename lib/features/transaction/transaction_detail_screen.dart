@@ -53,7 +53,7 @@ class TransactionDetailScreen extends ConsumerWidget {
       ),
       body: view == null
           ? const Center(
-              child: CircularProgressIndicator(color: AppColors.purple),
+              child: CircularProgressIndicator(color: AppColors.brand),
             )
           : _Body(view: view),
     );
@@ -191,8 +191,8 @@ class _Body extends ConsumerWidget {
                 TagPill(
                   label: t,
                   icon: Icons.local_offer_rounded,
-                  background: AppColors.purpleSoft,
-                  foreground: AppColors.purpleDark,
+                  background: AppColors.brandSoft,
+                  foreground: AppColors.brandDark,
                 ),
             ],
           ),
@@ -234,7 +234,7 @@ class _Body extends ConsumerWidget {
                   icon: const Icon(Icons.edit_rounded, size: 19),
                   label: const Text('Edit'),
                   style: FilledButton.styleFrom(
-                    backgroundColor: AppColors.purple,
+                    backgroundColor: AppColors.brand,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(16),
                     ),

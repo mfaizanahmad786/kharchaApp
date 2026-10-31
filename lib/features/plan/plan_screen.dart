@@ -190,7 +190,7 @@ class PlanScreen extends ConsumerWidget {
             ),
             const SizedBox(height: 10),
             ListTile(
-              leading: const Icon(Icons.flag_rounded, color: AppColors.purple),
+              leading: const Icon(Icons.flag_rounded, color: AppColors.brand),
               title: const Text(
                 'New goal',
                 style: TextStyle(fontWeight: FontWeight.w600),
@@ -263,7 +263,7 @@ class PlanScreen extends ConsumerWidget {
               },
             ),
             ListTile(
-              leading: const Icon(Icons.edit_rounded, color: AppColors.purple),
+              leading: const Icon(Icons.edit_rounded, color: AppColors.brand),
               title: const Text(
                 'Edit goal',
                 style: TextStyle(fontWeight: FontWeight.w600),
@@ -389,7 +389,7 @@ class _EmptyBlock extends StatelessWidget {
             FilledButton(
               onPressed: onAction,
               style: FilledButton.styleFrom(
-                backgroundColor: AppColors.purple,
+                backgroundColor: AppColors.brand,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(14),
                 ),

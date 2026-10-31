@@ -3,22 +3,26 @@ import 'package:flutter/material.dart';
 /// Palette lifted from the Kharcha design comps.
 abstract final class AppColors {
   // Brand
-  static const purple = Color(0xFF8B5CF6);
-  static const purpleDark = Color(0xFF7C4DEF);
-  static const purpleLight = Color(0xFFA78BFA);
-  static const purpleLighter = Color(0xFFB79DF9);
-  static const purpleSoft = Color(0xFFEDE7FE);
+  //
+  // Green is a far more luminous hue than the violet this replaced, so the
+  // ramp sits deliberately deeper: a like-for-like swap of the old lightness
+  // would have dropped white-on-brand below a readable contrast.
+  static const brand = Color(0xFF059669);
+  static const brandDark = Color(0xFF047857);
+  static const brandLight = Color(0xFF10B981);
+  static const brandLighter = Color(0xFF34D399);
+  static const brandSoft = Color(0xFFD1FAE5);
 
-  /// The lavender "For the Period" chip.
-  static const chipBg = Color(0xFFEFE9FD);
-  static const chipBorder = Color(0xFFDCCFFA);
-  static const chipText = Color(0xFF7C4DDB);
+  /// The "For the Period" chip.
+  static const chipBg = Color(0xFFE6F9F0);
+  static const chipBorder = Color(0xFFA7F3D0);
+  static const chipText = Color(0xFF047857);
 
-  /// The header gradient on Home — a soft diagonal violet wash.
+  /// The header gradient on Home — a soft diagonal wash.
   static const headerGradient = LinearGradient(
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
-    colors: [purple, purpleLight, purpleLighter],
+    colors: [brandDark, brand, brandLight],
   );
 
   // Surfaces
@@ -46,16 +50,16 @@ abstract final class AppColors {
   static const expenseTint = Color(0xFFFDEDEC);
 
   // Semantic
-  static const income = Color(0xFF2FB573);
+  static const income = brandDark;
   static const expense = Color(0xFFE0314B);
   static const warning = Color(0xFFE8743B);
-  static const badgeGreenBg = Color(0xFFE4F6EC);
-  static const badgeGreenFg = Color(0xFF2FB573);
+  static const badgeGreenBg = brandSoft;
+  static const badgeGreenFg = brandDark;
   static const badgeRedBg = Color(0xFFFDE8EB);
   static const badgeRedFg = Color(0xFFE0314B);
 
   /// Category accents, matched to the donut chart in the Report comp.
-  static const catPurple = purple;
+  static const catPurple = Color(0xFF8B5CF6);
   static const catBlue = Color(0xFF4A9BF0);
   static const catGreen = Color(0xFF4CBF7F);
   static const catOrange = Color(0xFFE8743B);

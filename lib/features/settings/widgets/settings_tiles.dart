@@ -163,7 +163,7 @@ class SettingsSwitch extends StatelessWidget {
       trailing: Switch.adaptive(
         value: value,
         onChanged: onChanged,
-        activeTrackColor: AppColors.purple,
+        activeTrackColor: AppColors.brand,
       ),
     );
   }

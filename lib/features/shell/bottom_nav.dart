@@ -133,7 +133,7 @@ class _AddButton extends StatelessWidget {
           height: AppSizes.fab + 16,
           decoration: BoxDecoration(
             shape: BoxShape.circle,
-            color: AppColors.purple.withValues(alpha: 0.14),
+            color: AppColors.brand.withValues(alpha: 0.14),
           ),
           child: Center(
             child: DecoratedBox(
@@ -142,11 +142,11 @@ class _AddButton extends StatelessWidget {
                 gradient: const LinearGradient(
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
-                  colors: [AppColors.purple, AppColors.purpleLight],
+                  colors: [AppColors.brand, AppColors.brandLight],
                 ),
                 boxShadow: [
                   BoxShadow(
-                    color: AppColors.purple.withValues(alpha: 0.45),
+                    color: AppColors.brand.withValues(alpha: 0.45),
                     blurRadius: 24,
                     offset: const Offset(0, 8),
                   ),

@@ -47,7 +47,7 @@ class _EditGoalSheetState extends ConsumerState<EditGoalSheet> {
       text: g == null ? '0' : (g.saved / 100).toStringAsFixed(0),
     );
     _icon = g?.iconName ?? 'savings';
-    _color = g?.colorValue ?? AppColors.purple.toARGB32();
+    _color = g?.colorValue ?? AppColors.brand.toARGB32();
     _deadline = g?.deadline;
   }
 

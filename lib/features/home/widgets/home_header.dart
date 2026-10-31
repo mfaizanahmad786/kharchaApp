@@ -64,7 +64,9 @@ class HomeHeader extends ConsumerWidget {
                 style: TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.w500,
-                  color: Colors.white.withValues(alpha: 0.7),
+                  // Green carries more luminance than the old violet, so the
+                  // label needs a touch more opacity to stay readable on it.
+                  color: Colors.white.withValues(alpha: 0.82),
                 ),
               ),
               const SizedBox(height: 4),
@@ -83,7 +85,7 @@ class HomeHeader extends ConsumerWidget {
                     letterSpacing: -1.6,
                     height: 1.12,
                   ),
-                  fractionOpacity: 0.5,
+                  fractionOpacity: 0.58,
                 ),
               ),
               const SizedBox(height: 10),
@@ -235,7 +237,7 @@ class _Avatar extends StatelessWidget {
                 width: 22,
                 height: 22,
                 decoration: BoxDecoration(
-                  color: AppColors.purple,
+                  color: AppColors.brand,
                   shape: BoxShape.circle,
                   border: Border.all(color: Colors.white, width: 2),
                 ),

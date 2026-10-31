@@ -178,7 +178,7 @@ class EditorSheetShell extends StatelessWidget {
     required this.children,
     required this.onSave,
     this.saveLabel = 'Save',
-    this.accent = AppColors.purple,
+    this.accent = AppColors.brand,
     this.onDelete,
   });
 

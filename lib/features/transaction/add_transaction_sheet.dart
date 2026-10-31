@@ -105,7 +105,7 @@ class _AddTransactionSheetState extends ConsumerState<AddTransactionSheet> {
       lastDate: DateTime.now().add(const Duration(days: 365)),
       builder: (context, child) => Theme(
         data: Theme.of(context).copyWith(
-          colorScheme: const ColorScheme.light(primary: AppColors.purple),
+          colorScheme: const ColorScheme.light(primary: AppColors.brand),
         ),
         child: child!,
       ),
@@ -189,7 +189,7 @@ class _AddTransactionSheetState extends ConsumerState<AddTransactionSheet> {
       _accountId = accounts.first.id;
     }
 
-    final accent = _type.isIncome ? AppColors.income : AppColors.purple;
+    final accent = _type.isIncome ? AppColors.income : AppColors.brand;
 
     return Container(
       decoration: const BoxDecoration(

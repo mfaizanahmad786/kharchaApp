@@ -108,7 +108,7 @@ class _MonthPickerSheetState extends ConsumerState<MonthPickerSheet> {
                   selected.year == _year && selected.month == i + 1;
               final isFuture = month.isAfter(AppDate.startOfMonth(now));
               return Material(
-                color: isSelected ? AppColors.purple : AppColors.surfaceMuted,
+                color: isSelected ? AppColors.brand : AppColors.surfaceMuted,
                 borderRadius: BorderRadius.circular(14),
                 child: InkWell(
                   borderRadius: BorderRadius.circular(14),

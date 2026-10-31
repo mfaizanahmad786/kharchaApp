@@ -65,7 +65,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       child: Scaffold(
         backgroundColor: AppColors.surface,
         body: RefreshIndicator(
-          color: AppColors.purple,
+          color: AppColors.brand,
           onRefresh: () async => ref.read(revisionProvider.notifier).bump(),
           child: CustomScrollView(
             controller: _scroll,
@@ -160,7 +160,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                       padding: EdgeInsets.only(top: 40),
                       child: Center(
                         child: CircularProgressIndicator(
-                          color: AppColors.purple,
+                          color: AppColors.brand,
                         ),
                       ),
                     ),

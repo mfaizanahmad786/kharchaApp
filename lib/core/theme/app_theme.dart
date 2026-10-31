@@ -14,10 +14,10 @@ abstract final class AppTheme {
       scaffoldBackgroundColor: AppColors.scaffold,
       colorScheme:
           ColorScheme.fromSeed(
-            seedColor: AppColors.purple,
+            seedColor: AppColors.brand,
             brightness: Brightness.light,
           ).copyWith(
-            primary: AppColors.purple,
+            primary: AppColors.brand,
             surface: AppColors.surface,
             error: AppColors.expense,
           ),

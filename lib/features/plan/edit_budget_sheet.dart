@@ -44,7 +44,7 @@ class _EditBudgetSheetState extends ConsumerState<EditBudgetSheet> {
       text: b == null ? '' : (b.limit / 100).toStringAsFixed(0),
     );
     _icon = b?.iconName ?? 'wallet';
-    _color = b?.colorValue ?? AppColors.purple.toARGB32();
+    _color = b?.colorValue ?? AppColors.brand.toARGB32();
     _alerts = b?.alertsEnabled ?? true;
     _threshold = b?.alertThreshold ?? 0.8;
     _categoryId = b?.categoryId;
@@ -128,7 +128,7 @@ class _EditBudgetSheetState extends ConsumerState<EditBudgetSheet> {
             _CategoryChip(
               label: 'All spending',
               icon: Icons.all_inclusive_rounded,
-              color: AppColors.purple,
+              color: AppColors.brand,
               selected: _categoryId == null,
               onTap: () => setState(() => _categoryId = null),
             ),

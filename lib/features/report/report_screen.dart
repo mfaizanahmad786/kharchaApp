@@ -129,7 +129,7 @@ class _ReportScreenState extends ConsumerState<ReportScreen> {
                             key: ValueKey('bars-$_type'),
                             data: daily,
                             color: isExpense
-                                ? AppColors.purple
+                                ? AppColors.brand
                                 : AppColors.income,
                           ),
                   ),
@@ -270,7 +270,7 @@ class _ChartModeToggle extends StatelessWidget {
         width: 36,
         height: 36,
         decoration: BoxDecoration(
-          color: selected ? AppColors.purple : Colors.transparent,
+          color: selected ? AppColors.brand : Colors.transparent,
           shape: BoxShape.circle,
         ),
         child: Icon(

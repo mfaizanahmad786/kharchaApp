@@ -9,7 +9,7 @@ class PinDots extends StatelessWidget {
     super.key,
     required this.length,
     required this.filled,
-    this.color = AppColors.purple,
+    this.color = AppColors.brand,
     this.error = false,
   });
 
@@ -109,7 +109,7 @@ class _Key extends StatelessWidget {
             ? const Icon(
                 Icons.fingerprint_rounded,
                 size: 28,
-                color: AppColors.purple,
+                color: AppColors.brand,
               )
             : const SizedBox.shrink();
       default:

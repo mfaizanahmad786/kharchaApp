@@ -149,7 +149,7 @@ class _CategoryEditorState extends ConsumerState<_CategoryEditor> {
     text: widget.existing?.name ?? '',
   );
   late String _icon = widget.existing?.iconName ?? 'other';
-  late int _color = widget.existing?.colorValue ?? AppColors.purple.toARGB32();
+  late int _color = widget.existing?.colorValue ?? AppColors.brand.toARGB32();
 
   @override
   void dispose() {
@@ -335,7 +335,7 @@ class _AccountEditorState extends ConsumerState<_AccountEditor> {
         : (widget.existing!.openingBalance / 100).toStringAsFixed(0),
   );
   late String _icon = widget.existing?.iconName ?? 'wallet';
-  late int _color = widget.existing?.colorValue ?? AppColors.purple.toARGB32();
+  late int _color = widget.existing?.colorValue ?? AppColors.brand.toARGB32();
 
   @override
   void dispose() {
