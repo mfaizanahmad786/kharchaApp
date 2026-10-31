@@ -36,7 +36,8 @@ class BudgetStatus {
   final int spent;
 
   int get remaining => budget.limit - spent;
-  double get progress => budget.limit == 0 ? 0 : (spent / budget.limit).clamp(0.0, 1.0);
+  double get progress =>
+      budget.limit == 0 ? 0 : (spent / budget.limit).clamp(0.0, 1.0);
   double get rawProgress => budget.limit == 0 ? 0 : spent / budget.limit;
   bool get isOver => spent > budget.limit;
   bool get isNearLimit =>
@@ -65,12 +66,18 @@ class FinanceRepository {
   // ---------------------------------------------------------------- accounts
 
   Future<List<Account>> accounts() async {
-    final rows = await _db.query('accounts', orderBy: 'sort_order ASC, name ASC');
+    final rows = await _db.query(
+      'accounts',
+      orderBy: 'sort_order ASC, name ASC',
+    );
     return rows.map(Account.fromMap).toList(growable: false);
   }
 
-  Future<void> upsertAccount(Account a) =>
-      _db.insert('accounts', a.toMap(), conflictAlgorithm: ConflictAlgorithm.replace);
+  Future<void> upsertAccount(Account a) => _db.insert(
+    'accounts',
+    a.toMap(),
+    conflictAlgorithm: ConflictAlgorithm.replace,
+  );
 
   Future<void> deleteAccount(String id) =>
       _db.delete('accounts', where: 'id = ?', whereArgs: [id]);
@@ -87,15 +94,19 @@ class FinanceRepository {
     return rows.map(Category.fromMap).toList(growable: false);
   }
 
-  Future<void> upsertCategory(Category c) =>
-      _db.insert('categories', c.toMap(), conflictAlgorithm: ConflictAlgorithm.replace);
+  Future<void> upsertCategory(Category c) => _db.insert(
+    'categories',
+    c.toMap(),
+    conflictAlgorithm: ConflictAlgorithm.replace,
+  );
 
   /// Refuses to delete a category that still has transactions pointing at it.
   Future<bool> deleteCategory(String id) async {
-    final used = Sqflite.firstIntValue(await _db.rawQuery(
-      'SELECT COUNT(*) FROM txns WHERE category_id = ?',
-      [id],
-    ));
+    final used = Sqflite.firstIntValue(
+      await _db.rawQuery('SELECT COUNT(*) FROM txns WHERE category_id = ?', [
+        id,
+      ]),
+    );
     if ((used ?? 0) > 0) return false;
     await _db.delete('categories', where: 'id = ?', whereArgs: [id]);
     return true;
@@ -144,7 +155,12 @@ class FinanceRepository {
   }
 
   Future<Txn?> transactionById(String id) async {
-    final rows = await _db.query('txns', where: 'id = ?', whereArgs: [id], limit: 1);
+    final rows = await _db.query(
+      'txns',
+      where: 'id = ?',
+      whereArgs: [id],
+      limit: 1,
+    );
     return rows.isEmpty ? null : Txn.fromMap(rows.first);
   }
 
@@ -171,12 +187,8 @@ class FinanceRepository {
     return id;
   }
 
-  Future<void> updateTransaction(Txn t) => _db.update(
-        'txns',
-        t.toMap(),
-        where: 'id = ?',
-        whereArgs: [t.id],
-      );
+  Future<void> updateTransaction(Txn t) =>
+      _db.update('txns', t.toMap(), where: 'id = ?', whereArgs: [t.id]);
 
   Future<void> deleteTransaction(String id) =>
       _db.delete('txns', where: 'id = ?', whereArgs: [id]);
@@ -190,19 +202,25 @@ class FinanceRepository {
 
     // Balance at the moment just before the oldest row in this list.
     final oldest = txns.last;
-    final opening = Sqflite.firstIntValue(
-          await _db.rawQuery('SELECT COALESCE(SUM(opening_balance), 0) FROM accounts'),
+    final opening =
+        Sqflite.firstIntValue(
+          await _db.rawQuery(
+            'SELECT COALESCE(SUM(opening_balance), 0) FROM accounts',
+          ),
         ) ??
         0;
-    final priorNet = Sqflite.firstIntValue(await _db.rawQuery(
-          '''SELECT COALESCE(SUM(CASE WHEN type = 'income' THEN amount ELSE -amount END), 0)
+    final priorNet =
+        Sqflite.firstIntValue(
+          await _db.rawQuery(
+            '''SELECT COALESCE(SUM(CASE WHEN type = 'income' THEN amount ELSE -amount END), 0)
              FROM txns WHERE date < ? OR (date = ? AND id < ?)''',
-          [
-            oldest.date.millisecondsSinceEpoch,
-            oldest.date.millisecondsSinceEpoch,
-            oldest.id,
-          ],
-        )) ??
+            [
+              oldest.date.millisecondsSinceEpoch,
+              oldest.date.millisecondsSinceEpoch,
+              oldest.id,
+            ],
+          ),
+        ) ??
         0;
 
     // Walk oldest -> newest accumulating, then flip back to newest-first.
@@ -225,12 +243,14 @@ class FinanceRepository {
     );
     for (final t in ascending) {
       running += t.signed;
-      out.add(TxnView(
-        txn: t,
-        category: cats[t.categoryId] ?? fallbackCat,
-        account: accs[t.accountId] ?? fallbackAcc,
-        runningBalance: running,
-      ));
+      out.add(
+        TxnView(
+          txn: t,
+          category: cats[t.categoryId] ?? fallbackCat,
+          account: accs[t.accountId] ?? fallbackAcc,
+          runningBalance: running,
+        ),
+      );
     }
     return out.reversed.toList(growable: false);
   }
@@ -238,13 +258,19 @@ class FinanceRepository {
   // ------------------------------------------------------------------ totals
 
   Future<int> currentBalance() async {
-    final opening = Sqflite.firstIntValue(
-          await _db.rawQuery('SELECT COALESCE(SUM(opening_balance), 0) FROM accounts'),
+    final opening =
+        Sqflite.firstIntValue(
+          await _db.rawQuery(
+            'SELECT COALESCE(SUM(opening_balance), 0) FROM accounts',
+          ),
         ) ??
         0;
-    final net = Sqflite.firstIntValue(await _db.rawQuery(
-          "SELECT COALESCE(SUM(CASE WHEN type = 'income' THEN amount ELSE -amount END), 0) FROM txns",
-        )) ??
+    final net =
+        Sqflite.firstIntValue(
+          await _db.rawQuery(
+            "SELECT COALESCE(SUM(CASE WHEN type = 'income' THEN amount ELSE -amount END), 0) FROM txns",
+          ),
+        ) ??
         0;
     return opening + net;
   }
@@ -284,10 +310,12 @@ class FinanceRepository {
       where.write(' AND category_id = ?');
       args.add(categoryId);
     }
-    return Sqflite.firstIntValue(await _db.rawQuery(
-          'SELECT COALESCE(SUM(amount), 0) FROM txns WHERE $where',
-          args,
-        )) ??
+    return Sqflite.firstIntValue(
+          await _db.rawQuery(
+            'SELECT COALESCE(SUM(amount), 0) FROM txns WHERE $where',
+            args,
+          ),
+        ) ??
         0;
   }
 
@@ -325,12 +353,14 @@ class FinanceRepository {
     for (final entry in current.entries) {
       final cat = cats[entry.key];
       if (cat == null) continue;
-      out.add(CategoryTotal(
-        category: cat,
-        total: entry.value.$1,
-        count: entry.value.$2,
-        previousTotal: previous[entry.key]?.$1 ?? 0,
-      ));
+      out.add(
+        CategoryTotal(
+          category: cat,
+          total: entry.value.$1,
+          count: entry.value.$2,
+          previousTotal: previous[entry.key]?.$1 ?? 0,
+        ),
+      );
     }
     out.sort((a, b) => b.total.compareTo(a.total));
     return out;
@@ -356,7 +386,10 @@ class FinanceRepository {
     var cursor = DateTime(from.year, from.month, from.day);
     final end = DateTime(to.year, to.month, to.day);
     while (!cursor.isAfter(end)) {
-      out.add((day: cursor, total: buckets[cursor.millisecondsSinceEpoch] ?? 0));
+      out.add((
+        day: cursor,
+        total: buckets[cursor.millisecondsSinceEpoch] ?? 0,
+      ));
       cursor = cursor.add(const Duration(days: 1));
     }
     return out;
@@ -364,13 +397,16 @@ class FinanceRepository {
 
   /// Net worth at the end of each of the last [months] months, oldest first.
   Future<List<({DateTime month, int income, int expense})>> monthlySeries(
-      int months) async {
+    int months,
+  ) async {
     final now = DateTime.now();
     final out = <({DateTime month, int income, int expense})>[];
     for (var i = months - 1; i >= 0; i--) {
       final start = DateTime(now.year, now.month - i);
-      final end = DateTime(now.year, now.month - i + 1)
-          .subtract(const Duration(milliseconds: 1));
+      final end = DateTime(
+        now.year,
+        now.month - i + 1,
+      ).subtract(const Duration(milliseconds: 1));
       final t = await totals(start, end);
       out.add((month: start, income: t.income, expense: t.expense));
     }
@@ -381,9 +417,14 @@ class FinanceRepository {
 
   Future<List<BudgetStatus>> budgetStatuses(DateTime month) async {
     final from = DateTime(month.year, month.month);
-    final to = DateTime(month.year, month.month + 1)
-        .subtract(const Duration(milliseconds: 1));
-    final rows = await _db.query('budgets', orderBy: 'sort_order ASC, name ASC');
+    final to = DateTime(
+      month.year,
+      month.month + 1,
+    ).subtract(const Duration(milliseconds: 1));
+    final rows = await _db.query(
+      'budgets',
+      orderBy: 'sort_order ASC, name ASC',
+    );
     final out = <BudgetStatus>[];
     for (final r in rows) {
       final b = Budget.fromMap(r);
@@ -398,8 +439,11 @@ class FinanceRepository {
     return out;
   }
 
-  Future<void> upsertBudget(Budget b) =>
-      _db.insert('budgets', b.toMap(), conflictAlgorithm: ConflictAlgorithm.replace);
+  Future<void> upsertBudget(Budget b) => _db.insert(
+    'budgets',
+    b.toMap(),
+    conflictAlgorithm: ConflictAlgorithm.replace,
+  );
 
   Future<void> deleteBudget(String id) =>
       _db.delete('budgets', where: 'id = ?', whereArgs: [id]);
@@ -413,8 +457,11 @@ class FinanceRepository {
     return rows.map(Goal.fromMap).toList(growable: false);
   }
 
-  Future<void> upsertGoal(Goal g) =>
-      _db.insert('goals', g.toMap(), conflictAlgorithm: ConflictAlgorithm.replace);
+  Future<void> upsertGoal(Goal g) => _db.insert(
+    'goals',
+    g.toMap(),
+    conflictAlgorithm: ConflictAlgorithm.replace,
+  );
 
   Future<void> deleteGoal(String id) =>
       _db.delete('goals', where: 'id = ?', whereArgs: [id]);

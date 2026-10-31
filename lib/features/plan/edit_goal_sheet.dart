@@ -16,6 +16,7 @@ class EditGoalSheet extends ConsumerStatefulWidget {
   static Future<void> show(BuildContext context, {Goal? existing}) =>
       showModalBottomSheet<void>(
         context: context,
+        useRootNavigator: true,
         isScrollControlled: true,
         useSafeArea: true,
         backgroundColor: Colors.transparent,
@@ -40,9 +41,11 @@ class _EditGoalSheetState extends ConsumerState<EditGoalSheet> {
     final g = widget.existing;
     _name = TextEditingController(text: g?.name ?? '');
     _target = TextEditingController(
-        text: g == null ? '' : (g.target / 100).toStringAsFixed(0));
+      text: g == null ? '' : (g.target / 100).toStringAsFixed(0),
+    );
     _saved = TextEditingController(
-        text: g == null ? '0' : (g.saved / 100).toStringAsFixed(0));
+      text: g == null ? '0' : (g.saved / 100).toStringAsFixed(0),
+    );
     _icon = g?.iconName ?? 'savings';
     _color = g?.colorValue ?? AppColors.purple.toARGB32();
     _deadline = g?.deadline;
@@ -60,13 +63,14 @@ class _EditGoalSheetState extends ConsumerState<EditGoalSheet> {
     final now = DateTime.now();
     final picked = await showDatePicker(
       context: context,
+      useRootNavigator: true,
       initialDate: _deadline ?? DateTime(now.year + 1, now.month),
       firstDate: now,
       lastDate: DateTime(now.year + 30),
       builder: (context, child) => Theme(
-        data: Theme.of(context).copyWith(
-          colorScheme: ColorScheme.light(primary: Color(_color)),
-        ),
+        data: Theme.of(
+          context,
+        ).copyWith(colorScheme: ColorScheme.light(primary: Color(_color))),
         child: child!,
       ),
     );
@@ -81,9 +85,11 @@ class _EditGoalSheetState extends ConsumerState<EditGoalSheet> {
     if (name.isEmpty || target <= 0) {
       ScaffoldMessenger.of(context)
         ..hideCurrentSnackBar()
-        ..showSnackBar(const SnackBar(
-          content: Text('Give the goal a name and a target above zero.'),
-        ));
+        ..showSnackBar(
+          const SnackBar(
+            content: Text('Give the goal a name and a target above zero.'),
+          ),
+        );
       return;
     }
 
@@ -169,18 +175,30 @@ class _EditGoalSheetState extends ConsumerState<EditGoalSheet> {
               ),
               child: Row(
                 children: [
-                  const Icon(Icons.event_rounded, size: 19, color: AppColors.inkSoft),
+                  const Icon(
+                    Icons.event_rounded,
+                    size: 19,
+                    color: AppColors.inkSoft,
+                  ),
                   const SizedBox(width: 10),
                   Text(
-                    _deadline == null ? 'No deadline' : AppDate.shortDay(_deadline!),
-                    style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                    _deadline == null
+                        ? 'No deadline'
+                        : AppDate.shortDay(_deadline!),
+                    style: const TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                    ),
                   ),
                   const Spacer(),
                   if (_deadline != null)
                     GestureDetector(
                       onTap: () => setState(() => _deadline = null),
-                      child: const Icon(Icons.close_rounded,
-                          size: 18, color: AppColors.inkFaint),
+                      child: const Icon(
+                        Icons.close_rounded,
+                        size: 18,
+                        color: AppColors.inkFaint,
+                      ),
                     ),
                 ],
               ),

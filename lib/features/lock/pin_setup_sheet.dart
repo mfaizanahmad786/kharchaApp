@@ -15,14 +15,17 @@ class PinSetupSheet extends ConsumerStatefulWidget {
 
   final bool requireCurrent;
 
-  static Future<bool?> show(BuildContext context, {required bool requireCurrent}) =>
-      showModalBottomSheet<bool>(
-        context: context,
-        isScrollControlled: true,
-        useSafeArea: true,
-        backgroundColor: Colors.transparent,
-        builder: (_) => PinSetupSheet(requireCurrent: requireCurrent),
-      );
+  static Future<bool?> show(
+    BuildContext context, {
+    required bool requireCurrent,
+  }) => showModalBottomSheet<bool>(
+    context: context,
+    useRootNavigator: true,
+    isScrollControlled: true,
+    useSafeArea: true,
+    backgroundColor: Colors.transparent,
+    builder: (_) => PinSetupSheet(requireCurrent: requireCurrent),
+  );
 
   @override
   ConsumerState<PinSetupSheet> createState() => _PinSetupSheetState();
@@ -35,10 +38,10 @@ class _PinSetupSheetState extends ConsumerState<PinSetupSheet> {
   String? _error;
 
   String get _title => switch (_stage) {
-        _Stage.current => 'Enter your current PIN',
-        _Stage.choose => 'Choose a $kPinLength-digit PIN',
-        _Stage.confirm => 'Confirm your PIN',
-      };
+    _Stage.current => 'Enter your current PIN',
+    _Stage.choose => 'Choose a $kPinLength-digit PIN',
+    _Stage.confirm => 'Confirm your PIN',
+  };
 
   Future<void> _onDigit(String d) async {
     if (_entry.length >= kPinLength) return;

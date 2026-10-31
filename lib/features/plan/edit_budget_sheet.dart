@@ -15,6 +15,7 @@ class EditBudgetSheet extends ConsumerStatefulWidget {
   static Future<void> show(BuildContext context, {Budget? existing}) =>
       showModalBottomSheet<void>(
         context: context,
+        useRootNavigator: true,
         isScrollControlled: true,
         useSafeArea: true,
         backgroundColor: Colors.transparent,
@@ -40,7 +41,8 @@ class _EditBudgetSheetState extends ConsumerState<EditBudgetSheet> {
     final b = widget.existing;
     _name = TextEditingController(text: b?.name ?? '');
     _limit = TextEditingController(
-        text: b == null ? '' : (b.limit / 100).toStringAsFixed(0));
+      text: b == null ? '' : (b.limit / 100).toStringAsFixed(0),
+    );
     _icon = b?.iconName ?? 'wallet';
     _color = b?.colorValue ?? AppColors.purple.toARGB32();
     _alerts = b?.alertsEnabled ?? true;
@@ -61,25 +63,29 @@ class _EditBudgetSheetState extends ConsumerState<EditBudgetSheet> {
     if (name.isEmpty || limit <= 0) {
       ScaffoldMessenger.of(context)
         ..hideCurrentSnackBar()
-        ..showSnackBar(const SnackBar(
-          content: Text('Give the budget a name and a limit above zero.'),
-        ));
+        ..showSnackBar(
+          const SnackBar(
+            content: Text('Give the budget a name and a limit above zero.'),
+          ),
+        );
       return;
     }
 
     final actions = ref.read(actionsProvider);
     final existing = widget.existing;
-    await actions.upsertBudget(Budget(
-      id: existing?.id ?? actions.repo.newId(),
-      name: name,
-      iconName: _icon,
-      colorValue: _color,
-      limit: limit,
-      categoryId: _categoryId,
-      alertsEnabled: _alerts,
-      alertThreshold: _threshold,
-      sortOrder: existing?.sortOrder ?? 99,
-    ));
+    await actions.upsertBudget(
+      Budget(
+        id: existing?.id ?? actions.repo.newId(),
+        name: name,
+        iconName: _icon,
+        colorValue: _color,
+        limit: limit,
+        categoryId: _categoryId,
+        alertsEnabled: _alerts,
+        alertThreshold: _threshold,
+        sortOrder: existing?.sortOrder ?? 99,
+      ),
+    );
     if (mounted) Navigator.of(context).pop();
   }
 
@@ -93,7 +99,8 @@ class _EditBudgetSheetState extends ConsumerState<EditBudgetSheet> {
   @override
   Widget build(BuildContext context) {
     final categories =
-        ref.watch(categoriesProvider(TxType.expense)).value ?? const <Category>[];
+        ref.watch(categoriesProvider(TxType.expense)).value ??
+        const <Category>[];
 
     return EditorSheetShell(
       title: widget.existing == null ? 'New Budget' : 'Edit Budget',
@@ -180,7 +187,9 @@ class _EditBudgetSheetState extends ConsumerState<EditBudgetSheet> {
                     Text(
                       '${(_threshold * 100).round()}%',
                       style: const TextStyle(
-                          fontSize: 14, fontWeight: FontWeight.w700),
+                        fontSize: 14,
+                        fontWeight: FontWeight.w700,
+                      ),
                     ),
                   ],
                 ),
@@ -215,13 +224,13 @@ class _Label extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Text(
-        text,
-        style: const TextStyle(
-          fontSize: 14,
-          fontWeight: FontWeight.w700,
-          color: AppColors.inkSoft,
-        ),
-      );
+    text,
+    style: const TextStyle(
+      fontSize: 14,
+      fontWeight: FontWeight.w700,
+      color: AppColors.inkSoft,
+    ),
+  );
 }
 
 class _CategoryChip extends StatelessWidget {

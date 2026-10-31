@@ -76,7 +76,10 @@ class CategoryBreakdownRow extends StatelessWidget {
                 children: [
                   AmountText(
                     item.total,
-                    style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
+                    style: const TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w700,
+                    ),
                     fractionOpacity: 0.5,
                   ),
                   const SizedBox(height: 5),
@@ -87,13 +90,23 @@ class CategoryBreakdownRow extends StatelessWidget {
                         TagPill(
                           dense: true,
                           label:
-                              '${change >= 0 ? '+' : ''}${change.abs() >= 100 ? change.toStringAsFixed(0) : change.toStringAsFixed(0)}%',
-                          background: change >= 0
-                              ? AppColors.badgeRedBg
-                              : AppColors.badgeGreenBg,
-                          foreground: change >= 0
-                              ? AppColors.badgeRedFg
-                              : AppColors.badgeGreenFg,
+                              '${change > 0
+                                  ? '+'
+                                  : change < 0
+                                  ? '-'
+                                  : ''}'
+                              '${change.abs().toStringAsFixed(0)}%',
+                          // Spending more than last month is the bad direction.
+                          background: switch (change) {
+                            > 0.5 => AppColors.badgeRedBg,
+                            < -0.5 => AppColors.badgeGreenBg,
+                            _ => AppColors.track,
+                          },
+                          foreground: switch (change) {
+                            > 0.5 => AppColors.badgeRedFg,
+                            < -0.5 => AppColors.badgeGreenFg,
+                            _ => AppColors.inkSoft,
+                          },
                         ),
                         const SizedBox(width: 6),
                         const Text(

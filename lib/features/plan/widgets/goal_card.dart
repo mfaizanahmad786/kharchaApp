@@ -10,12 +10,7 @@ import '../../../data/models/models.dart';
 /// The featured goal card: saved-of-target, a bar whose hatched band is the
 /// shortfall against schedule, and a warning strip when you are behind.
 class GoalCard extends StatelessWidget {
-  const GoalCard({
-    super.key,
-    required this.goal,
-    this.onTap,
-    this.onMenu,
-  });
+  const GoalCard({super.key, required this.goal, this.onTap, this.onMenu});
 
   final Goal goal;
   final VoidCallback? onTap;
@@ -170,11 +165,17 @@ class GoalCard extends StatelessWidget {
                 Container(
                   width: double.infinity,
                   color: AppColors.warning,
-                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 13),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 13,
+                  ),
                   child: Row(
                     children: [
-                      const Icon(Icons.info_outline_rounded,
-                          size: 17, color: Colors.white),
+                      const Icon(
+                        Icons.info_outline_rounded,
+                        size: 17,
+                        color: Colors.white,
+                      ),
                       const SizedBox(width: 9),
                       Expanded(
                         child: Text(
@@ -193,11 +194,17 @@ class GoalCard extends StatelessWidget {
                 Container(
                   width: double.infinity,
                   color: AppColors.income,
-                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 13),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 13,
+                  ),
                   child: const Row(
                     children: [
-                      Icon(Icons.check_circle_outline_rounded,
-                          size: 17, color: Colors.white),
+                      Icon(
+                        Icons.check_circle_outline_rounded,
+                        size: 17,
+                        color: Colors.white,
+                      ),
                       SizedBox(width: 9),
                       Text(
                         'Goal reached. Nicely done.',

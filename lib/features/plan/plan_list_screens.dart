@@ -15,8 +15,9 @@ import 'widgets/goal_card.dart';
 class GoalsScreen extends ConsumerWidget {
   const GoalsScreen({super.key});
 
-  static Future<void> open(BuildContext context) =>
-      Navigator.of(context).push(MaterialPageRoute(builder: (_) => const GoalsScreen()));
+  static Future<void> open(BuildContext context) => Navigator.of(
+    context,
+  ).push(MaterialPageRoute(builder: (_) => const GoalsScreen()));
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -45,17 +46,23 @@ class GoalsScreen extends ConsumerWidget {
 class BudgetsScreen extends ConsumerWidget {
   const BudgetsScreen({super.key});
 
-  static Future<void> open(BuildContext context) => Navigator.of(context)
-      .push(MaterialPageRoute(builder: (_) => const BudgetsScreen()));
+  static Future<void> open(BuildContext context) => Navigator.of(
+    context,
+  ).push(MaterialPageRoute(builder: (_) => const BudgetsScreen()));
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final budgets = ref.watch(budgetStatusesProvider).value ?? const <BudgetStatus>[];
+    final budgets =
+        ref.watch(budgetStatusesProvider).value ?? const <BudgetStatus>[];
 
     return Scaffold(
       backgroundColor: AppColors.scaffold,
-      appBar: _bar(context, 'Budgets', () => EditBudgetSheet.show(context),
-          showMonth: true),
+      appBar: _bar(
+        context,
+        'Budgets',
+        () => EditBudgetSheet.show(context),
+        showMonth: true,
+      ),
       body: budgets.isEmpty
           ? const _Empty(text: 'No budgets yet. Tap + to add one.')
           : ListView.separated(
@@ -108,12 +115,12 @@ class _Empty extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Center(
-        child: Text(
-          text,
-          style: const TextStyle(
-            color: AppColors.inkSoft,
-            fontWeight: FontWeight.w500,
-          ),
-        ),
-      );
+    child: Text(
+      text,
+      style: const TextStyle(
+        color: AppColors.inkSoft,
+        fontWeight: FontWeight.w500,
+      ),
+    ),
+  );
 }

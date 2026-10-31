@@ -65,7 +65,13 @@ abstract final class Seed {
   ];
 
   static const _tagPool = <String>[
-    'Vacation', 'Family', 'Work', 'Monthly', 'Urgent', 'Planned', 'Gift',
+    'Vacation',
+    'Family',
+    'Work',
+    'Monthly',
+    'Urgent',
+    'Planned',
+    'Gift',
   ];
 
   static Future<void> populate(DatabaseExecutor d) async {
@@ -84,7 +90,8 @@ abstract final class Seed {
       final id = 'cat_${(spec[1] as String)}';
       final color = spec[2] is int
           ? spec[2] as int
-          : AppColors.chartPalette[order % AppColors.chartPalette.length].toARGB32();
+          : AppColors.chartPalette[order % AppColors.chartPalette.length]
+                .toARGB32();
       batch.insert('categories', {
         'id': id,
         'name': spec[0],
@@ -138,7 +145,13 @@ abstract final class Seed {
         'type': 'income',
         'category_id': 'cat_salary',
         'account_id': 'acc_bank',
-        'date': DateTime(anchor.year, anchor.month, 1, 9, 30).millisecondsSinceEpoch,
+        'date': DateTime(
+          anchor.year,
+          anchor.month,
+          1,
+          9,
+          30,
+        ).millisecondsSinceEpoch,
         'note': 'Monthly salary',
         'tags': 'Work|Monthly',
       });
@@ -150,7 +163,12 @@ abstract final class Seed {
         'type': 'expense',
         'category_id': 'cat_rent',
         'account_id': 'acc_bank',
-        'date': DateTime(anchor.year, anchor.month, 3, 11).millisecondsSinceEpoch,
+        'date': DateTime(
+          anchor.year,
+          anchor.month,
+          3,
+          11,
+        ).millisecondsSinceEpoch,
         'note': 'Apartment rent',
         'tags': 'Monthly',
       });
@@ -167,16 +185,21 @@ abstract final class Seed {
           'type': 'income',
           'category_id': incomeCats[ci],
           'account_id': accountIds[rng.nextInt(accountIds.length)],
-          'date': DateTime(anchor.year, anchor.month, 1 + rng.nextInt(lastDay),
-                  10 + rng.nextInt(9))
-              .millisecondsSinceEpoch,
+          'date': DateTime(
+            anchor.year,
+            anchor.month,
+            1 + rng.nextInt(lastDay),
+            10 + rng.nextInt(9),
+          ).millisecondsSinceEpoch,
           'note': '',
           'tags': rng.nextBool() ? _tagPool[rng.nextInt(_tagPool.length)] : '',
         });
       }
 
       // Day-to-day spending.
-      final spendCount = isCurrentMonth ? (lastDay * 1.4).round() : 38 + rng.nextInt(14);
+      final spendCount = isCurrentMonth
+          ? (lastDay * 1.4).round()
+          : 38 + rng.nextInt(14);
       for (var i = 0; i < spendCount; i++) {
         final ci = _weighted(rng, expenseWeights);
         if (expenseCats[ci] == 'cat_rent') continue;
@@ -193,9 +216,13 @@ abstract final class Seed {
           'type': 'expense',
           'category_id': expenseCats[ci],
           'account_id': accountIds[rng.nextInt(accountIds.length)],
-          'date': DateTime(anchor.year, anchor.month, day, 8 + rng.nextInt(13),
-                  rng.nextInt(60))
-              .millisecondsSinceEpoch,
+          'date': DateTime(
+            anchor.year,
+            anchor.month,
+            day,
+            8 + rng.nextInt(13),
+            rng.nextInt(60),
+          ).millisecondsSinceEpoch,
           'note': '',
           'tags': tags.join('|'),
         });
@@ -263,7 +290,11 @@ abstract final class Seed {
       batch.insert('budgets', b);
     }
 
-    final goalBase = DateTime(now.year, now.month - 7, 1).millisecondsSinceEpoch;
+    final goalBase = DateTime(
+      now.year,
+      now.month - 7,
+      1,
+    ).millisecondsSinceEpoch;
     final goals = <Map<String, Object?>>[
       {
         'id': 'goal_house',
@@ -273,7 +304,9 @@ abstract final class Seed {
         'target_amount': 250000000,
         'saved_amount': 87500000,
         'created_at': goalBase,
-        'deadline': DateTime(now.year + 1, now.month + 2, 1).millisecondsSinceEpoch,
+        // Deliberately behind schedule, so the Plan screen shows the
+        // off-target warning rather than only the happy path.
+        'deadline': DateTime(now.year, now.month + 4, 1).millisecondsSinceEpoch,
       },
       {
         'id': 'goal_car',
@@ -313,7 +346,11 @@ abstract final class Seed {
         'target_amount': 30000000,
         'saved_amount': 13500000,
         'created_at': goalBase,
-        'deadline': DateTime(now.year + 1, now.month + 6, 1).millisecondsSinceEpoch,
+        'deadline': DateTime(
+          now.year + 1,
+          now.month + 6,
+          1,
+        ).millisecondsSinceEpoch,
       },
     ];
     for (final g in goals) {

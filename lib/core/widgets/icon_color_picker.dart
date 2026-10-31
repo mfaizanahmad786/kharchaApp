@@ -54,7 +54,11 @@ class IconPickerRow extends StatelessWidget {
 
 /// Swatches from the chart palette.
 class ColorPickerRow extends StatelessWidget {
-  const ColorPickerRow({super.key, required this.selected, required this.onSelect});
+  const ColorPickerRow({
+    super.key,
+    required this.selected,
+    required this.onSelect,
+  });
 
   final int selected;
   final ValueChanged<int> onSelect;
@@ -75,12 +79,18 @@ class ColorPickerRow extends StatelessWidget {
                   color: c,
                   borderRadius: BorderRadius.circular(12),
                   border: Border.all(
-                    color: c.toARGB32() == selected ? AppColors.ink : Colors.transparent,
+                    color: c.toARGB32() == selected
+                        ? AppColors.ink
+                        : Colors.transparent,
                     width: 2.5,
                   ),
                 ),
                 child: c.toARGB32() == selected
-                    ? const Icon(Icons.check_rounded, size: 18, color: Colors.white)
+                    ? const Icon(
+                        Icons.check_rounded,
+                        size: 18,
+                        color: Colors.white,
+                      )
                     : null,
               ),
             ),

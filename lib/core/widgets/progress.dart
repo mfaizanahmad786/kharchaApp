@@ -118,7 +118,11 @@ class _HatchedGoalPainter extends CustomPainter {
         ..style = PaintingStyle.stroke;
       const step = 7.0;
       for (var x = bandLeft - barHeight; x < bandRight + barHeight; x += step) {
-        canvas.drawLine(Offset(x, top + barHeight), Offset(x + barHeight, top), stroke);
+        canvas.drawLine(
+          Offset(x, top + barHeight),
+          Offset(x + barHeight, top),
+          stroke,
+        );
       }
       canvas.restore();
     }
@@ -133,9 +137,16 @@ class _HatchedGoalPainter extends CustomPainter {
     canvas.restore();
 
     // Knob
-    final knobX = (size.width * progress).clamp(barHeight / 2, size.width - barHeight / 2);
+    final knobX = (size.width * progress).clamp(
+      barHeight / 2,
+      size.width - barHeight / 2,
+    );
     final knobCenter = Offset(knobX, size.height / 2);
-    canvas.drawCircle(knobCenter, barHeight * 0.72, Paint()..color = Colors.white);
+    canvas.drawCircle(
+      knobCenter,
+      barHeight * 0.72,
+      Paint()..color = Colors.white,
+    );
     canvas.drawCircle(
       knobCenter,
       barHeight * 0.72,
@@ -148,7 +159,9 @@ class _HatchedGoalPainter extends CustomPainter {
 
   @override
   bool shouldRepaint(_HatchedGoalPainter old) =>
-      old.progress != progress || old.expected != expected || old.color != color;
+      old.progress != progress ||
+      old.expected != expected ||
+      old.color != color;
 }
 
 /// Circular percentage ring with the value in the middle — the budget rows.
@@ -185,7 +198,8 @@ class RingProgress extends StatelessWidget {
           child: Center(
             child: Text(
               text,
-              style: labelStyle ??
+              style:
+                  labelStyle ??
                   TextStyle(
                     fontFamily: 'Inter',
                     fontSize: size * 0.24,
@@ -201,7 +215,11 @@ class RingProgress extends StatelessWidget {
 }
 
 class _RingPainter extends CustomPainter {
-  _RingPainter({required this.value, required this.color, required this.stroke});
+  _RingPainter({
+    required this.value,
+    required this.color,
+    required this.stroke,
+  });
 
   final double value;
   final Color color;
@@ -236,5 +254,6 @@ class _RingPainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(_RingPainter old) => old.value != value || old.color != color;
+  bool shouldRepaint(_RingPainter old) =>
+      old.value != value || old.color != color;
 }

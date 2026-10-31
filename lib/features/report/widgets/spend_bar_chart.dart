@@ -45,7 +45,10 @@ class _SpendBarChartState extends State<SpendBarChart>
         child: const Center(
           child: Text(
             'No activity this month.',
-            style: TextStyle(color: AppColors.inkSoft, fontWeight: FontWeight.w500),
+            style: TextStyle(
+              color: AppColors.inkSoft,
+              fontWeight: FontWeight.w500,
+            ),
           ),
         ),
       );
@@ -63,7 +66,10 @@ class _SpendBarChartState extends State<SpendBarChart>
               opacity: selected == null ? 0 : 1,
               duration: const Duration(milliseconds: 160),
               child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 12,
+                  vertical: 6,
+                ),
                 decoration: BoxDecoration(
                   color: const Color(0xFF17171F),
                   borderRadius: BorderRadius.circular(14),
@@ -99,7 +105,8 @@ class _SpendBarChartState extends State<SpendBarChart>
                         child: GestureDetector(
                           behavior: HitTestBehavior.opaque,
                           onTap: () => setState(
-                              () => _selected = _selected == i ? null : i),
+                            () => _selected = _selected == i ? null : i,
+                          ),
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.end,
                             children: [
@@ -111,8 +118,9 @@ class _SpendBarChartState extends State<SpendBarChart>
                                         3,
                                         (widget.data[i].total / max) *
                                             (widget.height - 26) *
-                                            Curves.easeOutCubic
-                                                .transform(_grow.value),
+                                            Curves.easeOutCubic.transform(
+                                              _grow.value,
+                                            ),
                                       ),
                                 decoration: BoxDecoration(
                                   color: _selected == null || _selected == i

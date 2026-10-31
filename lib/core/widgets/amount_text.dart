@@ -37,17 +37,17 @@ class AmountText extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final hidden =
         maskable && ref.watch(settingsProvider.select((s) => s.hideAmounts));
-    final base = (style ?? Theme.of(context).textTheme.titleMedium!)
-        .copyWith(color: color ?? AppColors.ink);
+    final base = (style ?? Theme.of(context).textTheme.titleMedium!).copyWith(
+      color: color ?? AppColors.ink,
+    );
 
     if (hidden) {
       return Text('${showSymbol ? kCurrencySymbol : ''}••••', style: base);
     }
 
-    final sign = showSign
-        ? (paisa < 0 ? '-' : '+')
-        : (paisa < 0 ? '-' : '');
-    final head = '$sign${showSymbol ? kCurrencySymbol : ''}${Money.whole(paisa)}';
+    final sign = showSign ? (paisa < 0 ? '-' : '+') : (paisa < 0 ? '-' : '');
+    final head =
+        '$sign${showSymbol ? kCurrencySymbol : ''}${Money.whole(paisa)}';
     final tail = showDecimals ? '.${Money.fraction(paisa)}' : '';
 
     return RichText(
@@ -59,10 +59,12 @@ class AmountText extends ConsumerWidget {
           if (tail.isNotEmpty)
             TextSpan(
               text: tail,
-              style: fractionStyle ??
+              style:
+                  fractionStyle ??
                   base.copyWith(
-                    color: (base.color ?? AppColors.ink)
-                        .withValues(alpha: fractionOpacity),
+                    color: (base.color ?? AppColors.ink).withValues(
+                      alpha: fractionOpacity,
+                    ),
                   ),
             ),
         ],

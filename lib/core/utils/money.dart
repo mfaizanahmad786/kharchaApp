@@ -21,7 +21,8 @@ abstract final class Money {
   }
 
   /// The rupee part, grouped. Sign is dropped — callers render it themselves.
-  static String whole(int paisa) => groupDigits((paisa.abs() ~/ 100).toString());
+  static String whole(int paisa) =>
+      groupDigits((paisa.abs() ~/ 100).toString());
 
   /// The two-digit paisa part, without a separator.
   static String fraction(int paisa) =>
@@ -42,7 +43,10 @@ abstract final class Money {
     }
     if (symbol) buf.write(kCurrencySymbol);
     buf.write(whole(paisa));
-    if (decimals) buf..write('.')..write(fraction(paisa));
+    if (decimals)
+      buf
+        ..write('.')
+        ..write(fraction(paisa));
     return buf.toString();
   }
 
@@ -51,8 +55,9 @@ abstract final class Money {
     final rupees = paisa.abs() / 100;
     final s = paisa < 0 ? '-' : '';
     final sym = symbol ? kCurrencySymbol : '';
-    String n(double v) =>
-        v >= 100 ? v.toStringAsFixed(0) : v.toStringAsFixed(1).replaceAll(RegExp(r'\.0$'), '');
+    String n(double v) => v >= 100
+        ? v.toStringAsFixed(0)
+        : v.toStringAsFixed(1).replaceAll(RegExp(r'\.0$'), '');
     if (rupees >= 10000000) return '$s$sym${n(rupees / 10000000)}Cr';
     if (rupees >= 100000) return '$s$sym${n(rupees / 100000)}L';
     if (rupees >= 1000) return '$s$sym${n(rupees / 1000)}k';

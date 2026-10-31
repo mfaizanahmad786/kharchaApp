@@ -32,7 +32,8 @@ class _LockGateViewState extends ConsumerState<LockGateView>
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
-    if (state != AppLifecycleState.paused && state != AppLifecycleState.detached) {
+    if (state != AppLifecycleState.paused &&
+        state != AppLifecycleState.detached) {
       return;
     }
     final security = ref.read(securityProvider).value;
@@ -60,6 +61,10 @@ class _LockGateViewState extends ConsumerState<LockGateView>
 
     return AnimatedSwitcher(
       duration: const Duration(milliseconds: 260),
+      // The default layout builder uses a loose Stack, which would let the
+      // Scaffold below collapse to zero height. Force it to fill instead.
+      layoutBuilder: (current, previous) =>
+          Stack(fit: StackFit.expand, children: [...previous, ?current]),
       child: showLock ? const LockScreen() : const AppShell(),
     );
   }

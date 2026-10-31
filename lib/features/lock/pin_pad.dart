@@ -99,10 +99,18 @@ class _Key extends StatelessWidget {
     Widget content;
     switch (label) {
       case 'del':
-        content = const Icon(Icons.backspace_outlined, size: 22, color: AppColors.ink);
+        content = const Icon(
+          Icons.backspace_outlined,
+          size: 22,
+          color: AppColors.ink,
+        );
       case 'bio':
         content = enabled
-            ? const Icon(Icons.fingerprint_rounded, size: 28, color: AppColors.purple)
+            ? const Icon(
+                Icons.fingerprint_rounded,
+                size: 28,
+                color: AppColors.purple,
+              )
             : const SizedBox.shrink();
       default:
         content = Text(

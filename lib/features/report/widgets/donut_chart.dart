@@ -52,8 +52,10 @@ class _DonutChartState extends State<DonutChart>
     duration: const Duration(milliseconds: 850),
   )..forward();
 
-  late final Animation<double> _sweep =
-      CurvedAnimation(parent: _grow, curve: Curves.easeOutCubic);
+  late final Animation<double> _sweep = CurvedAnimation(
+    parent: _grow,
+    curve: Curves.easeOutCubic,
+  );
 
   @override
   void didUpdateWidget(DonutChart old) {
@@ -127,7 +129,8 @@ class _DonutChartState extends State<DonutChart>
                           slices: widget.slices,
                           stroke: widget.stroke,
                           selected: _selected!,
-                          text: '${(widget.slices[_selected!].value / total * 100).round()}%',
+                          text:
+                              '${(widget.slices[_selected!].value / total * 100).round()}%',
                           textDirection: Directionality.of(context),
                         ),
                   child: Center(
@@ -238,63 +241,54 @@ class _DonutPainter extends CustomPainter {
     }
   }
 
-  /// Diagonal stripes clipped to the arc band.
+  /// Diagonal stripes confined to the arc band.
   void _paintHatched(
-      Canvas canvas, Rect rect, double start, double sweep, Color color) {
-    final band = Path()
-      ..addArc(rect, start, sweep);
-    final clip = Path.combine(
-      PathOperation.intersect,
-      Path()..addRect(rect.inflate(stroke)),
-      band,
-    );
-
-    canvas.save();
-    canvas.clipPath(
-      // A stroked arc converted to a fillable region.
-      Path()
-        ..addPath(
-          Path.combine(
-            PathOperation.union,
-            clip,
-            Path()..addArc(rect, start, sweep),
-          ),
-          Offset.zero,
-        ),
-    );
-
-    // Base wash so the band reads even where no stripe lands.
+    Canvas canvas,
+    Rect rect,
+    double start,
+    double sweep,
+    Color color,
+  ) {
+    // A base wash so the band still reads between the stripes.
     canvas.drawArc(
       rect,
       start,
       sweep,
       false,
       Paint()
-        ..color = color.withValues(alpha: 0.16)
+        ..color = color.withValues(alpha: 0.14)
         ..style = PaintingStyle.stroke
         ..strokeCap = StrokeCap.round
         ..strokeWidth = stroke,
     );
-    canvas.restore();
 
-    // Stripes, masked to the arc by drawing them with a stroked-arc clip.
-    canvas.save();
-    final maskPath = Path()
-      ..addArc(rect.deflate(-stroke / 2), start, sweep)
-      ..arcTo(rect.deflate(stroke / 2), start + sweep, -sweep, false)
+    // `rect` is the mid-line of the band, so the sector runs from mid-stroke/2
+    // to mid+stroke/2.
+    final center = rect.center;
+    final mid = rect.width / 2;
+    final band = Path()
+      ..addArc(
+        Rect.fromCircle(center: center, radius: mid + stroke / 2),
+        start,
+        sweep,
+      )
+      ..arcTo(
+        Rect.fromCircle(center: center, radius: mid - stroke / 2),
+        start + sweep,
+        -sweep,
+        false,
+      )
       ..close();
-    canvas.clipPath(maskPath);
+
+    canvas.save();
+    canvas.clipPath(band);
     final stripe = Paint()
-      ..color = color.withValues(alpha: 0.5)
+      ..color = color.withValues(alpha: 0.55)
       ..strokeWidth = 2.2
       ..style = PaintingStyle.stroke;
-    final bounds = rect.inflate(stroke);
-    for (var x = bounds.left - bounds.height; x < bounds.right; x += 9) {
-      canvas.drawLine(
-        Offset(x, bounds.bottom),
-        Offset(x + bounds.height, bounds.top),
-        stripe,
-      );
+    final b = band.getBounds();
+    for (var x = b.left - b.height; x < b.right + b.height; x += 9) {
+      canvas.drawLine(Offset(x, b.bottom), Offset(x + b.height, b.top), stripe);
     }
     canvas.restore();
   }
@@ -359,7 +353,10 @@ class _TooltipPainter extends CustomPainter {
     );
     painter.paint(
       canvas,
-      Offset(box.center.dx - painter.width / 2, box.center.dy - painter.height / 2),
+      Offset(
+        box.center.dx - painter.width / 2,
+        box.center.dy - painter.height / 2,
+      ),
     );
   }
 

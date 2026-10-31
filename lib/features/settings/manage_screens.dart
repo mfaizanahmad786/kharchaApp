@@ -15,8 +15,9 @@ import '../../providers/providers.dart';
 class CategoriesScreen extends ConsumerStatefulWidget {
   const CategoriesScreen({super.key});
 
-  static Future<void> open(BuildContext context) => Navigator.of(context)
-      .push(MaterialPageRoute(builder: (_) => const CategoriesScreen()));
+  static Future<void> open(BuildContext context) => Navigator.of(
+    context,
+  ).push(MaterialPageRoute(builder: (_) => const CategoriesScreen()));
 
   @override
   ConsumerState<CategoriesScreen> createState() => _CategoriesScreenState();
@@ -27,7 +28,8 @@ class _CategoriesScreenState extends ConsumerState<CategoriesScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final categories = ref.watch(categoriesProvider(_type)).value ?? const <Category>[];
+    final categories =
+        ref.watch(categoriesProvider(_type)).value ?? const <Category>[];
 
     return Scaffold(
       backgroundColor: AppColors.scaffold,
@@ -59,8 +61,9 @@ class _CategoriesScreenState extends ConsumerState<CategoriesScreen> {
               labels: const ['Expense', 'Income'],
               index: _type.isExpense ? 0 : 1,
               height: 46,
-              onChanged: (i) =>
-                  setState(() => _type = i == 0 ? TxType.expense : TxType.income),
+              onChanged: (i) => setState(
+                () => _type = i == 0 ? TxType.expense : TxType.income,
+              ),
             ),
           ),
           Expanded(
@@ -83,12 +86,17 @@ class _CategoriesScreenState extends ConsumerState<CategoriesScreen> {
                         child: Text(
                           c.name,
                           style: const TextStyle(
-                              fontSize: 16, fontWeight: FontWeight.w600),
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600,
+                          ),
                         ),
                       ),
                       IconButton(
-                        icon: const Icon(Icons.delete_outline_rounded,
-                            size: 20, color: AppColors.inkFaint),
+                        icon: const Icon(
+                          Icons.delete_outline_rounded,
+                          size: 20,
+                          color: AppColors.inkFaint,
+                        ),
                         onPressed: () => _delete(c),
                       ),
                     ],
@@ -108,19 +116,22 @@ class _CategoriesScreenState extends ConsumerState<CategoriesScreen> {
     if (!removed) {
       ScaffoldMessenger.of(context)
         ..hideCurrentSnackBar()
-        ..showSnackBar(SnackBar(
-          content: Text('${c.name} still has transactions, so it was kept.'),
-        ));
+        ..showSnackBar(
+          SnackBar(
+            content: Text('${c.name} still has transactions, so it was kept.'),
+          ),
+        );
     }
   }
 
   Future<void> _edit(Category? existing) => showModalBottomSheet<void>(
-        context: context,
-        isScrollControlled: true,
-        useSafeArea: true,
-        backgroundColor: Colors.transparent,
-        builder: (_) => _CategoryEditor(existing: existing, type: _type),
-      );
+    context: context,
+    useRootNavigator: true,
+    isScrollControlled: true,
+    useSafeArea: true,
+    backgroundColor: Colors.transparent,
+    builder: (_) => _CategoryEditor(existing: existing, type: _type),
+  );
 }
 
 class _CategoryEditor extends ConsumerStatefulWidget {
@@ -134,8 +145,9 @@ class _CategoryEditor extends ConsumerStatefulWidget {
 }
 
 class _CategoryEditorState extends ConsumerState<_CategoryEditor> {
-  late final TextEditingController _name =
-      TextEditingController(text: widget.existing?.name ?? '');
+  late final TextEditingController _name = TextEditingController(
+    text: widget.existing?.name ?? '',
+  );
   late String _icon = widget.existing?.iconName ?? 'other';
   late int _color = widget.existing?.colorValue ?? AppColors.purple.toARGB32();
 
@@ -149,14 +161,16 @@ class _CategoryEditorState extends ConsumerState<_CategoryEditor> {
     final name = _name.text.trim();
     if (name.isEmpty) return;
     final actions = ref.read(actionsProvider);
-    await actions.upsertCategory(Category(
-      id: widget.existing?.id ?? actions.repo.newId(),
-      name: name,
-      iconName: _icon,
-      colorValue: _color,
-      type: widget.existing?.type ?? widget.type,
-      sortOrder: widget.existing?.sortOrder ?? 99,
-    ));
+    await actions.upsertCategory(
+      Category(
+        id: widget.existing?.id ?? actions.repo.newId(),
+        name: name,
+        iconName: _icon,
+        colorValue: _color,
+        type: widget.existing?.type ?? widget.type,
+        sortOrder: widget.existing?.sortOrder ?? 99,
+      ),
+    );
     if (mounted) Navigator.of(context).pop();
   }
 
@@ -192,8 +206,9 @@ class _CategoryEditorState extends ConsumerState<_CategoryEditor> {
 class AccountsScreen extends ConsumerWidget {
   const AccountsScreen({super.key});
 
-  static Future<void> open(BuildContext context) => Navigator.of(context)
-      .push(MaterialPageRoute(builder: (_) => const AccountsScreen()));
+  static Future<void> open(BuildContext context) => Navigator.of(
+    context,
+  ).push(MaterialPageRoute(builder: (_) => const AccountsScreen()));
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -243,7 +258,9 @@ class AccountsScreen extends ConsumerWidget {
                       Text(
                         a.name,
                         style: const TextStyle(
-                            fontSize: 16, fontWeight: FontWeight.w600),
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
+                        ),
                       ),
                       const SizedBox(height: 2),
                       Row(
@@ -261,7 +278,9 @@ class AccountsScreen extends ConsumerWidget {
                             showDecimals: false,
                             color: AppColors.inkFaint,
                             style: const TextStyle(
-                                fontSize: 13, fontWeight: FontWeight.w600),
+                              fontSize: 13,
+                              fontWeight: FontWeight.w600,
+                            ),
                           ),
                         ],
                       ),
@@ -269,8 +288,11 @@ class AccountsScreen extends ConsumerWidget {
                   ),
                 ),
                 IconButton(
-                  icon: const Icon(Icons.delete_outline_rounded,
-                      size: 20, color: AppColors.inkFaint),
+                  icon: const Icon(
+                    Icons.delete_outline_rounded,
+                    size: 20,
+                    color: AppColors.inkFaint,
+                  ),
                   onPressed: accounts.length <= 1
                       ? null
                       : () => ref.read(actionsProvider).deleteAccount(a.id),
@@ -286,6 +308,7 @@ class AccountsScreen extends ConsumerWidget {
   Future<void> _edit(BuildContext context, Account? existing) =>
       showModalBottomSheet<void>(
         context: context,
+        useRootNavigator: true,
         isScrollControlled: true,
         useSafeArea: true,
         backgroundColor: Colors.transparent,
@@ -303,8 +326,9 @@ class _AccountEditor extends ConsumerStatefulWidget {
 }
 
 class _AccountEditorState extends ConsumerState<_AccountEditor> {
-  late final TextEditingController _name =
-      TextEditingController(text: widget.existing?.name ?? '');
+  late final TextEditingController _name = TextEditingController(
+    text: widget.existing?.name ?? '',
+  );
   late final TextEditingController _opening = TextEditingController(
     text: widget.existing == null
         ? '0'
@@ -324,14 +348,16 @@ class _AccountEditorState extends ConsumerState<_AccountEditor> {
     final name = _name.text.trim();
     if (name.isEmpty) return;
     final actions = ref.read(actionsProvider);
-    await actions.upsertAccount(Account(
-      id: widget.existing?.id ?? actions.repo.newId(),
-      name: name,
-      iconName: _icon,
-      colorValue: _color,
-      openingBalance: Money.parse(_opening.text) ?? 0,
-      sortOrder: widget.existing?.sortOrder ?? 99,
-    ));
+    await actions.upsertAccount(
+      Account(
+        id: widget.existing?.id ?? actions.repo.newId(),
+        name: name,
+        iconName: _icon,
+        colorValue: _color,
+        openingBalance: Money.parse(_opening.text) ?? 0,
+        sortOrder: widget.existing?.sortOrder ?? 99,
+      ),
+    );
     if (mounted) Navigator.of(context).pop();
   }
 
@@ -378,11 +404,11 @@ class _Label extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Text(
-        text,
-        style: const TextStyle(
-          fontSize: 14,
-          fontWeight: FontWeight.w700,
-          color: AppColors.inkSoft,
-        ),
-      );
+    text,
+    style: const TextStyle(
+      fontSize: 14,
+      fontWeight: FontWeight.w700,
+      color: AppColors.inkSoft,
+    ),
+  );
 }

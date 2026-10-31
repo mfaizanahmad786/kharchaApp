@@ -41,8 +41,11 @@ class _LockScreenState extends ConsumerState<LockScreen>
 
   Future<void> _tryBiometrics() async {
     final state = ref.read(securityProvider).value;
-    if (state == null || !state.biometricEnabled || !state.biometricAvailable) return;
-    final ok = await ref.read(securityProvider.notifier).authenticateWithBiometrics();
+    if (state == null || !state.biometricEnabled || !state.biometricAvailable)
+      return;
+    final ok = await ref
+        .read(securityProvider.notifier)
+        .authenticateWithBiometrics();
     if (ok && mounted) ref.read(lockGateProvider.notifier).unlock();
   }
 
@@ -76,7 +79,8 @@ class _LockScreenState extends ConsumerState<LockScreen>
   Widget build(BuildContext context) {
     final security = ref.watch(securityProvider).value;
     final canBio =
-        (security?.biometricEnabled ?? false) && (security?.biometricAvailable ?? false);
+        (security?.biometricEnabled ?? false) &&
+        (security?.biometricAvailable ?? false);
 
     return Scaffold(
       backgroundColor: AppColors.scaffold,
@@ -91,11 +95,17 @@ class _LockScreenState extends ConsumerState<LockScreen>
                 gradient: AppColors.headerGradient,
                 shape: BoxShape.circle,
               ),
-              child: const Icon(Icons.lock_rounded, color: Colors.white, size: 32),
+              child: const Icon(
+                Icons.lock_rounded,
+                color: Colors.white,
+                size: 32,
+              ),
             ),
             const SizedBox(height: 22),
-            Text('Kharcha is locked',
-                style: Theme.of(context).textTheme.headlineMedium),
+            Text(
+              'Kharcha is locked',
+              style: Theme.of(context).textTheme.headlineMedium,
+            ),
             const SizedBox(height: 8),
             Text(
               _error ? 'Wrong PIN. Try again.' : 'Enter your PIN to continue',

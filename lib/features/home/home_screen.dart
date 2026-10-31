@@ -56,8 +56,12 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: _darkStatusBar
-          ? SystemUiOverlayStyle.dark.copyWith(statusBarColor: Colors.transparent)
-          : SystemUiOverlayStyle.light.copyWith(statusBarColor: Colors.transparent),
+          ? SystemUiOverlayStyle.dark.copyWith(
+              statusBarColor: Colors.transparent,
+            )
+          : SystemUiOverlayStyle.light.copyWith(
+              statusBarColor: Colors.transparent,
+            ),
       child: Scaffold(
         backgroundColor: AppColors.scaffold,
         body: RefreshIndicator(
@@ -76,16 +80,13 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                 ),
               ),
 
-              // The white sheet is pulled up over the bottom of the header.
+              // The sheet's rounded lip is drawn by HomeHeader, so this is a
+              // plain continuation of it.
               SliverToBoxAdapter(
-                child: Transform.translate(
-                  offset: const Offset(0, -26),
-                  child: Container(
-                    decoration: const BoxDecoration(
-                      color: AppColors.scaffold,
-                      borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
-                    ),
-                    padding: const EdgeInsets.fromLTRB(20, 22, 20, 0),
+                child: ColoredBox(
+                  color: AppColors.scaffold,
+                  child: Padding(
+                    padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -98,31 +99,40 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                           ),
                         ),
                         const SizedBox(height: 16),
-                        Row(
-                          crossAxisAlignment: CrossAxisAlignment.stretch,
-                          children: [
-                            Expanded(
-                              child: MoneySummaryCard(
-                                label: 'Income',
-                                amount: totals.value?.income ?? 0,
-                                icon: Icons.savings_rounded,
-                                color: AppColors.catBlue,
-                                onTap: () => TransactionsScreen.open(context,
-                                    initial: TxFilter.income),
+                        // IntrinsicHeight bounds the cross axis: a bare
+                        // stretch Row inside a sliver would be handed an
+                        // infinite height and silently break the whole layer.
+                        IntrinsicHeight(
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.stretch,
+                            children: [
+                              Expanded(
+                                child: MoneySummaryCard(
+                                  label: 'Income',
+                                  amount: totals.value?.income ?? 0,
+                                  icon: Icons.savings_rounded,
+                                  color: AppColors.catBlue,
+                                  onTap: () => TransactionsScreen.open(
+                                    context,
+                                    initial: TxFilter.income,
+                                  ),
+                                ),
                               ),
-                            ),
-                            const SizedBox(width: 14),
-                            Expanded(
-                              child: MoneySummaryCard(
-                                label: 'Expenses',
-                                amount: totals.value?.expense ?? 0,
-                                icon: Icons.account_balance_wallet_rounded,
-                                color: AppColors.expense,
-                                onTap: () => TransactionsScreen.open(context,
-                                    initial: TxFilter.expense),
+                              const SizedBox(width: 14),
+                              Expanded(
+                                child: MoneySummaryCard(
+                                  label: 'Expenses',
+                                  amount: totals.value?.expense ?? 0,
+                                  icon: Icons.account_balance_wallet_rounded,
+                                  color: AppColors.expense,
+                                  onTap: () => TransactionsScreen.open(
+                                    context,
+                                    initial: TxFilter.expense,
+                                  ),
+                                ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
                         const SizedBox(height: 16),
                         InsightBanner(
@@ -146,24 +156,27 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               ),
 
               ...switch (sections) {
-                AsyncData(:final value) when value.isEmpty =>
-                  const [SliverToBoxAdapter(child: _EmptyTransactions())],
+                AsyncData(:final value) when value.isEmpty => const [
+                  SliverToBoxAdapter(child: _EmptyTransactions()),
+                ],
                 AsyncData(:final value) => _daySlivers(value),
                 AsyncError() => const [
-                    SliverToBoxAdapter(
-                      child: _Message('Could not load your transactions.'),
-                    )
-                  ],
+                  SliverToBoxAdapter(
+                    child: _Message('Could not load your transactions.'),
+                  ),
+                ],
                 _ => const [
-                    SliverToBoxAdapter(
-                      child: Padding(
-                        padding: EdgeInsets.only(top: 40),
-                        child: Center(
-                          child: CircularProgressIndicator(color: AppColors.purple),
+                  SliverToBoxAdapter(
+                    child: Padding(
+                      padding: EdgeInsets.only(top: 40),
+                      child: Center(
+                        child: CircularProgressIndicator(
+                          color: AppColors.purple,
                         ),
                       ),
-                    )
-                  ],
+                    ),
+                  ),
+                ],
               },
 
               const SliverToBoxAdapter(
@@ -179,55 +192,62 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   List<Widget> _daySlivers(List<DaySection> sections) {
     final out = <Widget>[];
     for (final section in sections) {
-      out.add(SliverToBoxAdapter(
-        child: Padding(
-          padding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
-          child: Row(
-            children: [
-              Expanded(
-                child: Text(
-                  AppDate.friendlyDay(section.day),
-                  style: const TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w500,
-                    color: AppColors.inkSoft,
+      out.add(
+        SliverToBoxAdapter(
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
+            child: Row(
+              children: [
+                Expanded(
+                  child: Text(
+                    AppDate.friendlyDay(section.day),
+                    style: const TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w500,
+                      color: AppColors.inkSoft,
+                    ),
                   ),
                 ),
-              ),
-              const Text(
-                'Total',
-                style: TextStyle(
-                  fontSize: 12,
-                  fontWeight: FontWeight.w500,
-                  color: AppColors.inkFaint,
+                const Text(
+                  'Total',
+                  style: TextStyle(
+                    fontSize: 12,
+                    fontWeight: FontWeight.w500,
+                    color: AppColors.inkFaint,
+                  ),
                 ),
-              ),
-              const SizedBox(width: 6),
-              AmountText(
-                section.net,
-                showSign: true,
-                showDecimals: false,
-                color: section.net >= 0 ? AppColors.income : AppColors.ink,
-                style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w700),
-              ),
-            ],
+                const SizedBox(width: 6),
+                AmountText(
+                  section.net,
+                  showSign: true,
+                  showDecimals: false,
+                  color: section.net >= 0 ? AppColors.income : AppColors.ink,
+                  style: const TextStyle(
+                    fontSize: 15,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
-      ));
-      out.add(SliverPadding(
-        padding: const EdgeInsets.symmetric(horizontal: 20),
-        sliver: SliverList.separated(
-          itemCount: section.items.length,
-          separatorBuilder: (_, _) => const SizedBox(height: 10),
-          itemBuilder: (context, i) {
-            final view = section.items[i];
-            return TransactionTile(
-              view: view,
-              onTap: () => TransactionDetailScreen.open(context, view.txn.id),
-            );
-          },
+      );
+      out.add(
+        SliverPadding(
+          padding: const EdgeInsets.symmetric(horizontal: 20),
+          sliver: SliverList.separated(
+            itemCount: section.items.length,
+            separatorBuilder: (_, _) => const SizedBox(height: 10),
+            itemBuilder: (context, i) {
+              final view = section.items[i];
+              return TransactionTile(
+                view: view,
+                onTap: () => TransactionDetailScreen.open(context, view.txn.id),
+              );
+            },
+          ),
         ),
-      ));
+      );
       out.add(const SliverToBoxAdapter(child: SizedBox(height: 8)));
     }
     return out;
@@ -307,12 +327,15 @@ class _Message extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Padding(
-        padding: const EdgeInsets.all(30),
-        child: Center(
-          child: Text(
-            text,
-            style: const TextStyle(color: AppColors.inkSoft, fontWeight: FontWeight.w500),
-          ),
+    padding: const EdgeInsets.all(30),
+    child: Center(
+      child: Text(
+        text,
+        style: const TextStyle(
+          color: AppColors.inkSoft,
+          fontWeight: FontWeight.w500,
         ),
-      );
+      ),
+    ),
+  );
 }

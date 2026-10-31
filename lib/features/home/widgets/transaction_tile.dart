@@ -57,14 +57,20 @@ class TransactionTile extends StatelessWidget {
               AmountText(
                 txn.signed,
                 color: view.amountColor,
-                style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
+                style: const TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w700,
+                ),
                 fractionOpacity: 0.75,
               ),
               const SizedBox(height: 3),
               AmountText(
                 view.runningBalance,
                 color: AppColors.inkFaint,
-                style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w500),
+                style: const TextStyle(
+                  fontSize: 13,
+                  fontWeight: FontWeight.w500,
+                ),
                 fractionOpacity: 0.7,
               ),
             ],
@@ -85,8 +91,11 @@ class _Subtitle extends StatelessWidget {
     final tags = view.txn.tags;
     return Row(
       children: [
-        const Icon(Icons.subdirectory_arrow_right_rounded,
-            size: 13, color: AppColors.inkFaint),
+        const Icon(
+          Icons.subdirectory_arrow_right_rounded,
+          size: 13,
+          color: AppColors.inkFaint,
+        ),
         const SizedBox(width: 3),
         Flexible(
           child: Text(

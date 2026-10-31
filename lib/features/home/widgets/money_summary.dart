@@ -35,7 +35,10 @@ class MoneySummaryCard extends StatelessWidget {
           Container(
             width: 46,
             height: 46,
-            decoration: BoxDecoration(color: AppColors.tint(color), shape: BoxShape.circle),
+            decoration: BoxDecoration(
+              color: AppColors.tint(color),
+              shape: BoxShape.circle,
+            ),
             child: Icon(icon, color: color, size: 22),
           ),
           const SizedBox(height: 18),
@@ -50,7 +53,11 @@ class MoneySummaryCard extends StatelessWidget {
                 ),
               ),
               const SizedBox(width: 5),
-              const Icon(Icons.info_outline_rounded, size: 14, color: AppColors.inkFaint),
+              const Icon(
+                Icons.info_outline_rounded,
+                size: 14,
+                color: AppColors.inkFaint,
+              ),
             ],
           ),
           const SizedBox(height: 6),
@@ -75,7 +82,12 @@ class MoneySummaryCard extends StatelessWidget {
 
 /// The black "Your insight is ready — Get Pro" strip.
 class InsightBanner extends StatelessWidget {
-  const InsightBanner({super.key, required this.message, this.actionLabel, this.onTap});
+  const InsightBanner({
+    super.key,
+    required this.message,
+    this.actionLabel,
+    this.onTap,
+  });
 
   final String message;
   final String? actionLabel;
@@ -93,7 +105,11 @@ class InsightBanner extends StatelessWidget {
           padding: const EdgeInsets.fromLTRB(18, 16, 18, 16),
           child: Row(
             children: [
-              const Icon(Icons.auto_awesome_rounded, size: 19, color: AppColors.purpleLight),
+              const Icon(
+                Icons.auto_awesome_rounded,
+                size: 19,
+                color: AppColors.purpleLight,
+              ),
               const SizedBox(width: 10),
               Expanded(
                 child: Text(
@@ -118,8 +134,11 @@ class InsightBanner extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(width: 2),
-                Icon(Icons.chevron_right_rounded,
-                    size: 20, color: Colors.white.withValues(alpha: 0.75)),
+                Icon(
+                  Icons.chevron_right_rounded,
+                  size: 20,
+                  color: Colors.white.withValues(alpha: 0.75),
+                ),
               ],
             ],
           ),
@@ -156,10 +175,17 @@ class DetailsChip extends StatelessWidget {
             children: [
               Text(
                 label,
-                style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
+                style: const TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w600,
+                ),
               ),
               const SizedBox(width: 2),
-              const Icon(Icons.chevron_right_rounded, size: 19, color: AppColors.ink),
+              const Icon(
+                Icons.chevron_right_rounded,
+                size: 19,
+                color: AppColors.ink,
+              ),
             ],
           ),
         ),

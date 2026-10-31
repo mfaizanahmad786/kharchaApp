@@ -101,10 +101,8 @@ class _TabHost extends StatelessWidget {
   Widget build(BuildContext context) {
     return Navigator(
       key: navKey,
-      onGenerateRoute: (settings) => MaterialPageRoute(
-        settings: settings,
-        builder: (_) => child,
-      ),
+      onGenerateRoute: (settings) =>
+          MaterialPageRoute(settings: settings, builder: (_) => child),
     );
   }
 }

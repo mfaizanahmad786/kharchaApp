@@ -11,7 +11,10 @@ import '../../data/models/models.dart';
 import '../../providers/providers.dart';
 import 'add_transaction_sheet.dart';
 
-final _detailProvider = FutureProvider.family<TxnView?, String>((ref, id) async {
+final _detailProvider = FutureProvider.family<TxnView?, String>((
+  ref,
+  id,
+) async {
   ref.watch(revisionProvider);
   final repo = ref.watch(repositoryProvider);
   final txn = await repo.transactionById(id);
@@ -25,10 +28,9 @@ class TransactionDetailScreen extends ConsumerWidget {
 
   final String id;
 
-  static Future<void> open(BuildContext context, String id) =>
-      Navigator.of(context).push(MaterialPageRoute(
-        builder: (_) => TransactionDetailScreen(id: id),
-      ));
+  static Future<void> open(BuildContext context, String id) => Navigator.of(
+    context,
+  ).push(MaterialPageRoute(builder: (_) => TransactionDetailScreen(id: id)));
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -50,7 +52,9 @@ class TransactionDetailScreen extends ConsumerWidget {
         ),
       ),
       body: view == null
-          ? const Center(child: CircularProgressIndicator(color: AppColors.purple))
+          ? const Center(
+              child: CircularProgressIndicator(color: AppColors.purple),
+            )
           : _Body(view: view),
     );
   }
@@ -64,17 +68,24 @@ class _Body extends ConsumerWidget {
   Future<void> _confirmDelete(BuildContext context, WidgetRef ref) async {
     final ok = await showDialog<bool>(
       context: context,
+      useRootNavigator: true,
       builder: (ctx) => AlertDialog(
         title: const Text('Delete this transaction?'),
         content: const Text('This cannot be undone.'),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(ctx).pop(false),
-            child: const Text('Cancel', style: TextStyle(color: AppColors.inkSoft)),
+            child: const Text(
+              'Cancel',
+              style: TextStyle(color: AppColors.inkSoft),
+            ),
           ),
           TextButton(
             onPressed: () => Navigator.of(ctx).pop(true),
-            child: const Text('Delete', style: TextStyle(color: AppColors.expense)),
+            child: const Text(
+              'Delete',
+              style: TextStyle(color: AppColors.expense),
+            ),
           ),
         ],
       ),
@@ -127,9 +138,17 @@ class _Body extends ConsumerWidget {
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
           child: Column(
             children: [
-              _Row(label: 'Category', value: view.category.name, icon: view.category.icon),
+              _Row(
+                label: 'Category',
+                value: view.category.name,
+                icon: view.category.icon,
+              ),
               const Divider(),
-              _Row(label: 'Account', value: view.account.name, icon: view.account.icon),
+              _Row(
+                label: 'Account',
+                value: view.account.name,
+                icon: view.account.icon,
+              ),
               const Divider(),
               _Row(
                 label: 'Date',
@@ -153,7 +172,10 @@ class _Body extends ConsumerWidget {
                 icon: Icons.account_balance_wallet_rounded,
                 trailing: AmountText(
                   view.runningBalance,
-                  style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w700),
+                  style: const TextStyle(
+                    fontSize: 15,
+                    fontWeight: FontWeight.w700,
+                  ),
                 ),
               ),
             ],
@@ -187,12 +209,17 @@ class _Body extends ConsumerWidget {
                   label: const Text('Delete'),
                   style: OutlinedButton.styleFrom(
                     foregroundColor: AppColors.expense,
-                    side: const BorderSide(color: AppColors.badgeRedBg, width: 1.5),
+                    side: const BorderSide(
+                      color: AppColors.badgeRedBg,
+                      width: 1.5,
+                    ),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(16),
                     ),
-                    textStyle:
-                        const TextStyle(fontSize: 15, fontWeight: FontWeight.w700),
+                    textStyle: const TextStyle(
+                      fontSize: 15,
+                      fontWeight: FontWeight.w700,
+                    ),
                   ),
                 ),
               ),
@@ -211,8 +238,10 @@ class _Body extends ConsumerWidget {
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(16),
                     ),
-                    textStyle:
-                        const TextStyle(fontSize: 15, fontWeight: FontWeight.w700),
+                    textStyle: const TextStyle(
+                      fontSize: 15,
+                      fontWeight: FontWeight.w700,
+                    ),
                   ),
                 ),
               ),
@@ -261,7 +290,10 @@ class _Row extends StatelessWidget {
               child: Text(
                 value,
                 textAlign: TextAlign.right,
-                style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w600),
+                style: const TextStyle(
+                  fontSize: 15,
+                  fontWeight: FontWeight.w600,
+                ),
               ),
             ),
         ],

@@ -12,14 +12,15 @@ abstract final class AppTheme {
       brightness: Brightness.light,
       fontFamily: _font,
       scaffoldBackgroundColor: AppColors.scaffold,
-      colorScheme: ColorScheme.fromSeed(
-        seedColor: AppColors.purple,
-        brightness: Brightness.light,
-      ).copyWith(
-        primary: AppColors.purple,
-        surface: AppColors.surface,
-        error: AppColors.expense,
-      ),
+      colorScheme:
+          ColorScheme.fromSeed(
+            seedColor: AppColors.purple,
+            brightness: Brightness.light,
+          ).copyWith(
+            primary: AppColors.purple,
+            surface: AppColors.surface,
+            error: AppColors.expense,
+          ),
     );
 
     return base.copyWith(
@@ -47,7 +48,9 @@ abstract final class AppTheme {
       dialogTheme: const DialogThemeData(
         backgroundColor: AppColors.surface,
         surfaceTintColor: Colors.transparent,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(24))),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(Radius.circular(24)),
+        ),
       ),
       snackBarTheme: SnackBarThemeData(
         behavior: SnackBarBehavior.floating,
@@ -59,28 +62,80 @@ abstract final class AppTheme {
         ),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       ),
-      dividerTheme: const DividerThemeData(color: AppColors.divider, thickness: 1, space: 1),
+      dividerTheme: const DividerThemeData(
+        color: AppColors.divider,
+        thickness: 1,
+        space: 1,
+      ),
     );
   }
 
-  static TextTheme _textTheme(TextTheme base) => base
-      .apply(
-        fontFamily: _font,
-        bodyColor: AppColors.ink,
-        displayColor: AppColors.ink,
-      )
-      .copyWith(
-        displayLarge: const TextStyle(fontSize: 44, fontWeight: FontWeight.w800, letterSpacing: -1.4),
-        displayMedium: const TextStyle(fontSize: 34, fontWeight: FontWeight.w800, letterSpacing: -1.0),
-        headlineMedium: const TextStyle(fontSize: 26, fontWeight: FontWeight.w700, letterSpacing: -0.6),
-        titleLarge: const TextStyle(fontSize: 20, fontWeight: FontWeight.w700, letterSpacing: -0.4),
-        titleMedium: const TextStyle(fontSize: 17, fontWeight: FontWeight.w700, letterSpacing: -0.3),
-        titleSmall: const TextStyle(fontSize: 15, fontWeight: FontWeight.w600, letterSpacing: -0.2),
-        bodyLarge: const TextStyle(fontSize: 15, fontWeight: FontWeight.w500),
-        bodyMedium: const TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
-        bodySmall: const TextStyle(fontSize: 13, fontWeight: FontWeight.w500, color: AppColors.inkSoft),
-        labelLarge: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
-        labelMedium: const TextStyle(fontSize: 12, fontWeight: FontWeight.w600),
-        labelSmall: const TextStyle(fontSize: 11, fontWeight: FontWeight.w600, color: AppColors.inkFaint),
-      );
+  /// Each override is merged onto the *applied* base rather than replacing it:
+  /// a bare `TextStyle` in `copyWith` would drop the family and colour set by
+  /// `apply`, and a null text colour paints white.
+  static TextTheme _textTheme(TextTheme base) {
+    final t = base.apply(
+      fontFamily: _font,
+      bodyColor: AppColors.ink,
+      displayColor: AppColors.ink,
+    );
+    return t.copyWith(
+      displayLarge: t.displayLarge!.copyWith(
+        fontSize: 44,
+        fontWeight: FontWeight.w800,
+        letterSpacing: -1.4,
+      ),
+      displayMedium: t.displayMedium!.copyWith(
+        fontSize: 34,
+        fontWeight: FontWeight.w800,
+        letterSpacing: -1.0,
+      ),
+      headlineMedium: t.headlineMedium!.copyWith(
+        fontSize: 26,
+        fontWeight: FontWeight.w700,
+        letterSpacing: -0.6,
+      ),
+      titleLarge: t.titleLarge!.copyWith(
+        fontSize: 20,
+        fontWeight: FontWeight.w700,
+        letterSpacing: -0.4,
+      ),
+      titleMedium: t.titleMedium!.copyWith(
+        fontSize: 17,
+        fontWeight: FontWeight.w700,
+        letterSpacing: -0.3,
+      ),
+      titleSmall: t.titleSmall!.copyWith(
+        fontSize: 15,
+        fontWeight: FontWeight.w600,
+        letterSpacing: -0.2,
+      ),
+      bodyLarge: t.bodyLarge!.copyWith(
+        fontSize: 15,
+        fontWeight: FontWeight.w500,
+      ),
+      bodyMedium: t.bodyMedium!.copyWith(
+        fontSize: 14,
+        fontWeight: FontWeight.w500,
+      ),
+      bodySmall: t.bodySmall!.copyWith(
+        fontSize: 13,
+        fontWeight: FontWeight.w500,
+        color: AppColors.inkSoft,
+      ),
+      labelLarge: t.labelLarge!.copyWith(
+        fontSize: 14,
+        fontWeight: FontWeight.w600,
+      ),
+      labelMedium: t.labelMedium!.copyWith(
+        fontSize: 12,
+        fontWeight: FontWeight.w600,
+      ),
+      labelSmall: t.labelSmall!.copyWith(
+        fontSize: 11,
+        fontWeight: FontWeight.w600,
+        color: AppColors.inkFaint,
+      ),
+    );
+  }
 }

@@ -78,10 +78,14 @@ class _Key extends StatelessWidget {
                   onLongPress!();
                 },
           child: SizedBox(
-            height: 54,
+            height: 50,
             child: Center(
               child: isBackspace
-                  ? const Icon(Icons.backspace_outlined, size: 21, color: AppColors.ink)
+                  ? const Icon(
+                      Icons.backspace_outlined,
+                      size: 21,
+                      color: AppColors.ink,
+                    )
                   : Text(
                       label,
                       style: const TextStyle(

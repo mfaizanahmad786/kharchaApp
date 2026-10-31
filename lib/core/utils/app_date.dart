@@ -17,7 +17,8 @@ abstract final class AppDate {
   static DateTime startOfMonth(DateTime d) => DateTime(d.year, d.month);
   static DateTime endOfMonth(DateTime d) =>
       DateTime(d.year, d.month + 1).subtract(const Duration(milliseconds: 1));
-  static DateTime addMonths(DateTime d, int n) => DateTime(d.year, d.month + n, 1);
+  static DateTime addMonths(DateTime d, int n) =>
+      DateTime(d.year, d.month + n, 1);
 
   static bool sameDay(DateTime a, DateTime b) =>
       a.year == b.year && a.month == b.month && a.day == b.day;

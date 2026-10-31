@@ -104,14 +104,18 @@ class CircleIconButton extends StatelessWidget {
                   boxShadow: shadows,
                   color: background,
                 ),
-                child: Icon(icon, size: iconSize ?? size * 0.5, color: foreground),
+                child: Icon(
+                  icon,
+                  size: iconSize ?? size * 0.5,
+                  color: foreground,
+                ),
               ),
             ),
           ),
           if (badge)
             Positioned(
-              right: 1,
-              top: 1,
+              right: size * 0.13,
+              top: size * 0.13,
               child: Container(
                 width: 9,
                 height: 9,
@@ -156,7 +160,11 @@ class SectionHeader extends StatelessWidget {
           Text(title, style: Theme.of(context).textTheme.titleLarge),
           if (info) ...[
             const SizedBox(width: 6),
-            const Icon(Icons.info_outline_rounded, size: 16, color: AppColors.inkFaint),
+            const Icon(
+              Icons.info_outline_rounded,
+              size: 16,
+              color: AppColors.inkFaint,
+            ),
           ],
           const Spacer(),
           if (trailing != null)
@@ -242,8 +250,12 @@ class SegmentedToggle extends StatelessWidget {
                             style: TextStyle(
                               fontFamily: 'Inter',
                               fontSize: 15,
-                              fontWeight: i == index ? FontWeight.w700 : FontWeight.w500,
-                              color: i == index ? AppColors.ink : AppColors.inkSoft,
+                              fontWeight: i == index
+                                  ? FontWeight.w700
+                                  : FontWeight.w500,
+                              color: i == index
+                                  ? AppColors.ink
+                                  : AppColors.inkSoft,
                             ),
                             child: Text(labels[i]),
                           ),

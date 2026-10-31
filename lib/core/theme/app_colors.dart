@@ -57,7 +57,8 @@ abstract final class AppColors {
   ];
 
   /// Soft tinted background used behind category/account glyphs.
-  static Color tint(Color c) => Color.alphaBlend(c.withValues(alpha: 0.12), Colors.white);
+  static Color tint(Color c) =>
+      Color.alphaBlend(c.withValues(alpha: 0.12), Colors.white);
 
   // Elevation
   static const cardShadow = <BoxShadow>[

@@ -15,7 +15,8 @@ class SecurityController extends AsyncNotifier<SecurityState> {
     final store = ref.read(securityStoreProvider);
     var available = false;
     try {
-      available = await _auth.isDeviceSupported() && await _auth.canCheckBiometrics;
+      available =
+          await _auth.isDeviceSupported() && await _auth.canCheckBiometrics;
     } on LocalAuthException {
       available = false;
     } on PlatformException {
@@ -69,7 +70,9 @@ class SecurityController extends AsyncNotifier<SecurityState> {
 }
 
 final securityProvider =
-    AsyncNotifierProvider<SecurityController, SecurityState>(SecurityController.new);
+    AsyncNotifierProvider<SecurityController, SecurityState>(
+      SecurityController.new,
+    );
 
 /// Whether the lock screen is currently covering the app.
 class LockGate extends Notifier<bool> {

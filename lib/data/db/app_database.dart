@@ -104,7 +104,13 @@ class AppDatabase {
   /// Drops every row and re-seeds. Backs the "Reset data" action in Settings.
   Future<void> resetToSeed() async {
     await db.transaction((t) async {
-      for (final table in ['txns', 'budgets', 'goals', 'categories', 'accounts']) {
+      for (final table in [
+        'txns',
+        'budgets',
+        'goals',
+        'categories',
+        'accounts',
+      ]) {
         await t.delete(table);
       }
       await Seed.populate(t);

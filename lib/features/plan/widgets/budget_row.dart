@@ -21,8 +21,8 @@ class BudgetRow extends StatelessWidget {
     final tone = status.isOver
         ? AppColors.expense
         : status.isNearLimit
-            ? AppColors.warning
-            : b.color;
+        ? AppColors.warning
+        : b.color;
 
     return SoftCard(
       onTap: onTap,
@@ -54,7 +54,9 @@ class BudgetRow extends StatelessWidget {
                       showDecimals: false,
                       color: status.isOver ? AppColors.expense : AppColors.ink,
                       style: const TextStyle(
-                          fontSize: 14.5, fontWeight: FontWeight.w700),
+                        fontSize: 14.5,
+                        fontWeight: FontWeight.w700,
+                      ),
                     ),
                     const Text(
                       ' of ',
@@ -69,7 +71,9 @@ class BudgetRow extends StatelessWidget {
                       showDecimals: false,
                       color: AppColors.inkSoft,
                       style: const TextStyle(
-                          fontSize: 13.5, fontWeight: FontWeight.w500),
+                        fontSize: 13.5,
+                        fontWeight: FontWeight.w500,
+                      ),
                     ),
                   ],
                 ),

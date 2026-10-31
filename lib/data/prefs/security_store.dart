@@ -10,7 +10,7 @@ class SecurityStore {
   /// v11 of the plugin encrypts with AES-GCM behind the Keystore by default,
   /// so no extra Android options are needed here.
   SecurityStore([FlutterSecureStorage? storage])
-      : _storage = storage ?? const FlutterSecureStorage();
+    : _storage = storage ?? const FlutterSecureStorage();
 
   final FlutterSecureStorage _storage;
 

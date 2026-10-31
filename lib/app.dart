@@ -16,10 +16,9 @@ class KharchaApp extends ConsumerWidget {
       home: const LockGateView(),
       builder: (context, child) {
         // Keep the layout predictable regardless of the system font scale.
-        final scale = MediaQuery.textScalerOf(context).clamp(
-          minScaleFactor: 0.85,
-          maxScaleFactor: 1.2,
-        );
+        final scale = MediaQuery.textScalerOf(
+          context,
+        ).clamp(minScaleFactor: 0.85, maxScaleFactor: 1.2);
         return MediaQuery(
           data: MediaQuery.of(context).copyWith(textScaler: scale),
           child: child!,

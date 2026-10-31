@@ -20,6 +20,7 @@ class AddTransactionSheet extends ConsumerStatefulWidget {
   static Future<bool?> show(BuildContext context, {Txn? existing}) =>
       showModalBottomSheet<bool>(
         context: context,
+        useRootNavigator: true,
         isScrollControlled: true,
         useSafeArea: true,
         backgroundColor: Colors.transparent,
@@ -27,7 +28,8 @@ class AddTransactionSheet extends ConsumerStatefulWidget {
       );
 
   @override
-  ConsumerState<AddTransactionSheet> createState() => _AddTransactionSheetState();
+  ConsumerState<AddTransactionSheet> createState() =>
+      _AddTransactionSheetState();
 }
 
 class _AddTransactionSheetState extends ConsumerState<AddTransactionSheet> {
@@ -52,8 +54,8 @@ class _AddTransactionSheetState extends ConsumerState<AddTransactionSheet> {
     _input = e == null
         ? '0'
         : (e.amount % 100 == 0
-            ? (e.amount ~/ 100).toString()
-            : (e.amount / 100).toStringAsFixed(2));
+              ? (e.amount ~/ 100).toString()
+              : (e.amount / 100).toStringAsFixed(2));
   }
 
   @override
@@ -86,7 +88,9 @@ class _AddTransactionSheetState extends ConsumerState<AddTransactionSheet> {
 
   void _backspace() {
     setState(() {
-      _input = _input.length <= 1 ? '0' : _input.substring(0, _input.length - 1);
+      _input = _input.length <= 1
+          ? '0'
+          : _input.substring(0, _input.length - 1);
       if (_input.endsWith('.')) _input = _input.substring(0, _input.length - 1);
       if (_input.isEmpty) _input = '0';
     });
@@ -95,6 +99,7 @@ class _AddTransactionSheetState extends ConsumerState<AddTransactionSheet> {
   Future<void> _pickDate() async {
     final picked = await showDatePicker(
       context: context,
+      useRootNavigator: true,
       initialDate: _date,
       firstDate: DateTime(2015),
       lastDate: DateTime.now().add(const Duration(days: 365)),
@@ -106,13 +111,15 @@ class _AddTransactionSheetState extends ConsumerState<AddTransactionSheet> {
       ),
     );
     if (picked != null) {
-      setState(() => _date = DateTime(
-            picked.year,
-            picked.month,
-            picked.day,
-            _date.hour,
-            _date.minute,
-          ));
+      setState(
+        () => _date = DateTime(
+          picked.year,
+          picked.month,
+          picked.day,
+          _date.hour,
+          _date.minute,
+        ),
+      );
     }
   }
 
@@ -136,14 +143,16 @@ class _AddTransactionSheetState extends ConsumerState<AddTransactionSheet> {
     final note = _note.text.trim();
 
     if (_isEdit) {
-      await actions.updateTransaction(widget.existing!.copyWith(
-        amount: amount,
-        type: _type,
-        categoryId: _categoryId,
-        accountId: _accountId,
-        date: _date,
-        note: note,
-      ));
+      await actions.updateTransaction(
+        widget.existing!.copyWith(
+          amount: amount,
+          type: _type,
+          categoryId: _categoryId,
+          accountId: _accountId,
+          date: _date,
+          note: note,
+        ),
+      );
     } else {
       await actions.addTransaction(
         amount: amount,
@@ -234,7 +243,9 @@ class _AddTransactionSheetState extends ConsumerState<AddTransactionSheet> {
                       }),
                     ),
                     const SizedBox(height: 24),
-                    Center(child: _AmountDisplay(input: _input, accent: accent)),
+                    Center(
+                      child: _AmountDisplay(input: _input, accent: accent),
+                    ),
                     const SizedBox(height: 22),
                     const _Label('Category'),
                     const SizedBox(height: 10),
@@ -260,13 +271,18 @@ class _AddTransactionSheetState extends ConsumerState<AddTransactionSheet> {
                             onTap: _pickDate,
                             child: Row(
                               children: [
-                                const Icon(Icons.calendar_today_rounded,
-                                    size: 15, color: AppColors.inkSoft),
+                                const Icon(
+                                  Icons.calendar_today_rounded,
+                                  size: 15,
+                                  color: AppColors.inkSoft,
+                                ),
                                 const SizedBox(width: 8),
                                 Text(
                                   AppDate.shortDay(_date),
                                   style: const TextStyle(
-                                      fontSize: 14, fontWeight: FontWeight.w600),
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w600,
+                                  ),
                                 ),
                               ],
                             ),
@@ -280,7 +296,9 @@ class _AddTransactionSheetState extends ConsumerState<AddTransactionSheet> {
                               controller: _note,
                               textCapitalization: TextCapitalization.sentences,
                               style: const TextStyle(
-                                  fontSize: 14, fontWeight: FontWeight.w600),
+                                fontSize: 14,
+                                fontWeight: FontWeight.w600,
+                              ),
                               decoration: const InputDecoration(
                                 isDense: true,
                                 border: InputBorder.none,
@@ -304,38 +322,43 @@ class _AddTransactionSheetState extends ConsumerState<AddTransactionSheet> {
                       onBackspace: _backspace,
                       onClear: () => setState(() => _input = '0'),
                     ),
-                    const SizedBox(height: 14),
-                    SizedBox(
-                      width: double.infinity,
-                      height: 54,
-                      child: FilledButton(
-                        onPressed: _saving ? null : _save,
-                        style: FilledButton.styleFrom(
-                          backgroundColor: accent,
-                          disabledBackgroundColor: accent.withValues(alpha: 0.5),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(18),
+                  ],
+                ),
+              ),
+            ),
+
+            // Pinned footer: the save action must never scroll out of reach.
+            Padding(
+              padding: const EdgeInsets.fromLTRB(20, 12, 20, 12),
+              child: SizedBox(
+                width: double.infinity,
+                height: 54,
+                child: FilledButton(
+                  onPressed: _saving ? null : _save,
+                  style: FilledButton.styleFrom(
+                    backgroundColor: accent,
+                    disabledBackgroundColor: accent.withValues(alpha: 0.5),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(18),
+                    ),
+                  ),
+                  child: _saving
+                      ? const SizedBox(
+                          width: 20,
+                          height: 20,
+                          child: CircularProgressIndicator(
+                            strokeWidth: 2.2,
+                            color: Colors.white,
+                          ),
+                        )
+                      : Text(
+                          _isEdit ? 'Save changes' : 'Add transaction',
+                          style: const TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w700,
+                            color: Colors.white,
                           ),
                         ),
-                        child: _saving
-                            ? const SizedBox(
-                                width: 20,
-                                height: 20,
-                                child: CircularProgressIndicator(
-                                    strokeWidth: 2.2, color: Colors.white),
-                              )
-                            : Text(
-                                _isEdit ? 'Save changes' : 'Add transaction',
-                                style: const TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w700,
-                                  color: Colors.white,
-                                ),
-                              ),
-                      ),
-                    ),
-                    const SizedBox(height: 12),
-                  ],
                 ),
               ),
             ),
@@ -497,7 +520,10 @@ class _AccountPicker extends StatelessWidget {
               onTap: () => onSelect(a.id),
               child: AnimatedContainer(
                 duration: const Duration(milliseconds: 180),
-                padding: const EdgeInsets.symmetric(vertical: 11, horizontal: 10),
+                padding: const EdgeInsets.symmetric(
+                  vertical: 11,
+                  horizontal: 10,
+                ),
                 decoration: BoxDecoration(
                   color: AppColors.surface,
                   borderRadius: BorderRadius.circular(16),
@@ -510,7 +536,12 @@ class _AccountPicker extends StatelessWidget {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    GlyphTile(icon: a.icon, color: a.color, size: 26, radius: 8),
+                    GlyphTile(
+                      icon: a.icon,
+                      color: a.color,
+                      size: 26,
+                      radius: 8,
+                    ),
                     const SizedBox(width: 7),
                     Flexible(
                       child: Text(
@@ -518,7 +549,9 @@ class _AccountPicker extends StatelessWidget {
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                         style: const TextStyle(
-                            fontSize: 13, fontWeight: FontWeight.w600),
+                          fontSize: 13,
+                          fontWeight: FontWeight.w600,
+                        ),
                       ),
                     ),
                   ],
@@ -584,11 +617,11 @@ class _Label extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Text(
-        text,
-        style: const TextStyle(
-          fontSize: 14,
-          fontWeight: FontWeight.w700,
-          color: AppColors.inkSoft,
-        ),
-      );
+    text,
+    style: const TextStyle(
+      fontSize: 14,
+      fontWeight: FontWeight.w700,
+      color: AppColors.inkSoft,
+    ),
+  );
 }

@@ -16,7 +16,9 @@ final databaseProvider = Provider<AppDatabase>((ref) {
 });
 
 final settingsStoreProvider = Provider<SettingsStore>((ref) {
-  throw UnimplementedError('settingsStoreProvider must be overridden in main()');
+  throw UnimplementedError(
+    'settingsStoreProvider must be overridden in main()',
+  );
 });
 
 final securityStoreProvider = Provider<SecurityStore>((ref) => SecurityStore());
@@ -59,19 +61,22 @@ class FinanceActions {
     required DateTime date,
     String note = '',
     List<String> tags = const [],
-  }) =>
-      _write((r) => r.addTransaction(
-            amount: amount,
-            type: type,
-            categoryId: categoryId,
-            accountId: accountId,
-            date: date,
-            note: note,
-            tags: tags,
-          ));
+  }) => _write(
+    (r) => r.addTransaction(
+      amount: amount,
+      type: type,
+      categoryId: categoryId,
+      accountId: accountId,
+      date: date,
+      note: note,
+      tags: tags,
+    ),
+  );
 
-  Future<void> updateTransaction(Txn t) => _write((r) => r.updateTransaction(t));
-  Future<void> deleteTransaction(String id) => _write((r) => r.deleteTransaction(id));
+  Future<void> updateTransaction(Txn t) =>
+      _write((r) => r.updateTransaction(t));
+  Future<void> deleteTransaction(String id) =>
+      _write((r) => r.deleteTransaction(id));
 
   Future<void> upsertCategory(Category c) => _write((r) => r.upsertCategory(c));
   Future<bool> deleteCategory(String id) => _write((r) => r.deleteCategory(id));
@@ -110,8 +115,9 @@ class SelectedMonth extends Notifier<DateTime> {
   }
 }
 
-final selectedMonthProvider =
-    NotifierProvider<SelectedMonth, DateTime>(SelectedMonth.new);
+final selectedMonthProvider = NotifierProvider<SelectedMonth, DateTime>(
+  SelectedMonth.new,
+);
 
 ({DateTime from, DateTime to}) _monthRange(DateTime month) =>
     (from: AppDate.startOfMonth(month), to: AppDate.endOfMonth(month));
@@ -148,8 +154,10 @@ final allCategoriesProvider = FutureProvider<List<Category>>((ref) async {
   return ref.watch(repositoryProvider).categories();
 });
 
-final categoriesProvider =
-    FutureProvider.family<List<Category>, TxType>((ref, type) async {
+final categoriesProvider = FutureProvider.family<List<Category>, TxType>((
+  ref,
+  type,
+) async {
   ref.watch(revisionProvider);
   return ref.watch(repositoryProvider).categories(type: type);
 });
@@ -166,7 +174,9 @@ final monthTransactionsProvider = FutureProvider<List<TxnView>>((ref) async {
 /// Month transactions grouped into day sections, newest day first.
 typedef DaySection = ({DateTime day, int net, List<TxnView> items});
 
-final groupedTransactionsProvider = FutureProvider<List<DaySection>>((ref) async {
+final groupedTransactionsProvider = FutureProvider<List<DaySection>>((
+  ref,
+) async {
   final views = await ref.watch(monthTransactionsProvider.future);
   final sections = <DateTime, List<TxnView>>{};
   for (final v in views) {
@@ -184,8 +194,10 @@ final groupedTransactionsProvider = FutureProvider<List<DaySection>>((ref) async
   ];
 });
 
-final breakdownProvider =
-    FutureProvider.family<List<CategoryTotal>, TxType>((ref, type) async {
+final breakdownProvider = FutureProvider.family<List<CategoryTotal>, TxType>((
+  ref,
+  type,
+) async {
   ref.watch(revisionProvider);
   final range = _monthRange(ref.watch(selectedMonthProvider));
   return ref
@@ -194,18 +206,22 @@ final breakdownProvider =
 });
 
 final dailySeriesProvider =
-    FutureProvider.family<List<({DateTime day, int total})>, TxType>(
-        (ref, type) async {
-  ref.watch(revisionProvider);
-  final range = _monthRange(ref.watch(selectedMonthProvider));
-  return ref
-      .watch(repositoryProvider)
-      .dailySeries(from: range.from, to: range.to, type: type);
-});
+    FutureProvider.family<List<({DateTime day, int total})>, TxType>((
+      ref,
+      type,
+    ) async {
+      ref.watch(revisionProvider);
+      final range = _monthRange(ref.watch(selectedMonthProvider));
+      return ref
+          .watch(repositoryProvider)
+          .dailySeries(from: range.from, to: range.to, type: type);
+    });
 
 final budgetStatusesProvider = FutureProvider<List<BudgetStatus>>((ref) async {
   ref.watch(revisionProvider);
-  return ref.watch(repositoryProvider).budgetStatuses(ref.watch(selectedMonthProvider));
+  return ref
+      .watch(repositoryProvider)
+      .budgetStatuses(ref.watch(selectedMonthProvider));
 });
 
 /// Budgets that have tripped their alert threshold, worst first.
@@ -235,12 +251,15 @@ class SettingsState {
   final bool hideAmounts;
   final bool budgetAlerts;
 
-  SettingsState copyWith({String? userName, bool? hideAmounts, bool? budgetAlerts}) =>
-      SettingsState(
-        userName: userName ?? this.userName,
-        hideAmounts: hideAmounts ?? this.hideAmounts,
-        budgetAlerts: budgetAlerts ?? this.budgetAlerts,
-      );
+  SettingsState copyWith({
+    String? userName,
+    bool? hideAmounts,
+    bool? budgetAlerts,
+  }) => SettingsState(
+    userName: userName ?? this.userName,
+    hideAmounts: hideAmounts ?? this.hideAmounts,
+    budgetAlerts: budgetAlerts ?? this.budgetAlerts,
+  );
 }
 
 class SettingsController extends Notifier<SettingsState> {
@@ -270,8 +289,9 @@ class SettingsController extends Notifier<SettingsState> {
   }
 }
 
-final settingsProvider =
-    NotifierProvider<SettingsController, SettingsState>(SettingsController.new);
+final settingsProvider = NotifierProvider<SettingsController, SettingsState>(
+  SettingsController.new,
+);
 
 // ---------------------------------------------------------------- security
 

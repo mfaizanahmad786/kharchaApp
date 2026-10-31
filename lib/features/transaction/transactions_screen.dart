@@ -20,10 +20,10 @@ enum TxFilter {
   final String label;
 
   TxType? get type => switch (this) {
-        TxFilter.all => null,
-        TxFilter.expense => TxType.expense,
-        TxFilter.income => TxType.income,
-      };
+    TxFilter.all => null,
+    TxFilter.expense => TxType.expense,
+    TxFilter.income => TxType.income,
+  };
 }
 
 /// The full, searchable transaction list for the selected month.
@@ -32,10 +32,12 @@ class TransactionsScreen extends ConsumerStatefulWidget {
 
   final TxFilter initial;
 
-  static Future<void> open(BuildContext context, {TxFilter initial = TxFilter.all}) =>
-      Navigator.of(context).push(MaterialPageRoute(
-        builder: (_) => TransactionsScreen(initial: initial),
-      ));
+  static Future<void> open(
+    BuildContext context, {
+    TxFilter initial = TxFilter.all,
+  }) => Navigator.of(context).push(
+    MaterialPageRoute(builder: (_) => TransactionsScreen(initial: initial)),
+  );
 
   @override
   ConsumerState<TransactionsScreen> createState() => _TransactionsScreenState();
@@ -54,14 +56,16 @@ class _TransactionsScreenState extends ConsumerState<TransactionsScreen> {
 
   List<TxnView> _apply(List<TxnView> all) {
     final q = _query.trim().toLowerCase();
-    return all.where((v) {
-      if (_filter.type != null && v.txn.type != _filter.type) return false;
-      if (q.isEmpty) return true;
-      return v.category.name.toLowerCase().contains(q) ||
-          v.account.name.toLowerCase().contains(q) ||
-          v.txn.note.toLowerCase().contains(q) ||
-          v.txn.tags.any((t) => t.toLowerCase().contains(q));
-    }).toList(growable: false);
+    return all
+        .where((v) {
+          if (_filter.type != null && v.txn.type != _filter.type) return false;
+          if (q.isEmpty) return true;
+          return v.category.name.toLowerCase().contains(q) ||
+              v.account.name.toLowerCase().contains(q) ||
+              v.txn.note.toLowerCase().contains(q) ||
+              v.txn.tags.any((t) => t.toLowerCase().contains(q));
+        })
+        .toList(growable: false);
   }
 
   @override
@@ -104,7 +108,10 @@ class _TransactionsScreenState extends ConsumerState<TransactionsScreen> {
               child: TextField(
                 controller: _search,
                 onChanged: (v) => setState(() => _query = v),
-                style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w500),
+                style: const TextStyle(
+                  fontSize: 15,
+                  fontWeight: FontWeight.w500,
+                ),
                 decoration: InputDecoration(
                   hintText: 'Search category, account or note',
                   hintStyle: const TextStyle(
@@ -112,8 +119,11 @@ class _TransactionsScreenState extends ConsumerState<TransactionsScreen> {
                     fontWeight: FontWeight.w500,
                     color: AppColors.inkFaint,
                   ),
-                  prefixIcon: const Icon(Icons.search_rounded,
-                      size: 20, color: AppColors.inkFaint),
+                  prefixIcon: const Icon(
+                    Icons.search_rounded,
+                    size: 20,
+                    color: AppColors.inkFaint,
+                  ),
                   suffixIcon: _query.isEmpty
                       ? null
                       : IconButton(
@@ -167,7 +177,10 @@ class _TransactionsScreenState extends ConsumerState<TransactionsScreen> {
                   showSign: true,
                   showDecimals: false,
                   color: total >= 0 ? AppColors.income : AppColors.expense,
-                  style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w700),
+                  style: const TextStyle(
+                    fontSize: 15,
+                    fontWeight: FontWeight.w700,
+                  ),
                 ),
               ],
             ),
@@ -206,8 +219,10 @@ class _TransactionsScreenState extends ConsumerState<TransactionsScreen> {
                     },
                     itemBuilder: (context, i) => TransactionTile(
                       view: items[i],
-                      onTap: () =>
-                          TransactionDetailScreen.open(context, items[i].txn.id),
+                      onTap: () => TransactionDetailScreen.open(
+                        context,
+                        items[i].txn.id,
+                      ),
                     ),
                   ),
           ),

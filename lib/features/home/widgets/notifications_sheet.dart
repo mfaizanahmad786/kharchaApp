@@ -14,15 +14,17 @@ class NotificationsSheet extends ConsumerWidget {
   const NotificationsSheet({super.key});
 
   static Future<void> show(BuildContext context) => showModalBottomSheet<void>(
-        context: context,
-        isScrollControlled: true,
-        backgroundColor: Colors.transparent,
-        builder: (_) => const NotificationsSheet(),
-      );
+    context: context,
+    useRootNavigator: true,
+    isScrollControlled: true,
+    backgroundColor: Colors.transparent,
+    builder: (_) => const NotificationsSheet(),
+  );
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final alerts = ref.watch(budgetAlertsProvider).value ?? const <BudgetStatus>[];
+    final alerts =
+        ref.watch(budgetAlertsProvider).value ?? const <BudgetStatus>[];
     final enabled = ref.watch(settingsProvider.select((s) => s.budgetAlerts));
 
     return Container(
@@ -69,13 +71,15 @@ class NotificationsSheet extends ConsumerWidget {
             const _Placeholder(
               icon: Icons.notifications_off_rounded,
               title: 'Alerts are switched off',
-              body: 'Turn budget alerts back on in Settings to see warnings here.',
+              body:
+                  'Turn budget alerts back on in Settings to see warnings here.',
             )
           else if (alerts.isEmpty)
             const _Placeholder(
               icon: Icons.verified_rounded,
               title: 'Every budget is on track',
-              body: 'You will see a warning here as soon as one gets close to its limit.',
+              body:
+                  'You will see a warning here as soon as one gets close to its limit.',
             )
           else
             Flexible(
@@ -121,7 +125,10 @@ class _AlertRow extends StatelessWidget {
               children: [
                 Text(
                   status.budget.name,
-                  style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w700),
+                  style: const TextStyle(
+                    fontSize: 15,
+                    fontWeight: FontWeight.w700,
+                  ),
                 ),
                 const SizedBox(height: 3),
                 Text(
@@ -152,7 +159,11 @@ class _AlertRow extends StatelessWidget {
 }
 
 class _Placeholder extends StatelessWidget {
-  const _Placeholder({required this.icon, required this.title, required this.body});
+  const _Placeholder({
+    required this.icon,
+    required this.title,
+    required this.body,
+  });
 
   final IconData icon;
   final String title;
@@ -166,7 +177,10 @@ class _Placeholder extends StatelessWidget {
         children: [
           Icon(icon, size: 42, color: AppColors.inkFaint),
           const SizedBox(height: 14),
-          Text(title, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w700)),
+          Text(
+            title,
+            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
+          ),
           const SizedBox(height: 6),
           Text(
             body,

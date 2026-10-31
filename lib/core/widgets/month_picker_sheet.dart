@@ -10,11 +10,12 @@ class MonthPickerSheet extends ConsumerStatefulWidget {
   const MonthPickerSheet({super.key});
 
   static Future<void> show(BuildContext context) => showModalBottomSheet<void>(
-        context: context,
-        isScrollControlled: true,
-        backgroundColor: Colors.transparent,
-        builder: (_) => const MonthPickerSheet(),
-      );
+    context: context,
+    useRootNavigator: true,
+    isScrollControlled: true,
+    backgroundColor: Colors.transparent,
+    builder: (_) => const MonthPickerSheet(),
+  );
 
   @override
   ConsumerState<MonthPickerSheet> createState() => _MonthPickerSheetState();
@@ -24,8 +25,18 @@ class _MonthPickerSheetState extends ConsumerState<MonthPickerSheet> {
   late int _year = ref.read(selectedMonthProvider).year;
 
   static const _months = [
-    'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
-    'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec',
+    'Jan',
+    'Feb',
+    'Mar',
+    'Apr',
+    'May',
+    'Jun',
+    'Jul',
+    'Aug',
+    'Sep',
+    'Oct',
+    'Nov',
+    'Dec',
   ];
 
   @override
@@ -71,7 +82,9 @@ class _MonthPickerSheetState extends ConsumerState<MonthPickerSheet> {
                 ),
               ),
               IconButton(
-                onPressed: _year >= now.year ? null : () => setState(() => _year++),
+                onPressed: _year >= now.year
+                    ? null
+                    : () => setState(() => _year++),
                 icon: const Icon(Icons.chevron_right_rounded),
                 color: AppColors.ink,
                 disabledColor: AppColors.inkFaint.withValues(alpha: 0.4),
@@ -91,7 +104,8 @@ class _MonthPickerSheetState extends ConsumerState<MonthPickerSheet> {
             ),
             itemBuilder: (context, i) {
               final month = DateTime(_year, i + 1);
-              final isSelected = selected.year == _year && selected.month == i + 1;
+              final isSelected =
+                  selected.year == _year && selected.month == i + 1;
               final isFuture = month.isAfter(AppDate.startOfMonth(now));
               return Material(
                 color: isSelected ? AppColors.purple : AppColors.surfaceMuted,
@@ -109,12 +123,14 @@ class _MonthPickerSheetState extends ConsumerState<MonthPickerSheet> {
                       _months[i],
                       style: TextStyle(
                         fontSize: 15,
-                        fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
+                        fontWeight: isSelected
+                            ? FontWeight.w700
+                            : FontWeight.w500,
                         color: isSelected
                             ? Colors.white
                             : isFuture
-                                ? AppColors.inkFaint.withValues(alpha: 0.4)
-                                : AppColors.ink,
+                            ? AppColors.inkFaint.withValues(alpha: 0.4)
+                            : AppColors.ink,
                       ),
                     ),
                   ),
@@ -157,7 +173,11 @@ class MonthPill extends ConsumerWidget {
             children: [
               Text(
                 AppDate.monthYear(month),
-                style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: fg),
+                style: TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w600,
+                  color: fg,
+                ),
               ),
               const SizedBox(width: 4),
               Icon(Icons.keyboard_arrow_down_rounded, size: 20, color: fg),
