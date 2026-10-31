@@ -53,7 +53,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   Widget build(BuildContext context) {
     final totals = ref.watch(monthTotalsProvider);
     final sections = ref.watch(groupedTransactionsProvider);
-    final alerts = ref.watch(budgetAlertsProvider).value ?? const [];
 
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: _darkStatusBar
@@ -107,7 +106,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                           children: [
                             Expanded(
                               child: MoneySummaryCard(
-                                label: 'Income',
+                                label: 'In',
                                 amount: totals.value?.income ?? 0,
                                 icon: Icons.savings_rounded,
                                 tint: AppColors.incomeTint,
@@ -121,7 +120,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                             const SizedBox(width: AppSpacing.cardGap),
                             Expanded(
                               child: MoneySummaryCard(
-                                label: 'Expenses',
+                                label: 'Out',
                                 amount: totals.value?.expense ?? 0,
                                 icon: Icons.account_balance_wallet_rounded,
                                 tint: AppColors.expenseTint,
@@ -133,18 +132,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                               ),
                             ),
                           ],
-                        ),
-                        const SizedBox(height: AppSpacing.lg),
-                        InsightBanner(
-                          message: alerts.isEmpty
-                              ? 'Your insight is ready'
-                              : '${alerts.length} budget'
-                                    '${alerts.length == 1 ? '' : 's'} '
-                                    'need${alerts.length == 1 ? 's' : ''} attention',
-                          actionLabel: alerts.isEmpty ? 'View' : 'Review',
-                          onTap: () => alerts.isEmpty
-                              ? ShellNavigator.of(context)?.go(1)
-                              : ShellNavigator.of(context)?.go(2),
                         ),
                         const SizedBox(height: AppSpacing.xxl),
                         _TransactionsHeader(

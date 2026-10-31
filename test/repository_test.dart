@@ -23,34 +23,42 @@ void main() {
     );
     repo = FinanceRepository(db);
 
-    await repo.upsertAccount(const Account(
-      id: 'acc',
-      name: 'Cash',
-      iconName: 'cash',
-      colorValue: 0xFF000000,
-      openingBalance: 100000, // ₨1,000
-    ));
-    await repo.upsertCategory(const Category(
-      id: 'food',
-      name: 'Food',
-      iconName: 'cafe',
-      colorValue: 0xFF000000,
-      type: TxType.expense,
-    ));
-    await repo.upsertCategory(const Category(
-      id: 'travel',
-      name: 'Travel',
-      iconName: 'travel',
-      colorValue: 0xFF000000,
-      type: TxType.expense,
-    ));
-    await repo.upsertCategory(const Category(
-      id: 'pay',
-      name: 'Salary',
-      iconName: 'salary',
-      colorValue: 0xFF000000,
-      type: TxType.income,
-    ));
+    await repo.upsertAccount(
+      const Account(
+        id: 'acc',
+        name: 'Cash',
+        iconName: 'cash',
+        colorValue: 0xFF000000,
+        openingBalance: 100000, // ₨1,000
+      ),
+    );
+    await repo.upsertCategory(
+      const Category(
+        id: 'food',
+        name: 'Food',
+        iconName: 'cafe',
+        colorValue: 0xFF000000,
+        type: TxType.expense,
+      ),
+    );
+    await repo.upsertCategory(
+      const Category(
+        id: 'travel',
+        name: 'Travel',
+        iconName: 'travel',
+        colorValue: 0xFF000000,
+        type: TxType.expense,
+      ),
+    );
+    await repo.upsertCategory(
+      const Category(
+        id: 'pay',
+        name: 'Salary',
+        iconName: 'salary',
+        colorValue: 0xFF000000,
+        type: TxType.income,
+      ),
+    );
   });
 
   tearDown(() => db.close());
@@ -72,19 +80,21 @@ void main() {
       expect(await repo.currentBalance(), 100000 + 50000 - 20000);
     });
 
-    test('an amount is stored as a magnitude whatever sign is passed',
-        () async {
-      await repo.addTransaction(
-        amount: -7500,
-        type: TxType.expense,
-        categoryId: 'food',
-        accountId: 'acc',
-        date: DateTime(2026, 6, 4),
-      );
-      final txns = await repo.transactions();
-      expect(txns.single.amount, 7500);
-      expect(txns.single.signed, -7500);
-    });
+    test(
+      'an amount is stored as a magnitude whatever sign is passed',
+      () async {
+        await repo.addTransaction(
+          amount: -7500,
+          type: TxType.expense,
+          categoryId: 'food',
+          accountId: 'acc',
+          date: DateTime(2026, 6, 4),
+        );
+        final txns = await repo.transactions();
+        expect(txns.single.amount, 7500);
+        expect(txns.single.signed, -7500);
+      },
+    );
   });
 
   group('totals', () {
@@ -165,8 +175,11 @@ void main() {
       await add(30000, TxType.expense, 'food', DateTime(2026, 6, 5));
       await add(80000, TxType.income, 'pay', DateTime(2026, 6, 5));
 
-      final rows =
-          await repo.breakdown(from: june, to: juneEnd, type: TxType.expense);
+      final rows = await repo.breakdown(
+        from: june,
+        to: juneEnd,
+        type: TxType.expense,
+      );
       expect(rows.single.category.id, 'food');
     });
   });
@@ -191,15 +204,17 @@ void main() {
 
   group('budgets', () {
     setUp(() async {
-      await repo.upsertBudget(const Budget(
-        id: 'b_food',
-        name: 'Food',
-        iconName: 'cafe',
-        colorValue: 0xFF000000,
-        limit: 10000,
-        categoryId: 'food',
-        alertThreshold: 0.8,
-      ));
+      await repo.upsertBudget(
+        const Budget(
+          id: 'b_food',
+          name: 'Food',
+          iconName: 'cafe',
+          colorValue: 0xFF000000,
+          limit: 10000,
+          categoryId: 'food',
+          alertThreshold: 0.8,
+        ),
+      );
     });
 
     test('counts only its own category', () async {
@@ -221,27 +236,31 @@ void main() {
       expect(s.needsAttention, isTrue);
     });
 
-    test('reports going over, and clamps the bar while rawProgress does not',
-        () async {
-      await add(15000, TxType.expense, 'food', DateTime(2026, 6, 5));
+    test(
+      'reports going over, and clamps the bar while rawProgress does not',
+      () async {
+        await add(15000, TxType.expense, 'food', DateTime(2026, 6, 5));
 
-      final s = (await repo.budgetStatuses(june)).single;
-      expect(s.isOver, isTrue);
-      expect(s.remaining, -5000);
-      expect(s.progress, 1.0);
-      expect(s.rawProgress, closeTo(1.5, 0.001));
-    });
+        final s = (await repo.budgetStatuses(june)).single;
+        expect(s.isOver, isTrue);
+        expect(s.remaining, -5000);
+        expect(s.progress, 1.0);
+        expect(s.rawProgress, closeTo(1.5, 0.001));
+      },
+    );
 
     test('stays silent when alerts are switched off', () async {
-      await repo.upsertBudget(const Budget(
-        id: 'b_food',
-        name: 'Food',
-        iconName: 'cafe',
-        colorValue: 0xFF000000,
-        limit: 10000,
-        categoryId: 'food',
-        alertsEnabled: false,
-      ));
+      await repo.upsertBudget(
+        const Budget(
+          id: 'b_food',
+          name: 'Food',
+          iconName: 'cafe',
+          colorValue: 0xFF000000,
+          limit: 10000,
+          categoryId: 'food',
+          alertsEnabled: false,
+        ),
+      );
       await add(15000, TxType.expense, 'food', DateTime(2026, 6, 5));
 
       expect((await repo.budgetStatuses(june)).single.needsAttention, isFalse);
@@ -249,13 +268,15 @@ void main() {
 
     test('a budget with no category covers all spending', () async {
       await repo.deleteBudget('b_food');
-      await repo.upsertBudget(const Budget(
-        id: 'b_all',
-        name: 'Everything',
-        iconName: 'wallet',
-        colorValue: 0xFF000000,
-        limit: 100000,
-      ));
+      await repo.upsertBudget(
+        const Budget(
+          id: 'b_all',
+          name: 'Everything',
+          iconName: 'wallet',
+          colorValue: 0xFF000000,
+          limit: 100000,
+        ),
+      );
       await add(4000, TxType.expense, 'food', DateTime(2026, 6, 5));
       await add(9000, TxType.expense, 'travel', DateTime(2026, 6, 5));
 
@@ -273,21 +294,26 @@ void main() {
 
     test('deletes an unused one', () async {
       expect(await repo.deleteCategory('travel'), isTrue);
-      expect((await repo.categories()).map((c) => c.id), isNot(contains('travel')));
+      expect(
+        (await repo.categories()).map((c) => c.id),
+        isNot(contains('travel')),
+      );
     });
   });
 
   group('goals', () {
     test('contributions accumulate and never go below zero', () async {
-      await repo.upsertGoal(Goal(
-        id: 'g',
-        name: 'Car',
-        iconName: 'car',
-        colorValue: 0xFF000000,
-        target: 100000,
-        saved: 0,
-        createdAt: DateTime(2026, 1, 1),
-      ));
+      await repo.upsertGoal(
+        Goal(
+          id: 'g',
+          name: 'Car',
+          iconName: 'car',
+          colorValue: 0xFF000000,
+          target: 100000,
+          saved: 0,
+          createdAt: DateTime(2026, 1, 1),
+        ),
+      );
 
       await repo.contributeToGoal('g', 30000);
       expect((await repo.goals()).single.saved, 30000);

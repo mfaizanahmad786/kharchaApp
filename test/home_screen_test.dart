@@ -79,9 +79,11 @@ void main() {
           budgetAlertsProvider.overrideWith((ref) => const <BudgetStatus>[]),
           groupedTransactionsProvider.overrideWith(
             (ref) => [
-              (day: DateTime(today.year, today.month, today.day),
-               net: -245100,
-               items: [view]),
+              (
+                day: DateTime(today.year, today.month, today.day),
+                net: -245100,
+                items: [view],
+              ),
             ],
           ),
         ],
@@ -97,8 +99,8 @@ void main() {
     expect(find.text('Current Balance'), findsOneWidget);
     expect(find.text('Your Money'), findsOneWidget);
     expect(find.text('Transactions'), findsOneWidget);
-    expect(find.text('Income'), findsOneWidget);
-    expect(find.text('Expenses'), findsOneWidget);
+    expect(find.text('In'), findsOneWidget);
+    expect(find.text('Out'), findsOneWidget);
     expect(find.byType(TransactionTile), findsOneWidget);
     expect(find.text('Cafes'), findsOneWidget);
   });
@@ -129,10 +131,7 @@ void main() {
   testWidgets('amounts are formatted with South-Asian grouping', (t) async {
     await pumpHome(t);
 
-    expect(
-      find.textContaining('7,38,196', findRichText: true),
-      findsWidgets,
-    );
+    expect(find.textContaining('7,38,196', findRichText: true), findsWidgets);
   });
 
   testWidgets('hiding amounts masks every figure', (t) async {

@@ -15,9 +15,9 @@ Future<void> loadInter() async {
     'ExtraBold',
   ]) {
     loader.addFont(
-      rootBundle.load('assets/fonts/Inter-$weight.ttf').then(
-            (d) => ByteData.view(d.buffer),
-          ),
+      rootBundle
+          .load('assets/fonts/Inter-$weight.ttf')
+          .then((d) => ByteData.view(d.buffer)),
     );
   }
   await loader.load();
