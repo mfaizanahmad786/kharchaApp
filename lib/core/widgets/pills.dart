@@ -157,16 +157,29 @@ class SectionHeader extends StatelessWidget {
       padding: padding,
       child: Row(
         children: [
-          Text(title, style: Theme.of(context).textTheme.titleLarge),
-          if (info) ...[
-            const SizedBox(width: 6),
-            const Icon(
-              Icons.info_outline_rounded,
-              size: 16,
-              color: AppColors.inkFaint,
+          Expanded(
+            child: Row(
+              children: [
+                Flexible(
+                  child: Text(
+                    title,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: Theme.of(context).textTheme.titleLarge,
+                  ),
+                ),
+                if (info) ...[
+                  const SizedBox(width: 6),
+                  const Icon(
+                    Icons.info_outline_rounded,
+                    size: 16,
+                    color: AppColors.inkFaint,
+                  ),
+                ],
+              ],
             ),
-          ],
-          const Spacer(),
+          ),
+          const SizedBox(width: 10),
           if (trailing != null)
             trailing!
           else if (trailingLabel != null)

@@ -15,18 +15,26 @@ class AppDatabase {
   static const _fileName = 'kharcha.db';
   static const _version = 1;
 
-  static Future<AppDatabase> open() async {
-    final dir = await getDatabasesPath();
-    final path = p.join(dir, _fileName);
-    final db = await openDatabase(
-      path,
-      version: _version,
-      onConfigure: (d) => d.execute('PRAGMA foreign_keys = ON'),
-      onCreate: (d, v) async {
-        await _createSchema(d);
-        await Seed.populate(d);
-      },
-      onUpgrade: _migrate,
+  /// [factory] and [path] exist so tests can open an in-memory database
+  /// through sqflite_common_ffi; the app passes neither.
+  static Future<AppDatabase> open({
+    String? path,
+    DatabaseFactory? factory,
+    bool seed = true,
+  }) async {
+    final f = factory ?? databaseFactory;
+    final target = path ?? p.join(await f.getDatabasesPath(), _fileName);
+    final db = await f.openDatabase(
+      target,
+      options: OpenDatabaseOptions(
+        version: _version,
+        onConfigure: (d) => d.execute('PRAGMA foreign_keys = ON'),
+        onCreate: (d, v) async {
+          await _createSchema(d);
+          if (seed) await Seed.populate(d);
+        },
+        onUpgrade: _migrate,
+      ),
     );
     return AppDatabase._(db);
   }

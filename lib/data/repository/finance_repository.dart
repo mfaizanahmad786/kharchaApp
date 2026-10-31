@@ -320,15 +320,20 @@ class FinanceRepository {
   }
 
   /// Per-category totals for a window, each carrying the same category's total
-  /// over the immediately preceding window of equal length.
+  /// over a baseline window.
+  ///
+  /// Callers comparing calendar months must pass [previousFrom]/[previousTo]
+  /// explicitly: months differ in length, so a same-length window ending where
+  /// this one starts would silently clip a day off the shorter neighbour.
   Future<List<CategoryTotal>> breakdown({
     required DateTime from,
     required DateTime to,
     required TxType type,
+    DateTime? previousFrom,
+    DateTime? previousTo,
   }) async {
-    final span = to.difference(from);
-    final prevTo = from.subtract(const Duration(milliseconds: 1));
-    final prevFrom = prevTo.subtract(span);
+    final prevTo = previousTo ?? from.subtract(const Duration(milliseconds: 1));
+    final prevFrom = previousFrom ?? prevTo.subtract(to.difference(from));
 
     Future<Map<String, (int, int)>> agg(DateTime a, DateTime b) async {
       final rows = await _db.rawQuery(

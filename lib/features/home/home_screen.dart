@@ -263,8 +263,17 @@ class _TransactionsHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        Text('Transactions', style: Theme.of(context).textTheme.titleLarge),
-        const Spacer(),
+        // Expanded, not Flexible beside a Spacer: those two would split the
+        // free space and ellipsize a title that actually fits.
+        Expanded(
+          child: Text(
+            'Transactions',
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: Theme.of(context).textTheme.titleLarge,
+          ),
+        ),
+        const SizedBox(width: 10),
         CircleIconButton(
           icon: Icons.push_pin_outlined,
           iconSize: 17,

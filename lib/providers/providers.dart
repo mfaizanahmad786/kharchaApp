@@ -199,10 +199,18 @@ final breakdownProvider = FutureProvider.family<List<CategoryTotal>, TxType>((
   type,
 ) async {
   ref.watch(revisionProvider);
-  final range = _monthRange(ref.watch(selectedMonthProvider));
+  final month = ref.watch(selectedMonthProvider);
+  final range = _monthRange(month);
+  final previous = _monthRange(AppDate.addMonths(month, -1));
   return ref
       .watch(repositoryProvider)
-      .breakdown(from: range.from, to: range.to, type: type);
+      .breakdown(
+        from: range.from,
+        to: range.to,
+        type: type,
+        previousFrom: previous.from,
+        previousTo: previous.to,
+      );
 });
 
 final dailySeriesProvider =

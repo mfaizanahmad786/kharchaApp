@@ -43,10 +43,11 @@ abstract final class Money {
     }
     if (symbol) buf.write(kCurrencySymbol);
     buf.write(whole(paisa));
-    if (decimals)
+    if (decimals) {
       buf
         ..write('.')
         ..write(fraction(paisa));
+    }
     return buf.toString();
   }
 

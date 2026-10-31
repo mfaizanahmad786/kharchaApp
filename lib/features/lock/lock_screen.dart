@@ -41,8 +41,9 @@ class _LockScreenState extends ConsumerState<LockScreen>
 
   Future<void> _tryBiometrics() async {
     final state = ref.read(securityProvider).value;
-    if (state == null || !state.biometricEnabled || !state.biometricAvailable)
+    if (state == null || !state.biometricEnabled || !state.biometricAvailable) {
       return;
+    }
     final ok = await ref
         .read(securityProvider.notifier)
         .authenticateWithBiometrics();
