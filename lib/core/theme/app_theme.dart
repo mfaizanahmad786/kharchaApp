@@ -2,9 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import 'app_colors.dart';
+import 'app_fonts.dart';
 
 abstract final class AppTheme {
-  static const _font = 'Inter';
+  static const _font = AppFonts.family;
 
   static ThemeData light() {
     final base = ThemeData(

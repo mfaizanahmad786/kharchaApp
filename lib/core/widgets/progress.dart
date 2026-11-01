@@ -3,6 +3,7 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 
 import '../theme/app_colors.dart';
+import '../theme/app_fonts.dart';
 
 /// Flat rounded progress bar.
 class ProgressTrack extends StatelessWidget {
@@ -201,7 +202,7 @@ class RingProgress extends StatelessWidget {
               style:
                   labelStyle ??
                   TextStyle(
-                    fontFamily: 'Inter',
+                    fontFamily: AppFonts.family,
                     fontSize: size * 0.24,
                     fontWeight: FontWeight.w700,
                     color: color,

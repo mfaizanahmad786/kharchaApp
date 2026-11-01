@@ -10,6 +10,7 @@ import 'edit_budget_sheet.dart';
 import 'edit_goal_sheet.dart';
 import 'widgets/budget_row.dart';
 import 'widgets/goal_card.dart';
+import '../../core/theme/app_fonts.dart';
 
 /// "View All" for goals.
 class GoalsScreen extends ConsumerWidget {
@@ -92,7 +93,7 @@ AppBar _bar(
     ),
     title: Text(title),
     titleTextStyle: const TextStyle(
-      fontFamily: 'Inter',
+      fontFamily: AppFonts.family,
       fontSize: 20,
       fontWeight: FontWeight.w700,
       color: AppColors.ink,

@@ -10,6 +10,7 @@ import '../../data/models/models.dart';
 import '../../providers/providers.dart';
 import '../home/widgets/transaction_tile.dart';
 import 'transaction_detail_screen.dart';
+import '../../core/theme/app_fonts.dart';
 
 enum TxFilter {
   all('All'),
@@ -83,7 +84,7 @@ class _TransactionsScreenState extends ConsumerState<TransactionsScreen> {
         ),
         title: const Text('Transactions'),
         titleTextStyle: const TextStyle(
-          fontFamily: 'Inter',
+          fontFamily: AppFonts.family,
           fontSize: 20,
           fontWeight: FontWeight.w700,
           color: AppColors.ink,

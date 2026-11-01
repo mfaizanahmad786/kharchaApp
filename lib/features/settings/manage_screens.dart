@@ -10,6 +10,7 @@ import '../../core/widgets/pills.dart';
 import '../../core/widgets/soft_card.dart';
 import '../../data/models/models.dart';
 import '../../providers/providers.dart';
+import '../../core/theme/app_fonts.dart';
 
 /// Add, rename, recolour and delete categories.
 class CategoriesScreen extends ConsumerStatefulWidget {
@@ -40,7 +41,7 @@ class _CategoriesScreenState extends ConsumerState<CategoriesScreen> {
         ),
         title: const Text('Categories'),
         titleTextStyle: const TextStyle(
-          fontFamily: 'Inter',
+          fontFamily: AppFonts.family,
           fontSize: 20,
           fontWeight: FontWeight.w700,
           color: AppColors.ink,
@@ -223,7 +224,7 @@ class AccountsScreen extends ConsumerWidget {
         ),
         title: const Text('Accounts'),
         titleTextStyle: const TextStyle(
-          fontFamily: 'Inter',
+          fontFamily: AppFonts.family,
           fontSize: 20,
           fontWeight: FontWeight.w700,
           color: AppColors.ink,

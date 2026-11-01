@@ -10,6 +10,7 @@ import '../../core/widgets/soft_card.dart';
 import '../../data/models/models.dart';
 import '../../providers/providers.dart';
 import 'add_transaction_sheet.dart';
+import '../../core/theme/app_fonts.dart';
 
 final _detailProvider = FutureProvider.family<TxnView?, String>((
   ref,
@@ -45,7 +46,7 @@ class TransactionDetailScreen extends ConsumerWidget {
         ),
         title: const Text('Transaction'),
         titleTextStyle: const TextStyle(
-          fontFamily: 'Inter',
+          fontFamily: AppFonts.family,
           fontSize: 20,
           fontWeight: FontWeight.w700,
           color: AppColors.ink,

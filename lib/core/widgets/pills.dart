@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../theme/app_colors.dart';
 import '../theme/app_dimens.dart';
+import '../theme/app_fonts.dart';
 
 /// Small rounded label — "+12%", "Vacation", "For the Period".
 class TagPill extends StatelessWidget {
@@ -265,7 +266,7 @@ class SegmentedToggle extends StatelessWidget {
                           child: AnimatedDefaultTextStyle(
                             duration: const Duration(milliseconds: 200),
                             style: TextStyle(
-                              fontFamily: 'Inter',
+                              fontFamily: AppFonts.family,
                               fontSize: 15,
                               fontWeight: i == index
                                   ? FontWeight.w700

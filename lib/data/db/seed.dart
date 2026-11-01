@@ -138,40 +138,35 @@ abstract final class Seed {
           ? now.day
           : DateTime(anchor.year, anchor.month + 1, 0).day;
 
-      // Salary on the 1st.
-      batch.insert('txns', {
-        'id': 'tx_${txIndex++}',
-        'amount': 28500000,
-        'type': 'income',
-        'category_id': 'cat_salary',
-        'account_id': 'acc_bank',
-        'date': DateTime(
-          anchor.year,
-          anchor.month,
-          1,
-          9,
-          30,
-        ).millisecondsSinceEpoch,
-        'note': 'Monthly salary',
-        'tags': 'Work|Monthly',
-      });
+      // Salary on the 1st and rent on the 3rd — but never dated after today,
+      // or the current month opens on an entry that has not happened yet.
+      final salaryOn = DateTime(anchor.year, anchor.month, 1, 9, 30);
+      if (!salaryOn.isAfter(now)) {
+        batch.insert('txns', {
+          'id': 'tx_${txIndex++}',
+          'amount': 28500000,
+          'type': 'income',
+          'category_id': 'cat_salary',
+          'account_id': 'acc_bank',
+          'date': salaryOn.millisecondsSinceEpoch,
+          'note': 'Monthly salary',
+          'tags': 'Work|Monthly',
+        });
+      }
 
-      // Rent on the 3rd.
-      batch.insert('txns', {
-        'id': 'tx_${txIndex++}',
-        'amount': 5500000,
-        'type': 'expense',
-        'category_id': 'cat_rent',
-        'account_id': 'acc_bank',
-        'date': DateTime(
-          anchor.year,
-          anchor.month,
-          3,
-          11,
-        ).millisecondsSinceEpoch,
-        'note': 'Apartment rent',
-        'tags': 'Monthly',
-      });
+      final rentOn = DateTime(anchor.year, anchor.month, 3, 11);
+      if (!rentOn.isAfter(now)) {
+        batch.insert('txns', {
+          'id': 'tx_${txIndex++}',
+          'amount': 5500000,
+          'type': 'expense',
+          'category_id': 'cat_rent',
+          'account_id': 'acc_bank',
+          'date': rentOn.millisecondsSinceEpoch,
+          'note': 'Apartment rent',
+          'tags': 'Monthly',
+        });
+      }
 
       // A couple of extra income events.
       final extraIncome = 1 + rng.nextInt(3);

@@ -52,7 +52,7 @@ void main() {
 
   late SettingsStore settings;
 
-  setUpAll(loadInter);
+  setUpAll(loadAppFonts);
 
   setUp(() async {
     SharedPreferences.setMockInitialValues({});

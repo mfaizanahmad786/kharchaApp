@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../theme/app_colors.dart';
 import '../theme/app_icons.dart';
+import '../theme/app_fonts.dart';
 
 /// Horizontal icon strip used by the goal and budget editors.
 class IconPickerRow extends StatelessWidget {
@@ -151,7 +152,7 @@ class EditorField extends StatelessWidget {
               hintText: hint,
               prefixText: prefix,
               prefixStyle: const TextStyle(
-                fontFamily: 'Inter',
+                fontFamily: AppFonts.family,
                 fontSize: 16,
                 fontWeight: FontWeight.w600,
                 color: AppColors.inkFaint,

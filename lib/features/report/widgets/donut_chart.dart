@@ -3,6 +3,7 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 
 import '../../../core/theme/app_colors.dart';
+import '../../../core/theme/app_fonts.dart';
 
 class DonutSlice {
   const DonutSlice({
@@ -335,7 +336,7 @@ class _TooltipPainter extends CustomPainter {
       text: TextSpan(
         text: text,
         style: const TextStyle(
-          fontFamily: 'Inter',
+          fontFamily: AppFonts.family,
           fontSize: 13,
           fontWeight: FontWeight.w700,
           color: Colors.white,
