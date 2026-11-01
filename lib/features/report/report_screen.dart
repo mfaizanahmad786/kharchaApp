@@ -9,12 +9,12 @@ import '../../core/widgets/pills.dart';
 import '../../data/models/models.dart';
 import '../../data/repository/finance_repository.dart';
 import '../../providers/providers.dart';
-import '../shell/app_shell.dart';
 import '../shell/bottom_nav.dart';
 import 'widgets/category_breakdown_row.dart';
 import 'widgets/donut_chart.dart';
 import 'widgets/spend_bar_chart.dart';
 import '../../core/theme/app_palette.dart';
+import '../transaction/add_transaction_sheet.dart';
 
 enum _ChartMode { bars, donut }
 
@@ -60,10 +60,6 @@ class _ReportScreenState extends ConsumerState<ReportScreen> {
                   padding: const EdgeInsets.fromLTRB(8, 6, 20, 0),
                   child: Row(
                     children: [
-                      IconButton(
-                        icon: Icon(Icons.arrow_back_rounded, color: p.ink),
-                        onPressed: () => ShellNavigator.of(context)?.go(0),
-                      ),
                       Text(
                         'Report',
                         style: Theme.of(context).textTheme.titleLarge,
@@ -170,15 +166,48 @@ class _ReportScreenState extends ConsumerState<ReportScreen> {
               if (breakdown.isEmpty)
                 SliverToBoxAdapter(
                   child: Padding(
-                    padding: EdgeInsets.fromLTRB(20, 30, 20, 0),
-                    child: Center(
-                      child: Text(
-                        'Nothing recorded for this month yet.',
-                        style: TextStyle(
-                          color: p.inkSoft,
-                          fontWeight: FontWeight.w500,
+                    padding: const EdgeInsets.fromLTRB(20, 30, 20, 0),
+                    child: Column(
+                      children: [
+                        Text(
+                          isExpense
+                              ? 'Nothing went out this month'
+                              : 'Nothing came in this month',
+                          style: const TextStyle(
+                            fontSize: 17,
+                            fontWeight: FontWeight.w700,
+                          ),
                         ),
-                      ),
+                        const SizedBox(height: 6),
+                        Text(
+                          'Record something and it will be grouped by '
+                          'category here.',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w500,
+                            color: p.inkSoft,
+                            height: 1.5,
+                          ),
+                        ),
+                        const SizedBox(height: 16),
+                        FilledButton(
+                          onPressed: () => AddTransactionSheet.show(context),
+                          style: FilledButton.styleFrom(
+                            backgroundColor: AppColors.brand,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(14),
+                            ),
+                          ),
+                          child: const Text(
+                            'Add a transaction',
+                            style: TextStyle(
+                              fontWeight: FontWeight.w700,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                 )
@@ -263,18 +292,27 @@ class _ChartModeToggle extends StatelessWidget {
     final selected = mode == value;
     return GestureDetector(
       onTap: () => onChanged(value),
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 200),
-        width: 36,
-        height: 36,
-        decoration: BoxDecoration(
-          color: selected ? AppColors.brand : Colors.transparent,
-          shape: BoxShape.circle,
-        ),
-        child: Icon(
-          icon,
-          size: 19,
-          color: selected ? Colors.white : context.palette.inkFaint,
+      behavior: HitTestBehavior.opaque,
+      // A 36dp circle inside a 44dp target: accessibility.md asks for 44
+      // (Apple) / 48 (Material), and spacing counts as much as size.
+      child: SizedBox(
+        width: 44,
+        height: 44,
+        child: Center(
+          child: AnimatedContainer(
+            duration: const Duration(milliseconds: 200),
+            width: 36,
+            height: 36,
+            decoration: BoxDecoration(
+              color: selected ? AppColors.brand : Colors.transparent,
+              shape: BoxShape.circle,
+            ),
+            child: Icon(
+              icon,
+              size: 19,
+              color: selected ? Colors.white : context.palette.inkFaint,
+            ),
+          ),
         ),
       ),
     );

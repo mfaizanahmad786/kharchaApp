@@ -8,7 +8,6 @@ import '../../core/widgets/pills.dart';
 import '../../data/models/models.dart';
 import '../../data/repository/finance_repository.dart';
 import '../../providers/providers.dart';
-import '../shell/app_shell.dart';
 import '../shell/bottom_nav.dart';
 import 'edit_budget_sheet.dart';
 import 'edit_goal_sheet.dart';
@@ -49,10 +48,6 @@ class PlanScreen extends ConsumerWidget {
                   padding: const EdgeInsets.fromLTRB(8, 6, 20, 0),
                   child: Row(
                     children: [
-                      IconButton(
-                        icon: Icon(Icons.arrow_back_rounded, color: p.ink),
-                        onPressed: () => ShellNavigator.of(context)?.go(0),
-                      ),
                       Text(
                         'My Plan',
                         style: Theme.of(context).textTheme.titleLarge,
@@ -62,8 +57,9 @@ class PlanScreen extends ConsumerWidget {
                         icon: Icons.add_rounded,
                         size: 44,
                         iconSize: 23,
-                        background: const Color(0xFF17171F),
-                        foreground: Colors.white,
+                        background: p.ink,
+                        foreground: p.surface,
+                        tooltip: 'New goal or budget',
                         onTap: () => _showAddMenu(context),
                       ),
                       const SizedBox(width: 10),
@@ -71,6 +67,7 @@ class PlanScreen extends ConsumerWidget {
                         icon: Icons.north_east_rounded,
                         size: 44,
                         iconSize: 19,
+                        tooltip: 'All goals',
                         onTap: () => GoalsScreen.open(context),
                       ),
                     ],

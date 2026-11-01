@@ -19,12 +19,14 @@ class SettingsGroup extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.fromLTRB(4, 0, 4, 10),
           child: Text(
-            title.toUpperCase(),
+            title,
             style: TextStyle(
-              fontSize: 11.5,
-              fontWeight: FontWeight.w700,
-              letterSpacing: 0.8,
-              color: p.inkFaint,
+              // Sentence case at 13px: tracked capitals at 11.5 were the
+              // least legible text in the app, and inkFaint on the page
+              // measured 4.25:1 against a 4.5:1 requirement.
+              fontSize: 13,
+              fontWeight: FontWeight.w600,
+              color: p.inkSoft,
             ),
           ),
         ),

@@ -69,7 +69,7 @@ class _SpendBarChartState extends State<SpendBarChart>
                   vertical: 6,
                 ),
                 decoration: BoxDecoration(
-                  color: const Color(0xFF17171F),
+                  color: p.ink,
                   borderRadius: BorderRadius.circular(14),
                 ),
                 child: Text(

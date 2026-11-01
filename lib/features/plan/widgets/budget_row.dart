@@ -79,6 +79,32 @@ class BudgetRow extends StatelessWidget {
                     ),
                   ],
                 ),
+                // The ring's colour was the only thing saying a budget had
+                // tripped. accessibility.md > Vision: convey information with
+                // more than colour alone.
+                if (status.isOver || status.isNearLimit) ...[
+                  const SizedBox(height: 4),
+                  Row(
+                    children: [
+                      Icon(
+                        status.isOver
+                            ? Icons.error_rounded
+                            : Icons.warning_amber_rounded,
+                        size: 14,
+                        color: tone,
+                      ),
+                      const SizedBox(width: 5),
+                      Text(
+                        status.isOver ? 'Over limit' : 'Near limit',
+                        style: TextStyle(
+                          fontSize: 13,
+                          fontWeight: FontWeight.w600,
+                          color: tone,
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
               ],
             ),
           ),

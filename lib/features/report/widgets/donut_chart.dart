@@ -129,6 +129,7 @@ class _DonutChartState extends State<DonutChart>
                   foregroundPainter: _selected == null || total <= 0
                       ? null
                       : _TooltipPainter(
+                          tooltipColor: context.palette.ink,
                           slices: widget.slices,
                           stroke: widget.stroke,
                           selected: _selected!,
@@ -309,6 +310,7 @@ class _DonutPainter extends CustomPainter {
 /// The little black "31%" badge pinned to the selected slice.
 class _TooltipPainter extends CustomPainter {
   _TooltipPainter({
+    required this.tooltipColor,
     required this.slices,
     required this.stroke,
     required this.selected,
@@ -316,6 +318,8 @@ class _TooltipPainter extends CustomPainter {
     required this.textDirection,
   });
 
+  /// A painter has no context, so the badge colour comes from the caller.
+  final Color tooltipColor;
   final List<DonutSlice> slices;
   final double stroke;
   final int selected;
@@ -355,7 +359,7 @@ class _TooltipPainter extends CustomPainter {
     final box = Rect.fromCenter(center: anchor, width: w, height: h);
     canvas.drawRRect(
       RRect.fromRectAndRadius(box, const Radius.circular(14)),
-      Paint()..color = const Color(0xFF17171F),
+      Paint()..color = tooltipColor,
     );
     painter.paint(
       canvas,
