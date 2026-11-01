@@ -512,27 +512,21 @@ class _CategoryPicker extends StatelessWidget {
               width: 72,
               child: Column(
                 children: [
+                  // One accent for the selection and one neutral for
+                  // everything else: fourteen category hues at once made the
+                  // row read as decoration rather than as a choice.
                   AnimatedContainer(
                     duration: const Duration(milliseconds: 180),
                     width: 50,
                     height: 50,
                     decoration: BoxDecoration(
-                      color: selected ? c.color : p.tint(c.color),
+                      color: selected ? AppColors.brand : p.track,
                       shape: BoxShape.circle,
-                      boxShadow: selected
-                          ? [
-                              BoxShadow(
-                                color: c.color.withValues(alpha: 0.35),
-                                blurRadius: 12,
-                                offset: const Offset(0, 5),
-                              ),
-                            ]
-                          : null,
                     ),
                     child: Icon(
                       c.icon,
                       size: 23,
-                      color: selected ? Colors.white : c.color,
+                      color: selected ? Colors.white : p.inkSoft,
                     ),
                   ),
                   const SizedBox(height: 6),
@@ -584,25 +578,36 @@ class _AccountPicker extends StatelessWidget {
                   vertical: 11,
                   horizontal: 10,
                 ),
+                // Selection lifts the card instead of outlining it. In the
+                // dark appearance a drop shadow does nothing, so the lift is
+                // carried by lightness there, and the label's weight backs
+                // both up so the state never rests on depth alone.
                 decoration: BoxDecoration(
-                  color: p.surface,
+                  color: a.id == selectedId && p.isDark
+                      ? p.surfaceMuted
+                      : p.surface,
                   borderRadius: BorderRadius.circular(16),
-                  // The accent means "selected"; the account's own hue says
-                  // nothing about selection and read as arbitrary.
                   border: Border.all(
-                    color: a.id == selectedId
-                        ? AppColors.brand
-                        : Colors.transparent,
-                    width: 1.8,
+                    color: a.id == selectedId && p.isDark
+                        ? p.borderSoft
+                        : p.border,
                   ),
-                  boxShadow: p.softShadow,
+                  boxShadow: a.id == selectedId && !p.isDark
+                      ? const [
+                          BoxShadow(
+                            color: Color(0x1F101828),
+                            blurRadius: 14,
+                            offset: Offset(0, 5),
+                          ),
+                        ]
+                      : null,
                 ),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     GlyphTile(
                       icon: a.icon,
-                      color: a.color,
+                      color: a.id == selectedId ? AppColors.brand : p.inkSoft,
                       size: 26,
                       radius: 8,
                     ),
@@ -612,9 +617,12 @@ class _AccountPicker extends StatelessWidget {
                         a.name,
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontSize: 13,
-                          fontWeight: FontWeight.w600,
+                          fontWeight: a.id == selectedId
+                              ? FontWeight.w700
+                              : FontWeight.w500,
+                          color: a.id == selectedId ? p.ink : p.inkSoft,
                         ),
                       ),
                     ),
