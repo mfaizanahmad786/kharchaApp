@@ -12,6 +12,7 @@ import '../shell/bottom_nav.dart';
 import 'manage_screens.dart';
 import 'widgets/settings_tiles.dart';
 import '../../core/theme/app_palette.dart';
+import '../../core/widgets/text_prompt_dialog.dart';
 
 class SettingsScreen extends ConsumerWidget {
   const SettingsScreen({super.key});
@@ -240,34 +241,13 @@ class SettingsScreen extends ConsumerWidget {
     WidgetRef ref,
     String current,
   ) async {
-    final controller = TextEditingController(text: current);
-    final name = await showDialog<String>(
-      context: context,
-      useRootNavigator: true,
-      builder: (ctx) => AlertDialog(
-        title: const Text('Your name'),
-        content: TextField(
-          controller: controller,
-          autofocus: true,
-          textCapitalization: TextCapitalization.words,
-          decoration: const InputDecoration(hintText: 'Name'),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(ctx).pop(),
-            child: Text(
-              'Cancel',
-              style: TextStyle(color: context.palette.inkSoft),
-            ),
-          ),
-          TextButton(
-            onPressed: () => Navigator.of(ctx).pop(controller.text.trim()),
-            child: const Text('Save'),
-          ),
-        ],
-      ),
+    final name = await TextPromptDialog.show(
+      context,
+      title: 'Your name',
+      initialText: current,
+      hintText: 'Name',
+      textCapitalization: TextCapitalization.words,
     );
-    controller.dispose();
     if (name != null && name.isNotEmpty) {
       await ref.read(settingsProvider.notifier).setUserName(name);
     }

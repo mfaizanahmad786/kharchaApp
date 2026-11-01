@@ -15,6 +15,7 @@ import 'plan_list_screens.dart';
 import 'widgets/budget_row.dart';
 import 'widgets/goal_card.dart';
 import '../../core/theme/app_palette.dart';
+import '../../core/widgets/text_prompt_dialog.dart';
 
 /// Goals (savings targets) on top, budgets (monthly spending ceilings) below.
 class PlanScreen extends ConsumerWidget {
@@ -290,38 +291,15 @@ class PlanScreen extends ConsumerWidget {
     WidgetRef ref,
     Goal goal,
   ) async {
-    final controller = TextEditingController();
-    final amount = await showDialog<int>(
-      context: context,
-      useRootNavigator: true,
-      builder: (ctx) => AlertDialog(
-        title: Text('Add to ${goal.name}'),
-        content: TextField(
-          controller: controller,
-          autofocus: true,
-          keyboardType: TextInputType.number,
-          decoration: const InputDecoration(
-            prefixText: '$kCurrencySymbol ',
-            hintText: '0',
-          ),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(ctx).pop(),
-            child: Text(
-              'Cancel',
-              style: TextStyle(color: context.palette.inkSoft),
-            ),
-          ),
-          TextButton(
-            onPressed: () =>
-                Navigator.of(ctx).pop(Money.parse(controller.text)),
-            child: const Text('Add'),
-          ),
-        ],
-      ),
+    final entered = await TextPromptDialog.show(
+      context,
+      title: 'Add to ${goal.name}',
+      hintText: '0',
+      prefixText: '$kCurrencySymbol ',
+      keyboardType: TextInputType.number,
+      confirmLabel: 'Add',
     );
-    controller.dispose();
+    final amount = Money.parse(entered ?? '');
     if (amount != null && amount > 0) {
       await ref.read(actionsProvider).contributeToGoal(goal.id, amount);
     }
