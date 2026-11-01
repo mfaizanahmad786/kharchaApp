@@ -41,27 +41,15 @@ class MoneySummaryCard extends StatelessWidget {
             child: Icon(icon, color: iconColor, size: 24),
           ),
           const SizedBox(height: 14),
-          Row(
-            children: [
-              Flexible(
-                child: Text(
-                  label,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(
-                    fontSize: 15,
-                    fontWeight: FontWeight.w500,
-                    color: AppColors.inkSoft,
-                  ),
-                ),
-              ),
-              const SizedBox(width: 5),
-              const Icon(
-                Icons.info_outline,
-                size: 15,
-                color: AppColors.inkFaint,
-              ),
-            ],
+          Text(
+            label,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: const TextStyle(
+              fontSize: 15,
+              fontWeight: FontWeight.w500,
+              color: AppColors.inkSoft,
+            ),
           ),
           const SizedBox(height: 6),
           // A fixed line box: it keeps the two cards exactly the same height

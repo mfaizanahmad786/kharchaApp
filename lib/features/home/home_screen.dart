@@ -16,6 +16,7 @@ import 'widgets/home_header.dart';
 import 'widgets/money_summary.dart';
 import 'widgets/notifications_sheet.dart';
 import 'widgets/transaction_tile.dart';
+import 'widgets/transactions_skeleton.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key});
@@ -154,18 +155,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                     child: _Message('Could not load your transactions.'),
                   ),
                 ],
-                _ => const [
-                  SliverToBoxAdapter(
-                    child: Padding(
-                      padding: EdgeInsets.only(top: 40),
-                      child: Center(
-                        child: CircularProgressIndicator(
-                          color: AppColors.brand,
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
+                _ => const [SliverToBoxAdapter(child: TransactionsSkeleton())],
               },
 
               const SliverToBoxAdapter(
@@ -242,8 +232,6 @@ class _SectionHeading extends StatelessWidget {
             ),
           ),
         ),
-        const SizedBox(width: 6),
-        const Icon(Icons.info_outline, size: 16, color: AppColors.inkFaint),
         const Spacer(),
         ?trailing,
       ],
@@ -273,50 +261,15 @@ class _TransactionsHeader extends StatelessWidget {
           ),
         ),
         const SizedBox(width: AppSpacing.sm),
-        CircleIconButton(
-          icon: Icons.push_pin_outlined,
-          iconSize: 16,
-          onTap: onSeeAll,
-        ),
-        const SizedBox(width: AppSpacing.sm),
+        // One control, one behaviour. The pin icon did exactly what this does
+        // and the chip looked like a filter while only navigating.
         CircleIconButton(
           icon: Icons.history_rounded,
           iconSize: 17,
+          tooltip: 'All transactions',
           onTap: onSeeAll,
         ),
-        const SizedBox(width: AppSpacing.sm),
-        _PeriodChip(onTap: onSeeAll),
       ],
-    );
-  }
-}
-
-/// The lavender "For the Period" chip.
-class _PeriodChip extends StatelessWidget {
-  const _PeriodChip({required this.onTap});
-
-  final VoidCallback onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    return Material(
-      color: AppColors.chipBg,
-      shape: const StadiumBorder(side: BorderSide(color: AppColors.chipBorder)),
-      clipBehavior: Clip.antiAlias,
-      child: InkWell(
-        onTap: onTap,
-        child: const Padding(
-          padding: EdgeInsets.symmetric(horizontal: 14, vertical: 9),
-          child: Text(
-            'For the Period',
-            style: TextStyle(
-              fontSize: 14,
-              fontWeight: FontWeight.w600,
-              color: AppColors.chipText,
-            ),
-          ),
-        ),
-      ),
     );
   }
 }

@@ -235,7 +235,7 @@ class _AddTransactionSheetState extends ConsumerState<AddTransactionSheet> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     SegmentedToggle(
-                      labels: const ['Expense', 'Income'],
+                      labels: const ['Out', 'In'],
                       index: _type.isExpense ? 0 : 1,
                       onChanged: (i) => setState(() {
                         _type = i == 0 ? TxType.expense : TxType.income;

@@ -36,6 +36,9 @@ abstract final class AppSizes {
   static const avatar = 52.0;
   static const bellButton = 48.0;
   static const circleButton = 34.0;
+
+  /// Minimum tappable square. Material asks for 48, Apple for 44.
+  static const hitArea = 48.0;
   static const summaryGlyph = 48.0;
   static const txnGlyph = 56.0;
   static const insightBanner = 56.0;

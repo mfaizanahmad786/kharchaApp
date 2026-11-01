@@ -142,7 +142,8 @@ class _AddButton extends StatelessWidget {
                 gradient: const LinearGradient(
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
-                  colors: [AppColors.brand, AppColors.brandLight],
+                  // White on brandLight is only 2.54:1; this pair holds 3.77:1.
+                  colors: [AppColors.brandDark, AppColors.brand],
                 ),
                 boxShadow: [
                   BoxShadow(

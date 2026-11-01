@@ -14,8 +14,8 @@ import '../../core/theme/app_fonts.dart';
 
 enum TxFilter {
   all('All'),
-  expense('Expenses'),
-  income('Income');
+  expense('Out'),
+  income('In');
 
   const TxFilter(this.label);
   final String label;

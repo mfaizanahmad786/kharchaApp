@@ -75,10 +75,13 @@ class CircleIconButton extends StatelessWidget {
     this.shadows = AppColors.softShadow,
     this.badge = false,
     this.iconSize,
+    this.tooltip,
   });
 
   final IconData icon;
   final VoidCallback? onTap;
+
+  /// The drawn circle. The tappable area is always at least [AppSizes.hitArea].
   final double size;
   final Color background;
   final Color foreground;
@@ -86,54 +89,66 @@ class CircleIconButton extends StatelessWidget {
   final bool badge;
   final double? iconSize;
 
+  /// Read aloud by TalkBack and shown on long press. An icon with no label is
+  /// invisible to a screen reader.
+  final String? tooltip;
+
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
+    final hit = size < AppSizes.hitArea ? AppSizes.hitArea : size;
+
+    Widget circle = Container(
       width: size,
       height: size,
-      child: Stack(
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        boxShadow: shadows,
+        color: background,
+        border: background == AppColors.surface
+            ? Border.all(color: AppColors.border)
+            : null,
+      ),
+      child: Icon(icon, size: iconSize ?? size * 0.5, color: foreground),
+    );
+
+    if (badge) {
+      circle = Stack(
         clipBehavior: Clip.none,
         children: [
-          Material(
-            color: background,
-            shape: const CircleBorder(),
-            clipBehavior: Clip.antiAlias,
-            child: InkWell(
-              onTap: onTap,
-              child: Ink(
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  boxShadow: shadows,
-                  color: background,
-                  border: background == AppColors.surface
-                      ? Border.all(color: AppColors.border)
-                      : null,
-                ),
-                child: Icon(
-                  icon,
-                  size: iconSize ?? size * 0.5,
-                  color: foreground,
-                ),
+          circle,
+          Positioned(
+            right: size * 0.13,
+            top: size * 0.13,
+            child: Container(
+              width: 9,
+              height: 9,
+              decoration: BoxDecoration(
+                color: AppColors.expense,
+                shape: BoxShape.circle,
+                border: Border.all(color: background, width: 1.5),
               ),
             ),
           ),
-          if (badge)
-            Positioned(
-              right: size * 0.13,
-              top: size * 0.13,
-              child: Container(
-                width: 9,
-                height: 9,
-                decoration: BoxDecoration(
-                  color: AppColors.expense,
-                  shape: BoxShape.circle,
-                  border: Border.all(color: background, width: 1.5),
-                ),
-              ),
-            ),
         ],
+      );
+    }
+
+    // The ink responds across the full hit area, not just the drawn circle.
+    Widget button = SizedBox(
+      width: hit,
+      height: hit,
+      child: Material(
+        color: Colors.transparent,
+        shape: const CircleBorder(),
+        clipBehavior: Clip.antiAlias,
+        child: InkWell(
+          onTap: onTap,
+          child: Center(child: circle),
+        ),
       ),
     );
+
+    return tooltip == null ? button : Tooltip(message: tooltip!, child: button);
   }
 }
 

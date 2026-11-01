@@ -19,11 +19,23 @@ abstract final class AppColors {
   static const chipText = Color(0xFF047857);
 
   /// The header gradient on Home — a soft diagonal wash.
+  ///
+  /// Deeper than the brand ramp used on white: full-white 16pt text needs
+  /// 4.5:1, which the lighter greens could not carry. Worst stop here is
+  /// 4.74:1 for the label and 3.36:1 for the dimmed paisa.
+  static const headerTop = Color(0xFF04533D);
+  static const headerMid = Color(0xFF046A4E);
+  static const headerEnd = Color(0xFF058363);
+
   static const headerGradient = LinearGradient(
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
-    colors: [brandDark, brand, brandLight],
+    colors: [headerTop, headerMid, headerEnd],
   );
+
+  /// Solid fill for pills sitting on the header. A translucent white veil
+  /// left its label at 2.94:1; this carries white at 9.09:1.
+  static const headerPill = headerTop;
 
   // Surfaces
   static const scaffold = Color(0xFFF5F5F7);
@@ -33,14 +45,14 @@ abstract final class AppColors {
   static const divider = Color(0xFFECECEF);
   static const ink = Color(0xFF111111);
   static const inkSoft = Color(0xFF6B6B76);
-  static const inkFaint = Color(0xFF9A9AA6);
+  static const inkFaint = Color(0xFF74747E);
 
   /// Hairline borders carry the card edges on Home, in place of shadows.
   static const border = Color(0xFFECECF2);
   static const borderSoft = Color(0xFFE5E5EC);
 
   /// The inactive tab in the bottom bar.
-  static const navInactive = Color(0xFF8E8E99);
+  static const navInactive = Color(0xFF6E6E78);
 
   /// The muted trailing action on the black insight banner.
   static const onDarkMuted = Color(0xFF9A9AA5);

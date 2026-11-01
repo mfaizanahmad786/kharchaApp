@@ -64,9 +64,7 @@ class HomeHeader extends ConsumerWidget {
                 style: TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.w500,
-                  // Green carries more luminance than the old violet, so the
-                  // label needs a touch more opacity to stay readable on it.
-                  color: Colors.white.withValues(alpha: 0.82),
+                  color: Colors.white,
                 ),
               ),
               const SizedBox(height: 4),
@@ -85,7 +83,7 @@ class HomeHeader extends ConsumerWidget {
                     letterSpacing: -1.6,
                     height: 1.12,
                   ),
-                  fractionOpacity: 0.58,
+                  fractionOpacity: 0.75,
                 ),
               ),
               const SizedBox(height: 10),
@@ -125,9 +123,9 @@ class _DeltaPill extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 7),
-      decoration: ShapeDecoration(
-        color: Colors.white.withValues(alpha: 0.18),
-        shape: const StadiumBorder(),
+      decoration: const ShapeDecoration(
+        color: AppColors.headerPill,
+        shape: StadiumBorder(),
       ),
       child: Text(
         '${delta >= 0 ? '+' : '-'}${Money.compact(delta.abs())} than last week',

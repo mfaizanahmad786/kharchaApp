@@ -127,7 +127,7 @@ class _Body extends ConsumerWidget {
               ),
               const SizedBox(height: 8),
               TagPill(
-                label: txn.type.isIncome ? 'Income' : 'Expense',
+                label: txn.type.isIncome ? 'In' : 'Out',
                 background: AppColors.tint(view.amountColor),
                 foreground: view.amountColor,
               ),

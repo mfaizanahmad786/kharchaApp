@@ -38,7 +38,7 @@ class _ReportScreenState extends ConsumerState<ReportScreen> {
     final daily = ref.watch(dailySeriesProvider(_type)).value ?? const [];
     final total = breakdown.fold<int>(0, (s, e) => s + e.total);
     final isExpense = _type.isExpense;
-    final word = isExpense ? 'Expenses' : 'Income';
+    final word = isExpense ? 'Out' : 'In';
 
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: SystemUiOverlayStyle.dark.copyWith(
@@ -79,7 +79,7 @@ class _ReportScreenState extends ConsumerState<ReportScreen> {
                 child: Padding(
                   padding: const EdgeInsets.fromLTRB(20, 18, 20, 0),
                   child: SegmentedToggle(
-                    labels: const ['Expenses', 'Income'],
+                    labels: const ['Out', 'In'],
                     index: isExpense ? 0 : 1,
                     onChanged: (i) => setState(
                       () => _type = i == 0 ? TxType.expense : TxType.income,
@@ -93,7 +93,7 @@ class _ReportScreenState extends ConsumerState<ReportScreen> {
                   child: Row(
                     children: [
                       Text(
-                        '$word Report',
+                        'Money $word',
                         style: Theme.of(context).textTheme.titleLarge,
                       ),
                       const Spacer(),
@@ -141,7 +141,7 @@ class _ReportScreenState extends ConsumerState<ReportScreen> {
                   child: Row(
                     children: [
                       Text(
-                        'All $word',
+                        'All categories',
                         style: const TextStyle(
                           fontSize: 15,
                           fontWeight: FontWeight.w500,

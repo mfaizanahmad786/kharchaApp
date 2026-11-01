@@ -59,7 +59,7 @@ class _CategoriesScreenState extends ConsumerState<CategoriesScreen> {
           Padding(
             padding: const EdgeInsets.fromLTRB(20, 4, 20, 14),
             child: SegmentedToggle(
-              labels: const ['Expense', 'Income'],
+              labels: const ['Out', 'In'],
               index: _type.isExpense ? 0 : 1,
               height: 46,
               onChanged: (i) => setState(
