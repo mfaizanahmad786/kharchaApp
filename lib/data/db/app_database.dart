@@ -13,7 +13,7 @@ class AppDatabase {
   final Database db;
 
   static const _fileName = 'kharcha.db';
-  static const _version = 1;
+  static const _version = 2;
 
   /// [factory] and [path] exist so tests can open an in-memory database
   /// through sqflite_common_ffi; the app passes neither.
@@ -99,7 +99,8 @@ class AppDatabase {
         target_amount INTEGER NOT NULL,
         saved_amount  INTEGER NOT NULL DEFAULT 0,
         created_at    INTEGER NOT NULL,
-        deadline      INTEGER
+        deadline      INTEGER,
+        pinned        INTEGER NOT NULL DEFAULT 0
       )
     ''');
     await batch.commit(noResult: true);
@@ -107,6 +108,17 @@ class AppDatabase {
 
   static Future<void> _migrate(Database d, int from, int to) async {
     // v1 is the first shipped schema; future versions append their steps here.
+    if (from < 2) {
+      // The Plan screen used to feature whichever goal sorted first, which
+      // moved whenever a row was rewritten. It is now an explicit choice.
+      await d.execute(
+        'ALTER TABLE goals ADD COLUMN pinned INTEGER NOT NULL DEFAULT 0',
+      );
+      await d.execute(
+        'UPDATE goals SET pinned = 1 WHERE id = ('
+        'SELECT id FROM goals ORDER BY created_at DESC, id ASC LIMIT 1)',
+      );
+    }
   }
 
   /// Drops every row and re-seeds. Backs the "Reset data" action in Settings.

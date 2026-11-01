@@ -105,6 +105,8 @@ class _EditGoalSheetState extends ConsumerState<EditGoalSheet> {
       saved: saved,
       createdAt: existing?.createdAt ?? DateTime.now(),
       deadline: _deadline,
+      // Saving an edit must not quietly change which goal is featured.
+      pinned: existing?.pinned ?? false,
     );
     await actions.upsertGoal(goal);
     if (mounted) Navigator.of(context).pop();

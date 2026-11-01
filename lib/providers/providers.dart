@@ -89,6 +89,8 @@ class FinanceActions {
 
   Future<void> upsertGoal(Goal g) => _write((r) => r.upsertGoal(g));
   Future<void> deleteGoal(String id) => _write((r) => r.deleteGoal(id));
+  Future<void> setPinnedGoal(String id, {required bool pinned}) =>
+      _write((r) => r.setPinnedGoal(id, pinned: pinned));
   Future<void> contributeToGoal(String id, int amount) =>
       _write((r) => r.contributeToGoal(id, amount));
 

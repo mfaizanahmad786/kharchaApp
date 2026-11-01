@@ -286,6 +286,7 @@ class Goal {
     required this.saved,
     required this.createdAt,
     this.deadline,
+    this.pinned = false,
   });
 
   final String id;
@@ -298,6 +299,9 @@ class Goal {
   final int saved;
   final DateTime createdAt;
   final DateTime? deadline;
+
+  /// The goal featured on the Plan screen. At most one is pinned at a time.
+  final bool pinned;
 
   IconData get icon => AppIcons.byName(iconName);
   Color get color => Color(colorValue);
@@ -328,6 +332,7 @@ class Goal {
     'saved_amount': saved,
     'created_at': createdAt.millisecondsSinceEpoch,
     'deadline': deadline?.millisecondsSinceEpoch,
+    'pinned': pinned ? 1 : 0,
   };
 
   factory Goal.fromMap(Map<String, Object?> m) => Goal(
@@ -341,6 +346,7 @@ class Goal {
     deadline: m['deadline'] == null
         ? null
         : DateTime.fromMillisecondsSinceEpoch(m['deadline']! as int),
+    pinned: ((m['pinned'] as int?) ?? 0) == 1,
   );
 
   Goal copyWith({

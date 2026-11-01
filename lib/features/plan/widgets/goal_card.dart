@@ -77,8 +77,19 @@ class GoalCard extends StatelessWidget {
                             ],
                           ),
                         ),
+                        if (goal.pinned)
+                          Padding(
+                            padding: const EdgeInsets.only(right: 2),
+                            child: Icon(
+                              Icons.push_pin_rounded,
+                              size: 16,
+                              color: p.inkFaint,
+                              semanticLabel: 'Pinned to Plan',
+                            ),
+                          ),
                         IconButton(
                           onPressed: onMenu,
+                          tooltip: 'Goal options',
                           icon: const Icon(Icons.more_vert_rounded),
                           color: p.inkFaint,
                         ),

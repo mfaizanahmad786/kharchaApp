@@ -302,6 +302,59 @@ void main() {
   });
 
   group('goals', () {
+    Future<void> seedGoal(String id, {bool pinned = false}) => repo.upsertGoal(
+      Goal(
+        id: id,
+        name: id,
+        iconName: 'savings',
+        colorValue: 0xFF000000,
+        target: 100000,
+        saved: 0,
+        // Every seeded goal shares a creation time, which is what made the
+        // ordering fragile in the first place.
+        createdAt: DateTime(2026, 1, 1),
+        pinned: pinned,
+      ),
+    );
+
+    test('ordering does not depend on which row was written last', () async {
+      await seedGoal('a');
+      await seedGoal('b');
+      await seedGoal('c');
+      expect((await repo.goals()).map((g) => g.id), ['a', 'b', 'c']);
+
+      // upsert replaces the row, which gives it a new rowid. The Plan screen
+      // features goals.first, so a tie broken by rowid moved the pinned goal
+      // every time one was edited.
+      await seedGoal('a');
+      expect((await repo.goals()).map((g) => g.id), ['a', 'b', 'c']);
+    });
+
+    test('the pinned goal sorts first whatever its age', () async {
+      await seedGoal('a');
+      await seedGoal('b');
+      await repo.setPinnedGoal('c', pinned: true);
+      await seedGoal('c', pinned: true);
+      await repo.setPinnedGoal('c', pinned: true);
+      expect((await repo.goals()).first.id, 'c');
+    });
+
+    test('pinning one goal unpins the rest', () async {
+      await seedGoal('a', pinned: true);
+      await seedGoal('b');
+      await repo.setPinnedGoal('b', pinned: true);
+
+      final goals = await repo.goals();
+      expect(goals.where((g) => g.pinned).map((g) => g.id), ['b']);
+      expect(goals.first.id, 'b');
+    });
+
+    test('unpinning leaves nothing pinned', () async {
+      await seedGoal('a', pinned: true);
+      await repo.setPinnedGoal('a', pinned: false);
+      expect((await repo.goals()).any((g) => g.pinned), isFalse);
+    });
+
     test('contributions accumulate and never go below zero', () async {
       await repo.upsertGoal(
         Goal(

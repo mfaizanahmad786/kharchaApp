@@ -11,6 +11,7 @@ import 'widgets/budget_row.dart';
 import 'widgets/goal_card.dart';
 import '../../core/theme/app_fonts.dart';
 import '../../core/theme/app_palette.dart';
+import 'goal_menu.dart';
 
 /// "View All" for goals.
 class GoalsScreen extends ConsumerWidget {
@@ -37,7 +38,7 @@ class GoalsScreen extends ConsumerWidget {
               itemBuilder: (context, i) => GoalCard(
                 goal: goals[i],
                 onTap: () => EditGoalSheet.show(context, existing: goals[i]),
-                onMenu: () => EditGoalSheet.show(context, existing: goals[i]),
+                onMenu: () => showGoalMenu(context, ref, goals[i]),
               ),
             ),
     );

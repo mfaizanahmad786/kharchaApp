@@ -457,9 +457,32 @@ class FinanceRepository {
 
   // ------------------------------------------------------------------- goals
 
+  /// Pinned first, then newest. `id` breaks the tie so the order never
+  /// depends on rowid: the seeded goals share a creation time, and a
+  /// `ConflictAlgorithm.replace` rewrites the row, which used to reshuffle
+  /// which goal the Plan screen featured.
   Future<List<Goal>> goals() async {
-    final rows = await _db.query('goals', orderBy: 'created_at DESC');
+    final rows = await _db.query(
+      'goals',
+      orderBy: 'pinned DESC, created_at DESC, id ASC',
+    );
     return rows.map(Goal.fromMap).toList(growable: false);
+  }
+
+  /// Features one goal on the Plan screen. At most one is pinned, so this
+  /// clears the others in the same transaction.
+  Future<void> setPinnedGoal(String id, {required bool pinned}) async {
+    await _db.transaction((t) async {
+      if (pinned) {
+        await t.update('goals', {'pinned': 0}, where: 'pinned = 1');
+      }
+      await t.update(
+        'goals',
+        {'pinned': pinned ? 1 : 0},
+        where: 'id = ?',
+        whereArgs: [id],
+      );
+    });
   }
 
   Future<void> upsertGoal(Goal g) => _db.insert(

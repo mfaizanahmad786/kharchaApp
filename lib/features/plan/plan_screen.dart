@@ -3,7 +3,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../core/theme/app_colors.dart';
-import '../../core/utils/money.dart';
 import '../../core/widgets/pills.dart';
 import '../../data/models/models.dart';
 import '../../data/repository/finance_repository.dart';
@@ -15,7 +14,7 @@ import 'plan_list_screens.dart';
 import 'widgets/budget_row.dart';
 import 'widgets/goal_card.dart';
 import '../../core/theme/app_palette.dart';
-import '../../core/widgets/text_prompt_dialog.dart';
+import 'goal_menu.dart';
 
 /// Goals (savings targets) on top, budgets (monthly spending ceilings) below.
 class PlanScreen extends ConsumerWidget {
@@ -108,7 +107,7 @@ class PlanScreen extends ConsumerWidget {
                       goal: goals[i],
                       onTap: () =>
                           EditGoalSheet.show(context, existing: goals[i]),
-                      onMenu: () => _showGoalMenu(context, ref, goals[i]),
+                      onMenu: () => showGoalMenu(context, ref, goals[i]),
                     ),
                   ),
                 ),
@@ -218,91 +217,6 @@ class PlanScreen extends ConsumerWidget {
         ),
       ),
     );
-  }
-
-  void _showGoalMenu(BuildContext context, WidgetRef ref, Goal goal) {
-    final p = context.palette;
-    showModalBottomSheet<void>(
-      context: context,
-      useRootNavigator: true,
-      backgroundColor: Colors.transparent,
-      builder: (ctx) => Container(
-        decoration: BoxDecoration(
-          color: p.surface,
-          borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
-        ),
-        padding: EdgeInsets.only(
-          top: 10,
-          bottom: 16 + MediaQuery.viewPaddingOf(ctx).bottom,
-        ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Container(
-              width: 40,
-              height: 4,
-              decoration: BoxDecoration(
-                color: p.track,
-                borderRadius: BorderRadius.circular(2),
-              ),
-            ),
-            const SizedBox(height: 10),
-            ListTile(
-              leading: Icon(Icons.add_circle_outline_rounded, color: p.income),
-              title: const Text(
-                'Add money',
-                style: TextStyle(fontWeight: FontWeight.w600),
-              ),
-              onTap: () {
-                Navigator.of(ctx).pop();
-                _contribute(context, ref, goal);
-              },
-            ),
-            ListTile(
-              leading: const Icon(Icons.edit_rounded, color: AppColors.brand),
-              title: const Text(
-                'Edit goal',
-                style: TextStyle(fontWeight: FontWeight.w600),
-              ),
-              onTap: () {
-                Navigator.of(ctx).pop();
-                EditGoalSheet.show(context, existing: goal);
-              },
-            ),
-            ListTile(
-              leading: Icon(Icons.delete_outline_rounded, color: p.expense),
-              title: Text(
-                'Delete goal',
-                style: TextStyle(fontWeight: FontWeight.w600, color: p.expense),
-              ),
-              onTap: () async {
-                Navigator.of(ctx).pop();
-                await ref.read(actionsProvider).deleteGoal(goal.id);
-              },
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Future<void> _contribute(
-    BuildContext context,
-    WidgetRef ref,
-    Goal goal,
-  ) async {
-    final entered = await TextPromptDialog.show(
-      context,
-      title: 'Add to ${goal.name}',
-      hintText: '0',
-      prefixText: '$kCurrencySymbol ',
-      keyboardType: TextInputType.number,
-      confirmLabel: 'Add',
-    );
-    final amount = Money.parse(entered ?? '');
-    if (amount != null && amount > 0) {
-      await ref.read(actionsProvider).contributeToGoal(goal.id, amount);
-    }
   }
 }
 

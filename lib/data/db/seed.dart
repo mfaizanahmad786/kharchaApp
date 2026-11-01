@@ -299,6 +299,7 @@ abstract final class Seed {
         'target_amount': 250000000,
         'saved_amount': 87500000,
         'created_at': goalBase,
+        'pinned': 1,
         // Deliberately behind schedule, so the Plan screen shows the
         // off-target warning rather than only the happy path.
         'deadline': DateTime(now.year, now.month + 4, 1).millisecondsSinceEpoch,
