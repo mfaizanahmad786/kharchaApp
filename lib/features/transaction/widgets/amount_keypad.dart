@@ -82,7 +82,15 @@ class _Key extends StatelessWidget {
             height: 50,
             child: Center(
               child: isBackspace
-                  ? Icon(Icons.backspace_outlined, size: 21, color: p.ink)
+                  ? Semantics(
+                      label: 'Delete last digit',
+                      button: true,
+                      child: Icon(
+                        Icons.backspace_outlined,
+                        size: 21,
+                        color: p.ink,
+                      ),
+                    )
                   : Text(
                       label,
                       style: TextStyle(

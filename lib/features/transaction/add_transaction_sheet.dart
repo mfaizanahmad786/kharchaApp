@@ -66,6 +66,12 @@ class _AddTransactionSheetState extends ConsumerState<AddTransactionSheet> {
   }
 
   int get _paisa => Money.parse(_input) ?? 0;
+
+  /// entering-data.md asks for dynamic validation. The amount is the only
+  /// field a person can leave unusable: category and account are preselected.
+  bool get _canSave => _paisa > 0 && !_saving;
+
+  bool get _dirty => _paisa > 0 || _note.text.trim().isNotEmpty;
   bool get _isEdit => widget.existing != null;
 
   void _digit(String d) {
@@ -122,6 +128,41 @@ class _AddTransactionSheetState extends ConsumerState<AddTransactionSheet> {
         ),
       );
     }
+  }
+
+  /// modality.md: a modal needs an obvious way out — but not one that throws
+  /// away what someone just typed without asking.
+  Future<bool> _confirmDiscard() async {
+    if (!_dirty) return true;
+    final discard = await showDialog<bool>(
+      context: context,
+      useRootNavigator: true,
+      builder: (ctx) => AlertDialog(
+        title: const Text('Discard this transaction?'),
+        content: const Text('What you have entered will not be saved.'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(ctx).pop(false),
+            child: Text(
+              'Keep editing',
+              style: TextStyle(color: ctx.palette.inkSoft),
+            ),
+          ),
+          TextButton(
+            onPressed: () => Navigator.of(ctx).pop(true),
+            child: Text(
+              'Discard',
+              style: TextStyle(color: ctx.palette.expense),
+            ),
+          ),
+        ],
+      ),
+    );
+    return discard ?? false;
+  }
+
+  Future<void> _close() async {
+    if (await _confirmDiscard() && mounted) Navigator.of(context).pop();
   }
 
   Future<void> _save() async {
@@ -193,178 +234,190 @@ class _AddTransactionSheetState extends ConsumerState<AddTransactionSheet> {
 
     final accent = _type.isIncome ? p.income : AppColors.brand;
 
-    return Container(
-      decoration: BoxDecoration(
-        color: p.scaffold,
-        borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
-      ),
-      padding: EdgeInsets.only(bottom: MediaQuery.viewInsetsOf(context).bottom),
-      child: SafeArea(
-        top: false,
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            const SizedBox(height: 12),
-            Container(
-              width: 40,
-              height: 4,
-              decoration: BoxDecoration(
-                color: p.track,
-                borderRadius: BorderRadius.circular(2),
+    return PopScope(
+      canPop: !_dirty,
+      onPopInvokedWithResult: (didPop, _) async {
+        if (!didPop && await _confirmDiscard() && mounted) {
+          if (context.mounted) Navigator.of(context).pop();
+        }
+      },
+      child: Container(
+        decoration: BoxDecoration(
+          color: p.scaffold,
+          borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
+        ),
+        padding: EdgeInsets.only(
+          bottom: MediaQuery.viewInsetsOf(context).bottom,
+        ),
+        child: SafeArea(
+          top: false,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const SizedBox(height: 12),
+              Container(
+                width: 40,
+                height: 4,
+                decoration: BoxDecoration(
+                  color: p.track,
+                  borderRadius: BorderRadius.circular(2),
+                ),
               ),
-            ),
-            Padding(
-              padding: const EdgeInsets.fromLTRB(20, 14, 12, 0),
-              child: Row(
-                children: [
-                  Text(
-                    _isEdit ? 'Edit Transaction' : 'Add Transaction',
-                    style: Theme.of(context).textTheme.titleLarge,
-                  ),
-                  const Spacer(),
-                  IconButton(
-                    onPressed: () => Navigator.of(context).pop(),
-                    icon: const Icon(Icons.close_rounded),
-                    color: p.inkSoft,
-                  ),
-                ],
-              ),
-            ),
-            Flexible(
-              child: SingleChildScrollView(
-                padding: const EdgeInsets.fromLTRB(20, 6, 20, 0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+              Padding(
+                padding: const EdgeInsets.fromLTRB(20, 14, 12, 0),
+                child: Row(
                   children: [
-                    SegmentedToggle(
-                      labels: const ['Out', 'In'],
-                      index: _type.isExpense ? 0 : 1,
-                      onChanged: (i) => setState(() {
-                        _type = i == 0 ? TxType.expense : TxType.income;
-                        _categoryId = null;
-                      }),
+                    Text(
+                      _isEdit ? 'Edit Transaction' : 'Add Transaction',
+                      style: Theme.of(context).textTheme.titleLarge,
                     ),
-                    const SizedBox(height: 24),
-                    Center(
-                      child: _AmountDisplay(input: _input, accent: accent),
-                    ),
-                    const SizedBox(height: 22),
-                    const _Label('Category'),
-                    const SizedBox(height: 10),
-                    _CategoryPicker(
-                      categories: categories,
-                      selectedId: _categoryId,
-                      onSelect: (id) => setState(() => _categoryId = id),
-                    ),
-                    const SizedBox(height: 18),
-                    const _Label('Account'),
-                    const SizedBox(height: 10),
-                    _AccountPicker(
-                      accounts: accounts,
-                      selectedId: _accountId,
-                      onSelect: (id) => setState(() => _accountId = id),
-                    ),
-                    const SizedBox(height: 18),
-                    Row(
-                      children: [
-                        Expanded(
-                          child: _FieldShell(
-                            label: 'Date',
-                            onTap: _pickDate,
-                            child: Row(
-                              children: [
-                                Icon(
-                                  Icons.calendar_today_rounded,
-                                  size: 15,
-                                  color: p.inkSoft,
-                                ),
-                                const SizedBox(width: 8),
-                                Text(
-                                  AppDate.shortDay(_date),
-                                  style: const TextStyle(
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                        const SizedBox(width: 12),
-                        Expanded(
-                          child: _FieldShell(
-                            label: 'Note',
-                            child: TextField(
-                              controller: _note,
-                              textCapitalization: TextCapitalization.sentences,
-                              style: const TextStyle(
-                                fontSize: 14,
-                                fontWeight: FontWeight.w600,
-                              ),
-                              decoration: InputDecoration(
-                                isDense: true,
-                                border: InputBorder.none,
-                                hintText: 'Optional',
-                                contentPadding: EdgeInsets.zero,
-                                hintStyle: TextStyle(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w500,
-                                  color: p.inkFaint,
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 16),
-                    AmountKeypad(
-                      onDigit: _digit,
-                      onDecimal: _decimal,
-                      onBackspace: _backspace,
-                      onClear: () => setState(() => _input = '0'),
+                    const Spacer(),
+                    IconButton(
+                      onPressed: _close,
+                      tooltip: 'Close',
+                      icon: const Icon(Icons.close_rounded),
+                      color: p.inkSoft,
                     ),
                   ],
                 ),
               ),
-            ),
-
-            // Pinned footer: the save action must never scroll out of reach.
-            Padding(
-              padding: const EdgeInsets.fromLTRB(20, 12, 20, 12),
-              child: SizedBox(
-                width: double.infinity,
-                height: 54,
-                child: FilledButton(
-                  onPressed: _saving ? null : _save,
-                  style: FilledButton.styleFrom(
-                    backgroundColor: accent,
-                    disabledBackgroundColor: accent.withValues(alpha: 0.5),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(18),
-                    ),
+              Flexible(
+                child: SingleChildScrollView(
+                  padding: const EdgeInsets.fromLTRB(20, 6, 20, 0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      SegmentedToggle(
+                        labels: const ['Out', 'In'],
+                        index: _type.isExpense ? 0 : 1,
+                        onChanged: (i) => setState(() {
+                          _type = i == 0 ? TxType.expense : TxType.income;
+                          _categoryId = null;
+                        }),
+                      ),
+                      const SizedBox(height: 24),
+                      Center(
+                        child: _AmountDisplay(input: _input, accent: accent),
+                      ),
+                      const SizedBox(height: 22),
+                      const _Label('Category'),
+                      const SizedBox(height: 10),
+                      _CategoryPicker(
+                        categories: categories,
+                        selectedId: _categoryId,
+                        onSelect: (id) => setState(() => _categoryId = id),
+                      ),
+                      const SizedBox(height: 18),
+                      const _Label('Account'),
+                      const SizedBox(height: 10),
+                      _AccountPicker(
+                        accounts: accounts,
+                        selectedId: _accountId,
+                        onSelect: (id) => setState(() => _accountId = id),
+                      ),
+                      const SizedBox(height: 18),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: _FieldShell(
+                              label: 'Date',
+                              onTap: _pickDate,
+                              child: Row(
+                                children: [
+                                  Icon(
+                                    Icons.calendar_today_rounded,
+                                    size: 15,
+                                    color: p.inkSoft,
+                                  ),
+                                  const SizedBox(width: 8),
+                                  Text(
+                                    AppDate.shortDay(_date),
+                                    style: const TextStyle(
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                          const SizedBox(width: 12),
+                          Expanded(
+                            child: _FieldShell(
+                              label: 'Note',
+                              child: TextField(
+                                controller: _note,
+                                textCapitalization:
+                                    TextCapitalization.sentences,
+                                style: const TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                                decoration: InputDecoration(
+                                  isDense: true,
+                                  border: InputBorder.none,
+                                  hintText: 'Optional',
+                                  contentPadding: EdgeInsets.zero,
+                                  hintStyle: TextStyle(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w500,
+                                    color: p.inkFaint,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 16),
+                      AmountKeypad(
+                        onDigit: _digit,
+                        onDecimal: _decimal,
+                        onBackspace: _backspace,
+                        onClear: () => setState(() => _input = '0'),
+                      ),
+                    ],
                   ),
-                  child: _saving
-                      ? const SizedBox(
-                          width: 20,
-                          height: 20,
-                          child: CircularProgressIndicator(
-                            strokeWidth: 2.2,
-                            color: Colors.white,
-                          ),
-                        )
-                      : Text(
-                          _isEdit ? 'Save changes' : 'Add transaction',
-                          style: const TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w700,
-                            color: Colors.white,
-                          ),
-                        ),
                 ),
               ),
-            ),
-          ],
+
+              // Pinned footer: the save action must never scroll out of reach.
+              Padding(
+                padding: const EdgeInsets.fromLTRB(20, 12, 20, 12),
+                child: SizedBox(
+                  width: double.infinity,
+                  height: 54,
+                  child: FilledButton(
+                    onPressed: _canSave ? _save : null,
+                    style: FilledButton.styleFrom(
+                      backgroundColor: accent,
+                      disabledBackgroundColor: accent.withValues(alpha: 0.5),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(18),
+                      ),
+                    ),
+                    child: _saving
+                        ? const SizedBox(
+                            width: 20,
+                            height: 20,
+                            child: CircularProgressIndicator(
+                              strokeWidth: 2.2,
+                              color: Colors.white,
+                            ),
+                          )
+                        : Text(
+                            _isEdit ? 'Save changes' : 'Add transaction',
+                            style: const TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w700,
+                              color: Colors.white,
+                            ),
+                          ),
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -398,7 +451,9 @@ class _AmountDisplay extends StatelessWidget {
               style: TextStyle(
                 fontSize: 26,
                 fontWeight: FontWeight.w600,
-                color: accent.withValues(alpha: 0.7),
+                // At 70% alpha this measured 2.38:1 against a 3:1
+                // requirement; at full strength it is 3.40:1.
+                color: accent,
               ),
             ),
           ),
@@ -532,8 +587,12 @@ class _AccountPicker extends StatelessWidget {
                 decoration: BoxDecoration(
                   color: p.surface,
                   borderRadius: BorderRadius.circular(16),
+                  // The accent means "selected"; the account's own hue says
+                  // nothing about selection and read as arbitrary.
                   border: Border.all(
-                    color: a.id == selectedId ? a.color : Colors.transparent,
+                    color: a.id == selectedId
+                        ? AppColors.brand
+                        : Colors.transparent,
                     width: 1.8,
                   ),
                   boxShadow: p.softShadow,
