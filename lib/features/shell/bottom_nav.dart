@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_dimens.dart';
+import '../../core/theme/app_palette.dart';
 
 /// Height of the nav sheet, excluding the device's bottom inset.
 const double kNavBarHeight = 76;
@@ -39,6 +40,7 @@ class KharchaBottomNav extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final p = context.palette;
     final bottomInset = MediaQuery.viewPaddingOf(context).bottom;
 
     return SizedBox(
@@ -54,8 +56,8 @@ class KharchaBottomNav extends StatelessWidget {
             child: Container(
               height: kNavBarHeight + bottomInset,
               padding: EdgeInsets.only(bottom: bottomInset),
-              decoration: const BoxDecoration(
-                color: AppColors.surface,
+              decoration: BoxDecoration(
+                color: p.surface,
                 borderRadius: AppRadii.navTop,
                 boxShadow: [
                   BoxShadow(
@@ -67,11 +69,11 @@ class KharchaBottomNav extends StatelessWidget {
               ),
               child: Row(
                 children: [
-                  _item(0),
-                  _item(1),
+                  _item(p, 0),
+                  _item(p, 1),
                   const SizedBox(width: 80),
-                  _item(2),
-                  _item(3),
+                  _item(p, 2),
+                  _item(p, 3),
                 ],
               ),
             ),
@@ -85,7 +87,7 @@ class KharchaBottomNav extends StatelessWidget {
     );
   }
 
-  Widget _item(int i) {
+  Widget _item(AppPalette p, int i) {
     final d = navDestinations[i];
     final selected = i == index;
     return Expanded(
@@ -95,18 +97,14 @@ class KharchaBottomNav extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(
-              d.icon,
-              size: 25,
-              color: selected ? AppColors.ink : AppColors.navInactive,
-            ),
+            Icon(d.icon, size: 25, color: selected ? p.ink : p.navInactive),
             const SizedBox(height: 4),
             Text(
               d.label,
               style: TextStyle(
                 fontSize: 12,
                 fontWeight: selected ? FontWeight.w700 : FontWeight.w400,
-                color: selected ? AppColors.ink : AppColors.navInactive,
+                color: selected ? p.ink : p.navInactive,
               ),
             ),
           ],

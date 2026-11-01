@@ -17,6 +17,7 @@ import 'widgets/money_summary.dart';
 import 'widgets/notifications_sheet.dart';
 import 'widgets/transaction_tile.dart';
 import 'widgets/transactions_skeleton.dart';
+import '../../core/theme/app_palette.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key});
@@ -52,6 +53,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final p = context.palette;
     final totals = ref.watch(monthTotalsProvider);
     final sections = ref.watch(groupedTransactionsProvider);
 
@@ -64,7 +66,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               statusBarColor: Colors.transparent,
             ),
       child: Scaffold(
-        backgroundColor: AppColors.surface,
+        backgroundColor: p.surface,
         body: RefreshIndicator(
           color: AppColors.brand,
           onRefresh: () async => ref.read(revisionProvider.notifier).bump(),
@@ -83,7 +85,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
               SliverToBoxAdapter(
                 child: ColoredBox(
-                  color: AppColors.surface,
+                  color: p.surface,
                   child: Padding(
                     padding: const EdgeInsets.fromLTRB(
                       AppSpacing.screen,
@@ -110,7 +112,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                                 label: 'In',
                                 amount: totals.value?.income ?? 0,
                                 icon: Icons.savings_rounded,
-                                tint: AppColors.incomeTint,
+                                tint: p.incomeTint,
                                 iconColor: AppColors.catBlue,
                                 onTap: () => TransactionsScreen.open(
                                   context,
@@ -124,8 +126,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                                 label: 'Out',
                                 amount: totals.value?.expense ?? 0,
                                 icon: Icons.account_balance_wallet_rounded,
-                                tint: AppColors.expenseTint,
-                                iconColor: AppColors.expense,
+                                tint: p.expenseTint,
+                                iconColor: p.expense,
                                 onTap: () => TransactionsScreen.open(
                                   context,
                                   initial: TxFilter.expense,
@@ -279,7 +281,8 @@ class _EmptyTransactions extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Padding(
+    final p = context.palette;
+    return Padding(
       padding: EdgeInsets.fromLTRB(
         AppSpacing.screen,
         AppSpacing.xl,
@@ -288,7 +291,7 @@ class _EmptyTransactions extends StatelessWidget {
       ),
       child: Column(
         children: [
-          Icon(Icons.receipt_long_rounded, size: 46, color: AppColors.inkFaint),
+          Icon(Icons.receipt_long_rounded, size: 46, color: p.inkFaint),
           SizedBox(height: 14),
           Text(
             'Nothing here yet',
@@ -301,7 +304,7 @@ class _EmptyTransactions extends StatelessWidget {
             style: TextStyle(
               fontSize: 14,
               fontWeight: FontWeight.w500,
-              color: AppColors.inkSoft,
+              color: p.inkSoft,
               height: 1.5,
             ),
           ),
@@ -322,8 +325,8 @@ class _Message extends StatelessWidget {
     child: Center(
       child: Text(
         text,
-        style: const TextStyle(
-          color: AppColors.inkSoft,
+        style: TextStyle(
+          color: context.palette.inkSoft,
           fontWeight: FontWeight.w500,
         ),
       ),

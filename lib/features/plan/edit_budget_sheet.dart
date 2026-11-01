@@ -6,6 +6,7 @@ import '../../core/utils/money.dart';
 import '../../core/widgets/icon_color_picker.dart';
 import '../../data/models/models.dart';
 import '../../providers/providers.dart';
+import '../../core/theme/app_palette.dart';
 
 class EditBudgetSheet extends ConsumerStatefulWidget {
   const EditBudgetSheet({super.key, this.existing});
@@ -98,6 +99,7 @@ class _EditBudgetSheetState extends ConsumerState<EditBudgetSheet> {
 
   @override
   Widget build(BuildContext context) {
+    final p = context.palette;
     final categories =
         ref.watch(categoriesProvider(TxType.expense)).value ??
         const <Category>[];
@@ -146,9 +148,9 @@ class _EditBudgetSheetState extends ConsumerState<EditBudgetSheet> {
         Container(
           padding: const EdgeInsets.fromLTRB(14, 6, 10, 10),
           decoration: BoxDecoration(
-            color: AppColors.surface,
+            color: p.surface,
             borderRadius: BorderRadius.circular(16),
-            boxShadow: AppColors.softShadow,
+            boxShadow: p.softShadow,
           ),
           child: Column(
             children: [
@@ -165,12 +167,12 @@ class _EditBudgetSheetState extends ConsumerState<EditBudgetSheet> {
               if (_alerts) ...[
                 Row(
                   children: [
-                    const Text(
+                    Text(
                       'Warn at',
                       style: TextStyle(
                         fontSize: 14,
                         fontWeight: FontWeight.w500,
-                        color: AppColors.inkSoft,
+                        color: p.inkSoft,
                       ),
                     ),
                     Expanded(
@@ -225,10 +227,10 @@ class _Label extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Text(
     text,
-    style: const TextStyle(
+    style: TextStyle(
       fontSize: 14,
       fontWeight: FontWeight.w700,
-      color: AppColors.inkSoft,
+      color: context.palette.inkSoft,
     ),
   );
 }
@@ -250,15 +252,16 @@ class _CategoryChip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final p = context.palette;
     return GestureDetector(
       onTap: onTap,
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 160),
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 9),
         decoration: BoxDecoration(
-          color: selected ? color : AppColors.surface,
+          color: selected ? color : p.surface,
           borderRadius: BorderRadius.circular(999),
-          boxShadow: AppColors.softShadow,
+          boxShadow: p.softShadow,
         ),
         child: Row(
           mainAxisSize: MainAxisSize.min,
@@ -270,7 +273,7 @@ class _CategoryChip extends StatelessWidget {
               style: TextStyle(
                 fontSize: 13.5,
                 fontWeight: FontWeight.w600,
-                color: selected ? Colors.white : AppColors.ink,
+                color: selected ? Colors.white : p.ink,
               ),
             ),
           ],

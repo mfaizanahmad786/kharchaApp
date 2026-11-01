@@ -11,6 +11,7 @@ import '../../core/widgets/soft_card.dart';
 import '../../data/models/models.dart';
 import '../../providers/providers.dart';
 import '../../core/theme/app_fonts.dart';
+import '../../core/theme/app_palette.dart';
 
 /// Add, rename, recolour and delete categories.
 class CategoriesScreen extends ConsumerStatefulWidget {
@@ -29,26 +30,27 @@ class _CategoriesScreenState extends ConsumerState<CategoriesScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final p = context.palette;
     final categories =
         ref.watch(categoriesProvider(_type)).value ?? const <Category>[];
 
     return Scaffold(
-      backgroundColor: AppColors.scaffold,
+      backgroundColor: p.scaffold,
       appBar: AppBar(
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back_rounded, color: AppColors.ink),
+          icon: Icon(Icons.arrow_back_rounded, color: p.ink),
           onPressed: () => Navigator.of(context).pop(),
         ),
         title: const Text('Categories'),
-        titleTextStyle: const TextStyle(
+        titleTextStyle: TextStyle(
           fontFamily: AppFonts.family,
           fontSize: 20,
           fontWeight: FontWeight.w700,
-          color: AppColors.ink,
+          color: p.ink,
         ),
         actions: [
           IconButton(
-            icon: const Icon(Icons.add_rounded, color: AppColors.ink),
+            icon: Icon(Icons.add_rounded, color: p.ink),
             onPressed: () => _edit(null),
           ),
           const SizedBox(width: 8),
@@ -77,7 +79,7 @@ class _CategoriesScreenState extends ConsumerState<CategoriesScreen> {
                 return SoftCard(
                   radius: 18,
                   padding: const EdgeInsets.fromLTRB(12, 12, 8, 12),
-                  shadows: AppColors.softShadow,
+                  shadows: p.softShadow,
                   onTap: () => _edit(c),
                   child: Row(
                     children: [
@@ -93,10 +95,10 @@ class _CategoriesScreenState extends ConsumerState<CategoriesScreen> {
                         ),
                       ),
                       IconButton(
-                        icon: const Icon(
+                        icon: Icon(
                           Icons.delete_outline_rounded,
                           size: 20,
-                          color: AppColors.inkFaint,
+                          color: p.inkFaint,
                         ),
                         onPressed: () => _delete(c),
                       ),
@@ -213,25 +215,26 @@ class AccountsScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final p = context.palette;
     final accounts = ref.watch(accountsProvider).value ?? const <Account>[];
 
     return Scaffold(
-      backgroundColor: AppColors.scaffold,
+      backgroundColor: p.scaffold,
       appBar: AppBar(
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back_rounded, color: AppColors.ink),
+          icon: Icon(Icons.arrow_back_rounded, color: p.ink),
           onPressed: () => Navigator.of(context).pop(),
         ),
         title: const Text('Accounts'),
-        titleTextStyle: const TextStyle(
+        titleTextStyle: TextStyle(
           fontFamily: AppFonts.family,
           fontSize: 20,
           fontWeight: FontWeight.w700,
-          color: AppColors.ink,
+          color: p.ink,
         ),
         actions: [
           IconButton(
-            icon: const Icon(Icons.add_rounded, color: AppColors.ink),
+            icon: Icon(Icons.add_rounded, color: p.ink),
             onPressed: () => _edit(context, null),
           ),
           const SizedBox(width: 8),
@@ -246,7 +249,7 @@ class AccountsScreen extends ConsumerWidget {
           return SoftCard(
             radius: 18,
             padding: const EdgeInsets.fromLTRB(12, 12, 8, 12),
-            shadows: AppColors.softShadow,
+            shadows: p.softShadow,
             onTap: () => _edit(context, a),
             child: Row(
               children: [
@@ -266,18 +269,18 @@ class AccountsScreen extends ConsumerWidget {
                       const SizedBox(height: 2),
                       Row(
                         children: [
-                          const Text(
+                          Text(
                             'Opening ',
                             style: TextStyle(
                               fontSize: 13,
                               fontWeight: FontWeight.w500,
-                              color: AppColors.inkFaint,
+                              color: p.inkFaint,
                             ),
                           ),
                           AmountText(
                             a.openingBalance,
                             showDecimals: false,
-                            color: AppColors.inkFaint,
+                            color: p.inkFaint,
                             style: const TextStyle(
                               fontSize: 13,
                               fontWeight: FontWeight.w600,
@@ -289,10 +292,10 @@ class AccountsScreen extends ConsumerWidget {
                   ),
                 ),
                 IconButton(
-                  icon: const Icon(
+                  icon: Icon(
                     Icons.delete_outline_rounded,
                     size: 20,
-                    color: AppColors.inkFaint,
+                    color: p.inkFaint,
                   ),
                   onPressed: accounts.length <= 1
                       ? null
@@ -406,10 +409,10 @@ class _Label extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Text(
     text,
-    style: const TextStyle(
+    style: TextStyle(
       fontSize: 14,
       fontWeight: FontWeight.w700,
-      color: AppColors.inkSoft,
+      color: context.palette.inkSoft,
     ),
   );
 }

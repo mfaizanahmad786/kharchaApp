@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../core/theme/app_colors.dart';
 import '../../core/utils/app_date.dart';
 import '../../core/widgets/amount_text.dart';
 import '../../core/widgets/month_picker_sheet.dart';
@@ -11,6 +10,7 @@ import '../../providers/providers.dart';
 import '../home/widgets/transaction_tile.dart';
 import 'transaction_detail_screen.dart';
 import '../../core/theme/app_fonts.dart';
+import '../../core/theme/app_palette.dart';
 
 enum TxFilter {
   all('All'),
@@ -71,23 +71,24 @@ class _TransactionsScreenState extends ConsumerState<TransactionsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final p = context.palette;
     final all = ref.watch(monthTransactionsProvider).value ?? const <TxnView>[];
     final items = _apply(all);
     final total = items.fold<int>(0, (s, v) => s + v.txn.signed);
 
     return Scaffold(
-      backgroundColor: AppColors.scaffold,
+      backgroundColor: p.scaffold,
       appBar: AppBar(
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back_rounded, color: AppColors.ink),
+          icon: Icon(Icons.arrow_back_rounded, color: p.ink),
           onPressed: () => Navigator.of(context).pop(),
         ),
         title: const Text('Transactions'),
-        titleTextStyle: const TextStyle(
+        titleTextStyle: TextStyle(
           fontFamily: AppFonts.family,
           fontSize: 20,
           fontWeight: FontWeight.w700,
-          color: AppColors.ink,
+          color: p.ink,
         ),
         actions: const [
           Padding(
@@ -102,9 +103,9 @@ class _TransactionsScreenState extends ConsumerState<TransactionsScreen> {
             padding: const EdgeInsets.fromLTRB(20, 4, 20, 0),
             child: Container(
               decoration: BoxDecoration(
-                color: AppColors.surface,
+                color: p.surface,
                 borderRadius: BorderRadius.circular(16),
-                boxShadow: AppColors.softShadow,
+                boxShadow: p.softShadow,
               ),
               child: TextField(
                 controller: _search,
@@ -115,21 +116,21 @@ class _TransactionsScreenState extends ConsumerState<TransactionsScreen> {
                 ),
                 decoration: InputDecoration(
                   hintText: 'Search category, account or note',
-                  hintStyle: const TextStyle(
+                  hintStyle: TextStyle(
                     fontSize: 15,
                     fontWeight: FontWeight.w500,
-                    color: AppColors.inkFaint,
+                    color: p.inkFaint,
                   ),
-                  prefixIcon: const Icon(
+                  prefixIcon: Icon(
                     Icons.search_rounded,
                     size: 20,
-                    color: AppColors.inkFaint,
+                    color: p.inkFaint,
                   ),
                   suffixIcon: _query.isEmpty
                       ? null
                       : IconButton(
                           icon: const Icon(Icons.close_rounded, size: 18),
-                          color: AppColors.inkFaint,
+                          color: p.inkFaint,
                           onPressed: () {
                             _search.clear();
                             setState(() => _query = '');
@@ -157,19 +158,19 @@ class _TransactionsScreenState extends ConsumerState<TransactionsScreen> {
               children: [
                 Text(
                   '${items.length} transaction${items.length == 1 ? '' : 's'}',
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.w500,
-                    color: AppColors.inkSoft,
+                    color: p.inkSoft,
                   ),
                 ),
                 const Spacer(),
-                const Text(
+                Text(
                   'Net',
                   style: TextStyle(
                     fontSize: 12,
                     fontWeight: FontWeight.w500,
-                    color: AppColors.inkFaint,
+                    color: p.inkFaint,
                   ),
                 ),
                 const SizedBox(width: 6),
@@ -177,7 +178,7 @@ class _TransactionsScreenState extends ConsumerState<TransactionsScreen> {
                   total,
                   showSign: true,
                   showDecimals: false,
-                  color: total >= 0 ? AppColors.income : AppColors.expense,
+                  color: total >= 0 ? p.income : p.expense,
                   style: const TextStyle(
                     fontSize: 15,
                     fontWeight: FontWeight.w700,
@@ -188,11 +189,11 @@ class _TransactionsScreenState extends ConsumerState<TransactionsScreen> {
           ),
           Expanded(
             child: items.isEmpty
-                ? const Center(
+                ? Center(
                     child: Text(
                       'Nothing matches that.',
                       style: TextStyle(
-                        color: AppColors.inkSoft,
+                        color: p.inkSoft,
                         fontWeight: FontWeight.w500,
                       ),
                     ),
@@ -210,10 +211,10 @@ class _TransactionsScreenState extends ConsumerState<TransactionsScreen> {
                         padding: const EdgeInsets.fromLTRB(4, 18, 4, 10),
                         child: Text(
                           AppDate.friendlyDay(next),
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontSize: 13,
                             fontWeight: FontWeight.w600,
-                            color: AppColors.inkSoft,
+                            color: p.inkSoft,
                           ),
                         ),
                       );

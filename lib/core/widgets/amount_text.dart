@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../providers/providers.dart';
-import '../theme/app_colors.dart';
 import '../utils/money.dart';
+import '../theme/app_palette.dart';
 
 /// The two-tone amount used all over the comps: the rupees at full weight and
 /// the paisa dimmed. Honours the global "hide amounts" preference.
@@ -35,10 +35,11 @@ class AmountText extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final p = context.palette;
     final hidden =
         maskable && ref.watch(settingsProvider.select((s) => s.hideAmounts));
     final base = (style ?? Theme.of(context).textTheme.titleMedium!).copyWith(
-      color: color ?? AppColors.ink,
+      color: color ?? p.ink,
     );
 
     if (hidden) {
@@ -62,7 +63,7 @@ class AmountText extends ConsumerWidget {
               style:
                   fractionStyle ??
                   base.copyWith(
-                    color: (base.color ?? AppColors.ink).withValues(
+                    color: (base.color ?? p.ink).withValues(
                       alpha: fractionOpacity,
                     ),
                   ),

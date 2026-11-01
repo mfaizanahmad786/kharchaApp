@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-import '../../../core/theme/app_colors.dart';
+import '../../../core/theme/app_palette.dart';
 
 /// Numeric pad for amount entry. Keeping the OS keyboard out of the way means
 /// the category picker and the running total stay visible while you type.
@@ -59,11 +59,12 @@ class _Key extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final p = context.palette;
     final isBackspace = label == '<';
     return Padding(
       padding: const EdgeInsets.all(5),
       child: Material(
-        color: AppColors.surface,
+        color: p.surface,
         borderRadius: BorderRadius.circular(18),
         child: InkWell(
           borderRadius: BorderRadius.circular(18),
@@ -81,17 +82,13 @@ class _Key extends StatelessWidget {
             height: 50,
             child: Center(
               child: isBackspace
-                  ? const Icon(
-                      Icons.backspace_outlined,
-                      size: 21,
-                      color: AppColors.ink,
-                    )
+                  ? Icon(Icons.backspace_outlined, size: 21, color: p.ink)
                   : Text(
                       label,
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 23,
                         fontWeight: FontWeight.w600,
-                        color: AppColors.ink,
+                        color: p.ink,
                       ),
                     ),
             ),

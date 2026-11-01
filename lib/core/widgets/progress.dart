@@ -2,8 +2,8 @@ import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 
-import '../theme/app_colors.dart';
 import '../theme/app_fonts.dart';
+import '../theme/app_palette.dart';
 
 /// Flat rounded progress bar.
 class ProgressTrack extends StatelessWidget {
@@ -22,6 +22,7 @@ class ProgressTrack extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final p = context.palette;
     return ClipRRect(
       borderRadius: BorderRadius.circular(height),
       child: SizedBox(
@@ -33,7 +34,7 @@ class ProgressTrack extends StatelessWidget {
           builder: (context, v, _) => LinearProgressIndicator(
             value: v,
             minHeight: height,
-            backgroundColor: trackColor ?? AppColors.tint(color),
+            backgroundColor: trackColor ?? p.tint(color),
             valueColor: AlwaysStoppedAnimation(color),
           ),
         ),
@@ -69,6 +70,7 @@ class HatchedGoalBar extends StatelessWidget {
         curve: Curves.easeOutCubic,
         builder: (context, v, _) => CustomPaint(
           painter: _HatchedGoalPainter(
+            trackColor: context.palette.tint(color),
             progress: v,
             expected: expected.clamp(0.0, 1.0),
             color: color,
@@ -83,12 +85,14 @@ class HatchedGoalBar extends StatelessWidget {
 
 class _HatchedGoalPainter extends CustomPainter {
   _HatchedGoalPainter({
+    required this.trackColor,
     required this.progress,
     required this.expected,
     required this.color,
     required this.barHeight,
   });
 
+  final Color trackColor;
   final double progress;
   final double expected;
   final Color color;
@@ -101,7 +105,7 @@ class _HatchedGoalPainter extends CustomPainter {
     final rrect = RRect.fromRectAndRadius(rect, Radius.circular(barHeight / 2));
 
     // Track
-    canvas.drawRRect(rrect, Paint()..color = AppColors.tint(color));
+    canvas.drawRRect(rrect, Paint()..color = trackColor);
 
     canvas.save();
     canvas.clipRRect(rrect);
@@ -195,7 +199,12 @@ class RingProgress extends StatelessWidget {
         duration: const Duration(milliseconds: 700),
         curve: Curves.easeOutCubic,
         builder: (context, v, _) => CustomPaint(
-          painter: _RingPainter(value: v, color: color, stroke: stroke),
+          painter: _RingPainter(
+            value: v,
+            color: color,
+            stroke: stroke,
+            trackColor: context.palette.tint(color),
+          ),
           child: Center(
             child: Text(
               text,
@@ -220,11 +229,13 @@ class _RingPainter extends CustomPainter {
     required this.value,
     required this.color,
     required this.stroke,
+    required this.trackColor,
   });
 
   final double value;
   final Color color;
   final double stroke;
+  final Color trackColor;
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -236,7 +247,7 @@ class _RingPainter extends CustomPainter {
       math.pi * 2,
       false,
       Paint()
-        ..color = AppColors.tint(color)
+        ..color = trackColor
         ..style = PaintingStyle.stroke
         ..strokeWidth = stroke,
     );

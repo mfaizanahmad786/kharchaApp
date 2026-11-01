@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../theme/app_colors.dart';
+import '../theme/app_palette.dart';
 
 /// White card with the soft, wide shadow used throughout the design.
 class SoftCard extends StatelessWidget {
@@ -9,9 +9,9 @@ class SoftCard extends StatelessWidget {
     required this.child,
     this.padding = const EdgeInsets.all(16),
     this.radius = 20,
-    this.color = AppColors.surface,
+    this.color,
     this.onTap,
-    this.shadows = AppColors.cardShadow,
+    this.shadows,
     this.border,
     this.clip = false,
   });
@@ -19,20 +19,23 @@ class SoftCard extends StatelessWidget {
   final Widget child;
   final EdgeInsetsGeometry padding;
   final double radius;
-  final Color color;
+  final Color? color;
   final VoidCallback? onTap;
-  final List<BoxShadow> shadows;
+  final List<BoxShadow>? shadows;
   final BoxBorder? border;
   final bool clip;
 
   @override
   Widget build(BuildContext context) {
+    final p = context.palette;
     final shape = BorderRadius.circular(radius);
+    final fill = color ?? p.surface;
+    final shade = shadows ?? p.cardShadow;
     return DecoratedBox(
       decoration: BoxDecoration(
-        color: color,
+        color: fill,
         borderRadius: shape,
-        boxShadow: shadows,
+        boxShadow: shade,
         border: border,
       ),
       child: Material(

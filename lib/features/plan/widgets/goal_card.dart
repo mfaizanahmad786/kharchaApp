@@ -6,6 +6,7 @@ import '../../../core/widgets/amount_text.dart';
 import '../../../core/widgets/glyph_tile.dart';
 import '../../../core/widgets/progress.dart';
 import '../../../data/models/models.dart';
+import '../../../core/theme/app_palette.dart';
 
 /// The featured goal card: saved-of-target, a bar whose hatched band is the
 /// shortfall against schedule, and a warning strip when you are behind.
@@ -18,14 +19,15 @@ class GoalCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final p = context.palette;
     final behind = goal.isBehind;
     final gapPercent = (goal.scheduleGap * 100).round();
 
     return Container(
       decoration: BoxDecoration(
-        color: AppColors.surface,
+        color: p.surface,
         borderRadius: BorderRadius.circular(24),
-        boxShadow: AppColors.cardShadow,
+        boxShadow: p.cardShadow,
       ),
       clipBehavior: Clip.antiAlias,
       child: Material(
@@ -66,10 +68,10 @@ class GoalCard extends StatelessWidget {
                                 goal.deadline == null
                                     ? 'No deadline'
                                     : 'by ${AppDate.shortDay(goal.deadline!)}',
-                                style: const TextStyle(
+                                style: TextStyle(
                                   fontSize: 14,
                                   fontWeight: FontWeight.w500,
-                                  color: AppColors.inkSoft,
+                                  color: p.inkSoft,
                                 ),
                               ),
                             ],
@@ -78,7 +80,7 @@ class GoalCard extends StatelessWidget {
                         IconButton(
                           onPressed: onMenu,
                           icon: const Icon(Icons.more_vert_rounded),
-                          color: AppColors.inkFaint,
+                          color: p.inkFaint,
                         ),
                       ],
                     ),
@@ -103,18 +105,18 @@ class GoalCard extends StatelessWidget {
                           ),
                         ),
                         const SizedBox(width: 8),
-                        const Text(
+                        Text(
                           'Out of',
                           style: TextStyle(
                             fontSize: 15,
                             fontWeight: FontWeight.w500,
-                            color: AppColors.inkSoft,
+                            color: p.inkSoft,
                           ),
                         ),
                         const SizedBox(width: 5),
                         AmountText(
                           goal.target,
-                          color: AppColors.inkFaint,
+                          color: p.inkFaint,
                           style: const TextStyle(
                             fontSize: 15,
                             fontWeight: FontWeight.w700,
@@ -132,12 +134,12 @@ class GoalCard extends StatelessWidget {
                     const SizedBox(height: 8),
                     Row(
                       children: [
-                        const Text(
+                        Text(
                           'Your Progress',
                           style: TextStyle(
                             fontSize: 13.5,
                             fontWeight: FontWeight.w500,
-                            color: AppColors.inkSoft,
+                            color: p.inkSoft,
                           ),
                         ),
                         const Spacer(),
@@ -193,7 +195,7 @@ class GoalCard extends StatelessWidget {
               else if (goal.progress >= 1)
                 Container(
                   width: double.infinity,
-                  color: AppColors.income,
+                  color: p.income,
                   padding: const EdgeInsets.symmetric(
                     horizontal: 16,
                     vertical: 13,

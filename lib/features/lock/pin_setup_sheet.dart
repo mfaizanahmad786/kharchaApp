@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../core/theme/app_colors.dart';
 import '../../providers/security_controller.dart';
 import 'lock_screen.dart';
 import 'pin_pad.dart';
+import '../../core/theme/app_palette.dart';
 
 enum _Stage { current, choose, confirm }
 
@@ -96,9 +96,10 @@ class _PinSetupSheetState extends ConsumerState<PinSetupSheet> {
 
   @override
   Widget build(BuildContext context) {
+    final p = context.palette;
     return Container(
-      decoration: const BoxDecoration(
-        color: AppColors.scaffold,
+      decoration: BoxDecoration(
+        color: p.scaffold,
         borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
       ),
       child: SafeArea(
@@ -111,7 +112,7 @@ class _PinSetupSheetState extends ConsumerState<PinSetupSheet> {
               width: 40,
               height: 4,
               decoration: BoxDecoration(
-                color: AppColors.track,
+                color: p.track,
                 borderRadius: BorderRadius.circular(2),
               ),
             ),
@@ -123,7 +124,7 @@ class _PinSetupSheetState extends ConsumerState<PinSetupSheet> {
                   IconButton(
                     onPressed: () => Navigator.of(context).pop(false),
                     icon: const Icon(Icons.close_rounded),
-                    color: AppColors.inkSoft,
+                    color: p.inkSoft,
                   ),
                 ],
               ),
@@ -137,7 +138,7 @@ class _PinSetupSheetState extends ConsumerState<PinSetupSheet> {
                 style: TextStyle(
                   fontSize: 13.5,
                   fontWeight: FontWeight.w500,
-                  color: _error == null ? AppColors.inkSoft : AppColors.expense,
+                  color: _error == null ? p.inkSoft : p.expense,
                 ),
               ),
             ),

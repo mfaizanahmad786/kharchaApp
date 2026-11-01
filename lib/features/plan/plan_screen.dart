@@ -15,6 +15,7 @@ import 'edit_goal_sheet.dart';
 import 'plan_list_screens.dart';
 import 'widgets/budget_row.dart';
 import 'widgets/goal_card.dart';
+import '../../core/theme/app_palette.dart';
 
 /// Goals (savings targets) on top, budgets (monthly spending ceilings) below.
 class PlanScreen extends ConsumerWidget {
@@ -25,6 +26,7 @@ class PlanScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final p = context.palette;
     final goals = ref.watch(goalsProvider).value ?? const <Goal>[];
     final budgets =
         ref.watch(budgetStatusesProvider).value ?? const <BudgetStatus>[];
@@ -34,7 +36,7 @@ class PlanScreen extends ConsumerWidget {
         statusBarColor: Colors.transparent,
       ),
       child: Scaffold(
-        backgroundColor: AppColors.scaffold,
+        backgroundColor: p.scaffold,
         body: SafeArea(
           bottom: false,
           child: CustomScrollView(
@@ -48,10 +50,7 @@ class PlanScreen extends ConsumerWidget {
                   child: Row(
                     children: [
                       IconButton(
-                        icon: const Icon(
-                          Icons.arrow_back_rounded,
-                          color: AppColors.ink,
-                        ),
+                        icon: Icon(Icons.arrow_back_rounded, color: p.ink),
                         onPressed: () => ShellNavigator.of(context)?.go(0),
                       ),
                       Text(
@@ -164,13 +163,14 @@ class PlanScreen extends ConsumerWidget {
   }
 
   void _showAddMenu(BuildContext context) {
+    final p = context.palette;
     showModalBottomSheet<void>(
       context: context,
       useRootNavigator: true,
       backgroundColor: Colors.transparent,
       builder: (ctx) => Container(
-        decoration: const BoxDecoration(
-          color: AppColors.surface,
+        decoration: BoxDecoration(
+          color: p.surface,
           borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
         ),
         padding: EdgeInsets.only(
@@ -184,7 +184,7 @@ class PlanScreen extends ConsumerWidget {
               width: 40,
               height: 4,
               decoration: BoxDecoration(
-                color: AppColors.track,
+                color: p.track,
                 borderRadius: BorderRadius.circular(2),
               ),
             ),
@@ -223,13 +223,14 @@ class PlanScreen extends ConsumerWidget {
   }
 
   void _showGoalMenu(BuildContext context, WidgetRef ref, Goal goal) {
+    final p = context.palette;
     showModalBottomSheet<void>(
       context: context,
       useRootNavigator: true,
       backgroundColor: Colors.transparent,
       builder: (ctx) => Container(
-        decoration: const BoxDecoration(
-          color: AppColors.surface,
+        decoration: BoxDecoration(
+          color: p.surface,
           borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
         ),
         padding: EdgeInsets.only(
@@ -243,16 +244,13 @@ class PlanScreen extends ConsumerWidget {
               width: 40,
               height: 4,
               decoration: BoxDecoration(
-                color: AppColors.track,
+                color: p.track,
                 borderRadius: BorderRadius.circular(2),
               ),
             ),
             const SizedBox(height: 10),
             ListTile(
-              leading: const Icon(
-                Icons.add_circle_outline_rounded,
-                color: AppColors.income,
-              ),
+              leading: Icon(Icons.add_circle_outline_rounded, color: p.income),
               title: const Text(
                 'Add money',
                 style: TextStyle(fontWeight: FontWeight.w600),
@@ -274,16 +272,10 @@ class PlanScreen extends ConsumerWidget {
               },
             ),
             ListTile(
-              leading: const Icon(
-                Icons.delete_outline_rounded,
-                color: AppColors.expense,
-              ),
-              title: const Text(
+              leading: Icon(Icons.delete_outline_rounded, color: p.expense),
+              title: Text(
                 'Delete goal',
-                style: TextStyle(
-                  fontWeight: FontWeight.w600,
-                  color: AppColors.expense,
-                ),
+                style: TextStyle(fontWeight: FontWeight.w600, color: p.expense),
               ),
               onTap: () async {
                 Navigator.of(ctx).pop();
@@ -319,9 +311,9 @@ class PlanScreen extends ConsumerWidget {
         actions: [
           TextButton(
             onPressed: () => Navigator.of(ctx).pop(),
-            child: const Text(
+            child: Text(
               'Cancel',
-              style: TextStyle(color: AppColors.inkSoft),
+              style: TextStyle(color: context.palette.inkSoft),
             ),
           ),
           TextButton(
@@ -356,19 +348,20 @@ class _EmptyBlock extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final p = context.palette;
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
       child: Container(
         width: double.infinity,
         padding: const EdgeInsets.fromLTRB(20, 26, 20, 22),
         decoration: BoxDecoration(
-          color: AppColors.surface,
+          color: p.surface,
           borderRadius: BorderRadius.circular(22),
-          boxShadow: AppColors.softShadow,
+          boxShadow: p.softShadow,
         ),
         child: Column(
           children: [
-            Icon(icon, size: 34, color: AppColors.inkFaint),
+            Icon(icon, size: 34, color: p.inkFaint),
             const SizedBox(height: 12),
             Text(
               title,
@@ -378,10 +371,10 @@ class _EmptyBlock extends StatelessWidget {
             Text(
               body,
               textAlign: TextAlign.center,
-              style: const TextStyle(
+              style: TextStyle(
                 fontSize: 13.5,
                 fontWeight: FontWeight.w500,
-                color: AppColors.inkSoft,
+                color: p.inkSoft,
                 height: 1.5,
               ),
             ),

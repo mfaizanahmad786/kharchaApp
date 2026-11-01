@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../providers/providers.dart';
 import '../theme/app_colors.dart';
 import '../utils/app_date.dart';
+import '../theme/app_palette.dart';
 
 /// The month selector behind the "November 2025 ⌄" pill.
 class MonthPickerSheet extends ConsumerStatefulWidget {
@@ -41,12 +42,13 @@ class _MonthPickerSheetState extends ConsumerState<MonthPickerSheet> {
 
   @override
   Widget build(BuildContext context) {
+    final p = context.palette;
     final selected = ref.watch(selectedMonthProvider);
     final now = DateTime.now();
 
     return Container(
-      decoration: const BoxDecoration(
-        color: AppColors.surface,
+      decoration: BoxDecoration(
+        color: p.surface,
         borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
       ),
       padding: EdgeInsets.only(
@@ -62,7 +64,7 @@ class _MonthPickerSheetState extends ConsumerState<MonthPickerSheet> {
             width: 40,
             height: 4,
             decoration: BoxDecoration(
-              color: AppColors.track,
+              color: p.track,
               borderRadius: BorderRadius.circular(2),
             ),
           ),
@@ -72,7 +74,7 @@ class _MonthPickerSheetState extends ConsumerState<MonthPickerSheet> {
               IconButton(
                 onPressed: () => setState(() => _year--),
                 icon: const Icon(Icons.chevron_left_rounded),
-                color: AppColors.ink,
+                color: p.ink,
               ),
               Expanded(
                 child: Text(
@@ -86,8 +88,8 @@ class _MonthPickerSheetState extends ConsumerState<MonthPickerSheet> {
                     ? null
                     : () => setState(() => _year++),
                 icon: const Icon(Icons.chevron_right_rounded),
-                color: AppColors.ink,
-                disabledColor: AppColors.inkFaint.withValues(alpha: 0.4),
+                color: p.ink,
+                disabledColor: p.inkFaint.withValues(alpha: 0.4),
               ),
             ],
           ),
@@ -108,7 +110,7 @@ class _MonthPickerSheetState extends ConsumerState<MonthPickerSheet> {
                   selected.year == _year && selected.month == i + 1;
               final isFuture = month.isAfter(AppDate.startOfMonth(now));
               return Material(
-                color: isSelected ? AppColors.brand : AppColors.surfaceMuted,
+                color: isSelected ? AppColors.brand : p.surfaceMuted,
                 borderRadius: BorderRadius.circular(14),
                 child: InkWell(
                   borderRadius: BorderRadius.circular(14),
@@ -129,8 +131,8 @@ class _MonthPickerSheetState extends ConsumerState<MonthPickerSheet> {
                         color: isSelected
                             ? Colors.white
                             : isFuture
-                            ? AppColors.inkFaint.withValues(alpha: 0.4)
-                            : AppColors.ink,
+                            ? p.inkFaint.withValues(alpha: 0.4)
+                            : p.ink,
                       ),
                     ),
                   ),
@@ -153,10 +155,11 @@ class MonthPill extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final p = context.palette;
     final month = ref.watch(selectedMonthProvider);
-    final fg = onLight ? AppColors.ink : Colors.white;
+    final fg = onLight ? p.ink : Colors.white;
     return Material(
-      color: onLight ? AppColors.surface : Colors.white.withValues(alpha: 0.18),
+      color: onLight ? p.surface : Colors.white.withValues(alpha: 0.18),
       shape: const StadiumBorder(),
       clipBehavior: Clip.antiAlias,
       child: InkWell(
@@ -165,8 +168,8 @@ class MonthPill extends ConsumerWidget {
           padding: const EdgeInsets.fromLTRB(16, 9, 10, 9),
           decoration: ShapeDecoration(
             shape: const StadiumBorder(),
-            shadows: onLight ? AppColors.softShadow : null,
-            color: onLight ? AppColors.surface : null,
+            shadows: onLight ? p.softShadow : null,
+            color: onLight ? p.surface : null,
           ),
           child: Row(
             mainAxisSize: MainAxisSize.min,

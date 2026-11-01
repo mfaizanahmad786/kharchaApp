@@ -8,6 +8,7 @@ import '../../../core/widgets/amount_text.dart';
 import '../../../core/widgets/month_picker_sheet.dart';
 import '../../../providers/providers.dart';
 import 'header_sheen.dart';
+import '../../../core/theme/app_palette.dart';
 
 /// The violet balance header: avatar, month pill, bell, and the balance set
 /// large with its paisa dimmed.
@@ -23,6 +24,7 @@ class HomeHeader extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final p = context.palette;
     final topInset = MediaQuery.viewPaddingOf(context).top;
     final balance = ref.watch(balanceProvider);
     final delta = ref.watch(weekDeltaProvider);
@@ -95,7 +97,7 @@ class HomeHeader extends ConsumerWidget {
         // The sheet's rounded corners sit over the purple. They live here
         // because a viewport paints its first sliver on top, so the following
         // sliver could never overlap the header.
-        const Positioned(
+        Positioned(
           left: 0,
           right: 0,
           bottom: 0,
@@ -103,7 +105,7 @@ class HomeHeader extends ConsumerWidget {
             height: AppRadii.sheet,
             child: DecoratedBox(
               decoration: BoxDecoration(
-                color: AppColors.surface,
+                color: p.surface,
                 borderRadius: AppRadii.sheetTop,
               ),
             ),
@@ -148,6 +150,7 @@ class _BellButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final p = context.palette;
     const size = AppSizes.bellButton;
     return SizedBox(
       width: size,
@@ -179,8 +182,8 @@ class _BellButton extends StatelessWidget {
               child: Container(
                 width: 10,
                 height: 10,
-                decoration: const BoxDecoration(
-                  color: AppColors.expense,
+                decoration: BoxDecoration(
+                  color: p.expense,
                   shape: BoxShape.circle,
                 ),
               ),

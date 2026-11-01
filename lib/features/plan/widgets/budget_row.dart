@@ -6,6 +6,7 @@ import '../../../core/widgets/glyph_tile.dart';
 import '../../../core/widgets/progress.dart';
 import '../../../core/widgets/soft_card.dart';
 import '../../../data/repository/finance_repository.dart';
+import '../../../core/theme/app_palette.dart';
 
 /// Budget row: glyph, name, spent-of-limit, and a ring that turns amber near
 /// the threshold and red once the limit is passed.
@@ -17,9 +18,10 @@ class BudgetRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final p = context.palette;
     final b = status.budget;
     final tone = status.isOver
-        ? AppColors.expense
+        ? p.expense
         : status.isNearLimit
         ? AppColors.warning
         : b.color;
@@ -52,24 +54,24 @@ class BudgetRow extends StatelessWidget {
                     AmountText(
                       status.spent,
                       showDecimals: false,
-                      color: status.isOver ? AppColors.expense : AppColors.ink,
+                      color: status.isOver ? p.expense : p.ink,
                       style: const TextStyle(
                         fontSize: 14.5,
                         fontWeight: FontWeight.w700,
                       ),
                     ),
-                    const Text(
+                    Text(
                       ' of ',
                       style: TextStyle(
                         fontSize: 13.5,
                         fontWeight: FontWeight.w500,
-                        color: AppColors.inkSoft,
+                        color: p.inkSoft,
                       ),
                     ),
                     AmountText(
                       b.limit,
                       showDecimals: false,
-                      color: AppColors.inkSoft,
+                      color: p.inkSoft,
                       style: const TextStyle(
                         fontSize: 13.5,
                         fontWeight: FontWeight.w500,

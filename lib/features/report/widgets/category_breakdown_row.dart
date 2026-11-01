@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 
-import '../../../core/theme/app_colors.dart';
 import '../../../core/widgets/amount_text.dart';
 import '../../../core/widgets/glyph_tile.dart';
 import '../../../core/widgets/pills.dart';
 import '../../../core/widgets/progress.dart';
 import '../../../core/widgets/soft_card.dart';
 import '../../../data/repository/finance_repository.dart';
+import '../../../core/theme/app_palette.dart';
 
 /// One category row under the chart: share of total, amount, month-on-month
 /// change, and a bar showing the share.
@@ -24,6 +24,7 @@ class CategoryBreakdownRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final p = context.palette;
     final share = total == 0 ? 0.0 : item.total / total;
     final change = item.changePercent;
 
@@ -31,7 +32,7 @@ class CategoryBreakdownRow extends StatelessWidget {
       onTap: onTap,
       radius: 20,
       padding: const EdgeInsets.fromLTRB(14, 14, 16, 16),
-      shadows: AppColors.softShadow,
+      shadows: p.softShadow,
       child: Column(
         children: [
           Row(
@@ -61,10 +62,10 @@ class CategoryBreakdownRow extends StatelessWidget {
                     const SizedBox(height: 3),
                     Text(
                       '${(share * 100).toStringAsFixed(share < 0.1 ? 1 : 0)}% of total',
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 13,
                         fontWeight: FontWeight.w500,
-                        color: AppColors.inkSoft,
+                        color: p.inkSoft,
                       ),
                     ),
                   ],
@@ -98,34 +99,34 @@ class CategoryBreakdownRow extends StatelessWidget {
                               '${change.abs().toStringAsFixed(0)}%',
                           // Spending more than last month is the bad direction.
                           background: switch (change) {
-                            > 0.5 => AppColors.badgeRedBg,
-                            < -0.5 => AppColors.badgeGreenBg,
-                            _ => AppColors.track,
+                            > 0.5 => p.badgeRedBg,
+                            < -0.5 => p.badgeGreenBg,
+                            _ => p.track,
                           },
                           foreground: switch (change) {
-                            > 0.5 => AppColors.badgeRedFg,
-                            < -0.5 => AppColors.badgeGreenFg,
-                            _ => AppColors.inkSoft,
+                            > 0.5 => p.badgeRedFg,
+                            < -0.5 => p.badgeGreenFg,
+                            _ => p.inkSoft,
                           },
                         ),
                         const SizedBox(width: 6),
-                        const Text(
+                        Text(
                           'vs last month',
                           style: TextStyle(
                             fontSize: 12,
                             fontWeight: FontWeight.w500,
-                            color: AppColors.inkFaint,
+                            color: p.inkFaint,
                           ),
                         ),
                       ],
                     )
                   else
-                    const Text(
+                    Text(
                       'new this month',
                       style: TextStyle(
                         fontSize: 12,
                         fontWeight: FontWeight.w500,
-                        color: AppColors.inkFaint,
+                        color: p.inkFaint,
                       ),
                     ),
                 ],

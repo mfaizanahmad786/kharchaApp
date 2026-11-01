@@ -11,12 +11,14 @@ import '../lock/pin_setup_sheet.dart';
 import '../shell/bottom_nav.dart';
 import 'manage_screens.dart';
 import 'widgets/settings_tiles.dart';
+import '../../core/theme/app_palette.dart';
 
 class SettingsScreen extends ConsumerWidget {
   const SettingsScreen({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final p = context.palette;
     final settings = ref.watch(settingsProvider);
     final security = ref.watch(securityProvider).value ?? SecurityState.unknown;
     final balance = ref.watch(balanceProvider).value ?? 0;
@@ -26,7 +28,7 @@ class SettingsScreen extends ConsumerWidget {
         statusBarColor: Colors.transparent,
       ),
       child: Scaffold(
-        backgroundColor: AppColors.scaffold,
+        backgroundColor: p.scaffold,
         body: SafeArea(
           bottom: false,
           child: ListView(
@@ -70,9 +72,9 @@ class SettingsScreen extends ConsumerWidget {
                     onChanged: (v) =>
                         ref.read(settingsProvider.notifier).setBudgetAlerts(v),
                   ),
-                  const SettingsTile(
+                  SettingsTile(
                     icon: Icons.payments_rounded,
-                    iconColor: AppColors.income,
+                    iconColor: p.income,
                     title: 'Currency',
                     subtitle: 'Pakistani Rupee ($kCurrencySymbol)',
                   ),
@@ -153,7 +155,7 @@ class SettingsScreen extends ConsumerWidget {
                   ),
                   SettingsTile(
                     icon: Icons.delete_sweep_rounded,
-                    iconColor: AppColors.expense,
+                    iconColor: p.expense,
                     title: 'Delete all transactions',
                     subtitle: 'Keeps your categories, accounts and budgets',
                     destructive: true,
@@ -173,7 +175,7 @@ class SettingsScreen extends ConsumerWidget {
 
               SettingsGroup(
                 title: 'About',
-                children: const [
+                children: [
                   SettingsTile(
                     icon: Icons.cloud_off_rounded,
                     iconColor: AppColors.catGreen,
@@ -183,7 +185,7 @@ class SettingsScreen extends ConsumerWidget {
                   ),
                   SettingsTile(
                     icon: Icons.info_outline_rounded,
-                    iconColor: AppColors.inkFaint,
+                    iconColor: p.inkFaint,
                     title: 'Kharcha',
                     subtitle: 'Version 1.0.0',
                   ),
@@ -215,16 +217,16 @@ class SettingsScreen extends ConsumerWidget {
         actions: [
           TextButton(
             onPressed: () => Navigator.of(ctx).pop(false),
-            child: const Text(
+            child: Text(
               'Cancel',
-              style: TextStyle(color: AppColors.inkSoft),
+              style: TextStyle(color: context.palette.inkSoft),
             ),
           ),
           TextButton(
             onPressed: () => Navigator.of(ctx).pop(true),
-            child: const Text(
+            child: Text(
               'Turn off',
-              style: TextStyle(color: AppColors.expense),
+              style: TextStyle(color: context.palette.expense),
             ),
           ),
         ],
@@ -253,9 +255,9 @@ class SettingsScreen extends ConsumerWidget {
         actions: [
           TextButton(
             onPressed: () => Navigator.of(ctx).pop(),
-            child: const Text(
+            child: Text(
               'Cancel',
-              style: TextStyle(color: AppColors.inkSoft),
+              style: TextStyle(color: context.palette.inkSoft),
             ),
           ),
           TextButton(
@@ -288,16 +290,16 @@ class SettingsScreen extends ConsumerWidget {
         actions: [
           TextButton(
             onPressed: () => Navigator.of(ctx).pop(false),
-            child: const Text(
+            child: Text(
               'Cancel',
-              style: TextStyle(color: AppColors.inkSoft),
+              style: TextStyle(color: context.palette.inkSoft),
             ),
           ),
           TextButton(
             onPressed: () => Navigator.of(ctx).pop(true),
             child: Text(
               confirmLabel,
-              style: const TextStyle(color: AppColors.expense),
+              style: TextStyle(color: context.palette.expense),
             ),
           ),
         ],

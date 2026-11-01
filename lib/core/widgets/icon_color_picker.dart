@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../theme/app_colors.dart';
 import '../theme/app_icons.dart';
 import '../theme/app_fonts.dart';
+import '../theme/app_palette.dart';
 
 /// Horizontal icon strip used by the goal and budget editors.
 class IconPickerRow extends StatelessWidget {
@@ -19,6 +20,7 @@ class IconPickerRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final p = context.palette;
     final names = AppIcons.names;
     return SizedBox(
       height: 52,
@@ -36,14 +38,14 @@ class IconPickerRow extends StatelessWidget {
               width: 48,
               height: 48,
               decoration: BoxDecoration(
-                color: isSelected ? color : AppColors.surface,
+                color: isSelected ? color : p.surface,
                 borderRadius: BorderRadius.circular(15),
-                boxShadow: AppColors.softShadow,
+                boxShadow: p.softShadow,
               ),
               child: Icon(
                 AppIcons.byName(name),
                 size: 22,
-                color: isSelected ? Colors.white : AppColors.inkSoft,
+                color: isSelected ? Colors.white : p.inkSoft,
               ),
             ),
           );
@@ -66,6 +68,7 @@ class ColorPickerRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final p = context.palette;
     return Row(
       children: [
         for (final c in AppColors.chartPalette) ...[
@@ -81,7 +84,7 @@ class ColorPickerRow extends StatelessWidget {
                   borderRadius: BorderRadius.circular(12),
                   border: Border.all(
                     color: c.toARGB32() == selected
-                        ? AppColors.ink
+                        ? p.ink
                         : Colors.transparent,
                     width: 2.5,
                   ),
@@ -123,23 +126,24 @@ class EditorField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final p = context.palette;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
           label,
-          style: const TextStyle(
+          style: TextStyle(
             fontSize: 14,
             fontWeight: FontWeight.w700,
-            color: AppColors.inkSoft,
+            color: p.inkSoft,
           ),
         ),
         const SizedBox(height: 8),
         Container(
           decoration: BoxDecoration(
-            color: AppColors.surface,
+            color: p.surface,
             borderRadius: BorderRadius.circular(16),
-            boxShadow: AppColors.softShadow,
+            boxShadow: p.softShadow,
           ),
           padding: const EdgeInsets.symmetric(horizontal: 14),
           child: TextField(
@@ -151,16 +155,16 @@ class EditorField extends StatelessWidget {
               border: InputBorder.none,
               hintText: hint,
               prefixText: prefix,
-              prefixStyle: const TextStyle(
+              prefixStyle: TextStyle(
                 fontFamily: AppFonts.family,
                 fontSize: 16,
                 fontWeight: FontWeight.w600,
-                color: AppColors.inkFaint,
+                color: p.inkFaint,
               ),
-              hintStyle: const TextStyle(
+              hintStyle: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.w500,
-                color: AppColors.inkFaint,
+                color: p.inkFaint,
               ),
               contentPadding: const EdgeInsets.symmetric(vertical: 15),
             ),
@@ -192,9 +196,10 @@ class EditorSheetShell extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final p = context.palette;
     return Container(
-      decoration: const BoxDecoration(
-        color: AppColors.scaffold,
+      decoration: BoxDecoration(
+        color: p.scaffold,
         borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
       ),
       padding: EdgeInsets.only(bottom: MediaQuery.viewInsetsOf(context).bottom),
@@ -208,7 +213,7 @@ class EditorSheetShell extends StatelessWidget {
               width: 40,
               height: 4,
               decoration: BoxDecoration(
-                color: AppColors.track,
+                color: p.track,
                 borderRadius: BorderRadius.circular(2),
               ),
             ),
@@ -222,12 +227,12 @@ class EditorSheetShell extends StatelessWidget {
                     IconButton(
                       onPressed: onDelete,
                       icon: const Icon(Icons.delete_outline_rounded),
-                      color: AppColors.expense,
+                      color: p.expense,
                     ),
                   IconButton(
                     onPressed: () => Navigator.of(context).pop(),
                     icon: const Icon(Icons.close_rounded),
-                    color: AppColors.inkSoft,
+                    color: p.inkSoft,
                   ),
                 ],
               ),

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../core/theme/app_colors.dart';
 import '../../core/widgets/month_picker_sheet.dart';
 import '../../data/models/models.dart';
 import '../../data/repository/finance_repository.dart';
@@ -11,6 +10,7 @@ import 'edit_goal_sheet.dart';
 import 'widgets/budget_row.dart';
 import 'widgets/goal_card.dart';
 import '../../core/theme/app_fonts.dart';
+import '../../core/theme/app_palette.dart';
 
 /// "View All" for goals.
 class GoalsScreen extends ConsumerWidget {
@@ -22,10 +22,11 @@ class GoalsScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final p = context.palette;
     final goals = ref.watch(goalsProvider).value ?? const <Goal>[];
 
     return Scaffold(
-      backgroundColor: AppColors.scaffold,
+      backgroundColor: p.scaffold,
       appBar: _bar(context, 'Goals', () => EditGoalSheet.show(context)),
       body: goals.isEmpty
           ? const _Empty(text: 'No goals yet. Tap + to add one.')
@@ -53,11 +54,12 @@ class BudgetsScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final p = context.palette;
     final budgets =
         ref.watch(budgetStatusesProvider).value ?? const <BudgetStatus>[];
 
     return Scaffold(
-      backgroundColor: AppColors.scaffold,
+      backgroundColor: p.scaffold,
       appBar: _bar(
         context,
         'Budgets',
@@ -86,22 +88,23 @@ AppBar _bar(
   VoidCallback onAdd, {
   bool showMonth = false,
 }) {
+  final p = context.palette;
   return AppBar(
     leading: IconButton(
-      icon: const Icon(Icons.arrow_back_rounded, color: AppColors.ink),
+      icon: Icon(Icons.arrow_back_rounded, color: p.ink),
       onPressed: () => Navigator.of(context).pop(),
     ),
     title: Text(title),
-    titleTextStyle: const TextStyle(
+    titleTextStyle: TextStyle(
       fontFamily: AppFonts.family,
       fontSize: 20,
       fontWeight: FontWeight.w700,
-      color: AppColors.ink,
+      color: p.ink,
     ),
     actions: [
       if (showMonth) const MonthPill(onLight: true),
       IconButton(
-        icon: const Icon(Icons.add_rounded, color: AppColors.ink),
+        icon: Icon(Icons.add_rounded, color: p.ink),
         onPressed: onAdd,
       ),
       const SizedBox(width: 8),
@@ -118,8 +121,8 @@ class _Empty extends StatelessWidget {
   Widget build(BuildContext context) => Center(
     child: Text(
       text,
-      style: const TextStyle(
-        color: AppColors.inkSoft,
+      style: TextStyle(
+        color: context.palette.inkSoft,
         fontWeight: FontWeight.w500,
       ),
     ),

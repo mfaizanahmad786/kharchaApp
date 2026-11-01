@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../core/theme/app_colors.dart';
 import '../../providers/security_controller.dart';
 import 'pin_pad.dart';
+import '../../core/theme/app_palette.dart';
 
 const int kPinLength = 4;
 
@@ -78,13 +79,14 @@ class _LockScreenState extends ConsumerState<LockScreen>
 
   @override
   Widget build(BuildContext context) {
+    final p = context.palette;
     final security = ref.watch(securityProvider).value;
     final canBio =
         (security?.biometricEnabled ?? false) &&
         (security?.biometricAvailable ?? false);
 
     return Scaffold(
-      backgroundColor: AppColors.scaffold,
+      backgroundColor: p.scaffold,
       body: SafeArea(
         child: Column(
           children: [
@@ -113,7 +115,7 @@ class _LockScreenState extends ConsumerState<LockScreen>
               style: TextStyle(
                 fontSize: 14,
                 fontWeight: FontWeight.w500,
-                color: _error ? AppColors.expense : AppColors.inkSoft,
+                color: _error ? p.expense : p.inkSoft,
               ),
             ),
             const SizedBox(height: 32),

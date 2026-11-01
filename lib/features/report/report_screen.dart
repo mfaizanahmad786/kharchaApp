@@ -14,6 +14,7 @@ import '../shell/bottom_nav.dart';
 import 'widgets/category_breakdown_row.dart';
 import 'widgets/donut_chart.dart';
 import 'widgets/spend_bar_chart.dart';
+import '../../core/theme/app_palette.dart';
 
 enum _ChartMode { bars, donut }
 
@@ -33,6 +34,7 @@ class _ReportScreenState extends ConsumerState<ReportScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final p = context.palette;
     final breakdown =
         ref.watch(breakdownProvider(_type)).value ?? const <CategoryTotal>[];
     final daily = ref.watch(dailySeriesProvider(_type)).value ?? const [];
@@ -45,7 +47,7 @@ class _ReportScreenState extends ConsumerState<ReportScreen> {
         statusBarColor: Colors.transparent,
       ),
       child: Scaffold(
-        backgroundColor: AppColors.scaffold,
+        backgroundColor: p.scaffold,
         body: SafeArea(
           bottom: false,
           child: CustomScrollView(
@@ -59,10 +61,7 @@ class _ReportScreenState extends ConsumerState<ReportScreen> {
                   child: Row(
                     children: [
                       IconButton(
-                        icon: const Icon(
-                          Icons.arrow_back_rounded,
-                          color: AppColors.ink,
-                        ),
+                        icon: Icon(Icons.arrow_back_rounded, color: p.ink),
                         onPressed: () => ShellNavigator.of(context)?.go(0),
                       ),
                       Text(
@@ -128,9 +127,7 @@ class _ReportScreenState extends ConsumerState<ReportScreen> {
                         : SpendBarChart(
                             key: ValueKey('bars-$_type'),
                             data: daily,
-                            color: isExpense
-                                ? AppColors.brand
-                                : AppColors.income,
+                            color: isExpense ? AppColors.brand : p.income,
                           ),
                   ),
                 ),
@@ -142,19 +139,19 @@ class _ReportScreenState extends ConsumerState<ReportScreen> {
                     children: [
                       Text(
                         'All categories',
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontSize: 15,
                           fontWeight: FontWeight.w500,
-                          color: AppColors.inkSoft,
+                          color: p.inkSoft,
                         ),
                       ),
                       const Spacer(),
-                      const Text(
+                      Text(
                         'Total',
                         style: TextStyle(
                           fontSize: 12,
                           fontWeight: FontWeight.w500,
-                          color: AppColors.inkFaint,
+                          color: p.inkFaint,
                         ),
                       ),
                       const SizedBox(width: 6),
@@ -171,14 +168,14 @@ class _ReportScreenState extends ConsumerState<ReportScreen> {
                 ),
               ),
               if (breakdown.isEmpty)
-                const SliverToBoxAdapter(
+                SliverToBoxAdapter(
                   child: Padding(
                     padding: EdgeInsets.fromLTRB(20, 30, 20, 0),
                     child: Center(
                       child: Text(
                         'Nothing recorded for this month yet.',
                         style: TextStyle(
-                          color: AppColors.inkSoft,
+                          color: p.inkSoft,
                           fontWeight: FontWeight.w500,
                         ),
                       ),
@@ -225,7 +222,7 @@ class _ReportScreenState extends ConsumerState<ReportScreen> {
         DonutSlice(
           label: 'Other (${tail.length})',
           value: rest.toDouble(),
-          color: AppColors.inkFaint,
+          color: context.palette.inkFaint,
           hatched: true,
         ),
       );
@@ -243,25 +240,26 @@ class _ChartModeToggle extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final p = context.palette;
     return Container(
       padding: const EdgeInsets.all(5),
       decoration: BoxDecoration(
-        color: AppColors.surface,
+        color: p.surface,
         borderRadius: BorderRadius.circular(999),
-        boxShadow: AppColors.softShadow,
+        boxShadow: p.softShadow,
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          _button(Icons.bar_chart_rounded, _ChartMode.bars),
+          _button(context, Icons.bar_chart_rounded, _ChartMode.bars),
           const SizedBox(width: 4),
-          _button(Icons.pie_chart_rounded, _ChartMode.donut),
+          _button(context, Icons.pie_chart_rounded, _ChartMode.donut),
         ],
       ),
     );
   }
 
-  Widget _button(IconData icon, _ChartMode value) {
+  Widget _button(BuildContext context, IconData icon, _ChartMode value) {
     final selected = mode == value;
     return GestureDetector(
       onTap: () => onChanged(value),
@@ -276,7 +274,7 @@ class _ChartModeToggle extends StatelessWidget {
         child: Icon(
           icon,
           size: 19,
-          color: selected ? Colors.white : AppColors.inkFaint,
+          color: selected ? Colors.white : context.palette.inkFaint,
         ),
       ),
     );

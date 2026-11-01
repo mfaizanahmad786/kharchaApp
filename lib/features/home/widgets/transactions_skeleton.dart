@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
-import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_dimens.dart';
 import '../../../core/widgets/bordered_card.dart';
+import '../../../core/theme/app_palette.dart';
 
 /// Placeholder in the shape of the transaction list.
 ///
@@ -16,6 +16,7 @@ class TransactionsSkeleton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final p = context.palette;
     return ExcludeSemantics(
       child: Padding(
         padding: AppSpacing.screenPadding,
@@ -34,7 +35,7 @@ class TransactionsSkeleton extends StatelessWidget {
                   children: [
                     const _Bar(width: 84, height: 15),
                     const Spacer(),
-                    _Bar(width: 96, height: 15, tone: AppColors.track),
+                    _Bar(width: 96, height: 15, tone: p.track),
                   ],
                 ),
               ),
@@ -56,6 +57,7 @@ class _SkeletonRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final p = context.palette;
     return BorderedCard(
       padding: const EdgeInsets.all(14),
       shadow: false,
@@ -65,7 +67,7 @@ class _SkeletonRow extends StatelessWidget {
             width: AppSizes.txnGlyph,
             height: AppSizes.txnGlyph,
             decoration: BoxDecoration(
-              color: AppColors.track,
+              color: p.track,
               borderRadius: AppRadii.tileShape,
             ),
           ),
@@ -96,22 +98,18 @@ class _SkeletonRow extends StatelessWidget {
 }
 
 class _Bar extends StatelessWidget {
-  const _Bar({
-    required this.width,
-    required this.height,
-    this.tone = AppColors.track,
-  });
+  const _Bar({required this.width, required this.height, this.tone});
 
   final double width;
   final double height;
-  final Color tone;
+  final Color? tone;
 
   @override
   Widget build(BuildContext context) => Container(
     width: width,
     height: height,
     decoration: BoxDecoration(
-      color: tone,
+      color: tone ?? context.palette.track,
       borderRadius: BorderRadius.circular(height / 3),
     ),
   );

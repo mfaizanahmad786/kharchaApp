@@ -10,6 +10,7 @@ import '../../core/widgets/pills.dart';
 import '../../data/models/models.dart';
 import '../../providers/providers.dart';
 import 'widgets/amount_keypad.dart';
+import '../../core/theme/app_palette.dart';
 
 /// Add, or edit, a single transaction. Opened by the purple + in the nav bar.
 class AddTransactionSheet extends ConsumerStatefulWidget {
@@ -178,6 +179,7 @@ class _AddTransactionSheetState extends ConsumerState<AddTransactionSheet> {
 
   @override
   Widget build(BuildContext context) {
+    final p = context.palette;
     final categories = ref.watch(categoriesProvider(_type)).value ?? const [];
     final accounts = ref.watch(accountsProvider).value ?? const [];
 
@@ -189,11 +191,11 @@ class _AddTransactionSheetState extends ConsumerState<AddTransactionSheet> {
       _accountId = accounts.first.id;
     }
 
-    final accent = _type.isIncome ? AppColors.income : AppColors.brand;
+    final accent = _type.isIncome ? p.income : AppColors.brand;
 
     return Container(
-      decoration: const BoxDecoration(
-        color: AppColors.scaffold,
+      decoration: BoxDecoration(
+        color: p.scaffold,
         borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
       ),
       padding: EdgeInsets.only(bottom: MediaQuery.viewInsetsOf(context).bottom),
@@ -207,7 +209,7 @@ class _AddTransactionSheetState extends ConsumerState<AddTransactionSheet> {
               width: 40,
               height: 4,
               decoration: BoxDecoration(
-                color: AppColors.track,
+                color: p.track,
                 borderRadius: BorderRadius.circular(2),
               ),
             ),
@@ -223,7 +225,7 @@ class _AddTransactionSheetState extends ConsumerState<AddTransactionSheet> {
                   IconButton(
                     onPressed: () => Navigator.of(context).pop(),
                     icon: const Icon(Icons.close_rounded),
-                    color: AppColors.inkSoft,
+                    color: p.inkSoft,
                   ),
                 ],
               ),
@@ -271,10 +273,10 @@ class _AddTransactionSheetState extends ConsumerState<AddTransactionSheet> {
                             onTap: _pickDate,
                             child: Row(
                               children: [
-                                const Icon(
+                                Icon(
                                   Icons.calendar_today_rounded,
                                   size: 15,
-                                  color: AppColors.inkSoft,
+                                  color: p.inkSoft,
                                 ),
                                 const SizedBox(width: 8),
                                 Text(
@@ -299,7 +301,7 @@ class _AddTransactionSheetState extends ConsumerState<AddTransactionSheet> {
                                 fontSize: 14,
                                 fontWeight: FontWeight.w600,
                               ),
-                              decoration: const InputDecoration(
+                              decoration: InputDecoration(
                                 isDense: true,
                                 border: InputBorder.none,
                                 hintText: 'Optional',
@@ -307,7 +309,7 @@ class _AddTransactionSheetState extends ConsumerState<AddTransactionSheet> {
                                 hintStyle: TextStyle(
                                   fontSize: 14,
                                   fontWeight: FontWeight.w500,
-                                  color: AppColors.inkFaint,
+                                  color: p.inkFaint,
                                 ),
                               ),
                             ),
@@ -377,6 +379,7 @@ class _AmountDisplay extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final p = context.palette;
     final dot = input.indexOf('.');
     final whole = dot == -1 ? input : input.substring(0, dot);
     final frac = dot == -1 ? '' : input.substring(dot);
@@ -416,7 +419,7 @@ class _AmountDisplay extends StatelessWidget {
                 fontWeight: FontWeight.w800,
                 letterSpacing: -1.6,
                 height: 1.1,
-                color: AppColors.ink.withValues(alpha: 0.45),
+                color: p.ink.withValues(alpha: 0.45),
               ),
             ),
         ],
@@ -438,6 +441,7 @@ class _CategoryPicker extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final p = context.palette;
     return SizedBox(
       height: 84,
       child: ListView.separated(
@@ -458,7 +462,7 @@ class _CategoryPicker extends StatelessWidget {
                     width: 50,
                     height: 50,
                     decoration: BoxDecoration(
-                      color: selected ? c.color : AppColors.tint(c.color),
+                      color: selected ? c.color : p.tint(c.color),
                       shape: BoxShape.circle,
                       boxShadow: selected
                           ? [
@@ -486,7 +490,7 @@ class _CategoryPicker extends StatelessWidget {
                       fontSize: 11,
                       height: 1.2,
                       fontWeight: selected ? FontWeight.w700 : FontWeight.w500,
-                      color: selected ? AppColors.ink : AppColors.inkSoft,
+                      color: selected ? p.ink : p.inkSoft,
                     ),
                   ),
                 ],
@@ -512,6 +516,7 @@ class _AccountPicker extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final p = context.palette;
     return Row(
       children: [
         for (final a in accounts) ...[
@@ -525,13 +530,13 @@ class _AccountPicker extends StatelessWidget {
                   horizontal: 10,
                 ),
                 decoration: BoxDecoration(
-                  color: AppColors.surface,
+                  color: p.surface,
                   borderRadius: BorderRadius.circular(16),
                   border: Border.all(
                     color: a.id == selectedId ? a.color : Colors.transparent,
                     width: 1.8,
                   ),
-                  boxShadow: AppColors.softShadow,
+                  boxShadow: p.softShadow,
                 ),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -575,8 +580,9 @@ class _FieldShell extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final p = context.palette;
     return Material(
-      color: AppColors.surface,
+      color: p.surface,
       borderRadius: BorderRadius.circular(16),
       child: InkWell(
         borderRadius: BorderRadius.circular(16),
@@ -585,8 +591,8 @@ class _FieldShell extends StatelessWidget {
           padding: const EdgeInsets.fromLTRB(14, 10, 14, 12),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(16),
-            boxShadow: AppColors.softShadow,
-            color: AppColors.surface,
+            boxShadow: p.softShadow,
+            color: p.surface,
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -594,10 +600,10 @@ class _FieldShell extends StatelessWidget {
             children: [
               Text(
                 label,
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 11,
                   fontWeight: FontWeight.w600,
-                  color: AppColors.inkFaint,
+                  color: p.inkFaint,
                 ),
               ),
               const SizedBox(height: 5),
@@ -618,10 +624,10 @@ class _Label extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Text(
     text,
-    style: const TextStyle(
+    style: TextStyle(
       fontSize: 14,
       fontWeight: FontWeight.w700,
-      color: AppColors.inkSoft,
+      color: context.palette.inkSoft,
     ),
   );
 }

@@ -2,8 +2,8 @@ import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 
-import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_fonts.dart';
+import '../../../core/theme/app_palette.dart';
 
 class DonutSlice {
   const DonutSlice({
@@ -103,6 +103,7 @@ class _DonutChartState extends State<DonutChart>
 
   @override
   Widget build(BuildContext context) {
+    final p = context.palette;
     final total = widget.slices.fold<double>(0, (s, e) => s + e.value);
 
     return LayoutBuilder(
@@ -118,6 +119,7 @@ class _DonutChartState extends State<DonutChart>
                 animation: _sweep,
                 builder: (context, _) => CustomPaint(
                   painter: _DonutPainter(
+                    emptyColor: context.palette.track,
                     slices: widget.slices,
                     stroke: widget.stroke,
                     gapDegrees: widget.gapDegrees,
@@ -145,10 +147,10 @@ class _DonutChartState extends State<DonutChart>
                           textAlign: TextAlign.center,
                           maxLines: 2,
                           overflow: TextOverflow.ellipsis,
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontSize: 15,
                             fontWeight: FontWeight.w500,
-                            color: AppColors.inkSoft,
+                            color: p.inkSoft,
                           ),
                         ),
                         const SizedBox(height: 4),
@@ -168,6 +170,7 @@ class _DonutChartState extends State<DonutChart>
 
 class _DonutPainter extends CustomPainter {
   _DonutPainter({
+    required this.emptyColor,
     required this.slices,
     required this.stroke,
     required this.gapDegrees,
@@ -175,6 +178,8 @@ class _DonutPainter extends CustomPainter {
     required this.selected,
   });
 
+  /// Painted when there is nothing to chart; a painter has no context.
+  final Color emptyColor;
   final List<DonutSlice> slices;
   final double stroke;
   final double gapDegrees;
@@ -197,7 +202,7 @@ class _DonutPainter extends CustomPainter {
         math.pi * 2,
         false,
         Paint()
-          ..color = AppColors.track
+          ..color = emptyColor
           ..style = PaintingStyle.stroke
           ..strokeWidth = stroke,
       );

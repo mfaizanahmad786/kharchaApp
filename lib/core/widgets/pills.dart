@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
-import '../theme/app_colors.dart';
 import '../theme/app_dimens.dart';
 import '../theme/app_fonts.dart';
+import '../theme/app_palette.dart';
 
 /// Small rounded label — "+12%", "Vacation", "For the Period".
 class TagPill extends StatelessWidget {
@@ -25,14 +25,15 @@ class TagPill extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final fg = foreground ?? AppColors.inkSoft;
+    final p = context.palette;
+    final fg = foreground ?? p.inkSoft;
     final child = Container(
       padding: EdgeInsets.symmetric(
         horizontal: dense ? 8 : 10,
         vertical: dense ? 3 : 5,
       ),
       decoration: BoxDecoration(
-        color: background ?? AppColors.track,
+        color: background ?? p.track,
         borderRadius: BorderRadius.circular(999),
       ),
       child: Row(
@@ -70,9 +71,9 @@ class CircleIconButton extends StatelessWidget {
     required this.icon,
     this.onTap,
     this.size = AppSizes.circleButton,
-    this.background = AppColors.surface,
-    this.foreground = AppColors.ink,
-    this.shadows = AppColors.softShadow,
+    this.background,
+    this.foreground,
+    this.shadows,
     this.badge = false,
     this.iconSize,
     this.tooltip,
@@ -83,9 +84,9 @@ class CircleIconButton extends StatelessWidget {
 
   /// The drawn circle. The tappable area is always at least [AppSizes.hitArea].
   final double size;
-  final Color background;
-  final Color foreground;
-  final List<BoxShadow> shadows;
+  final Color? background;
+  final Color? foreground;
+  final List<BoxShadow>? shadows;
   final bool badge;
   final double? iconSize;
 
@@ -95,20 +96,22 @@ class CircleIconButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final p = context.palette;
     final hit = size < AppSizes.hitArea ? AppSizes.hitArea : size;
+    final bg = background ?? p.surface;
+    final fg = foreground ?? p.ink;
+    final shade = shadows ?? p.softShadow;
 
     Widget circle = Container(
       width: size,
       height: size,
       decoration: BoxDecoration(
         shape: BoxShape.circle,
-        boxShadow: shadows,
-        color: background,
-        border: background == AppColors.surface
-            ? Border.all(color: AppColors.border)
-            : null,
+        boxShadow: shade,
+        color: bg,
+        border: bg == p.surface ? Border.all(color: p.border) : null,
       ),
-      child: Icon(icon, size: iconSize ?? size * 0.5, color: foreground),
+      child: Icon(icon, size: iconSize ?? size * 0.5, color: fg),
     );
 
     if (badge) {
@@ -123,9 +126,9 @@ class CircleIconButton extends StatelessWidget {
               width: 9,
               height: 9,
               decoration: BoxDecoration(
-                color: AppColors.expense,
+                color: p.expense,
                 shape: BoxShape.circle,
-                border: Border.all(color: background, width: 1.5),
+                border: Border.all(color: bg, width: 1.5),
               ),
             ),
           ),
@@ -173,6 +176,7 @@ class SectionHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final p = context.palette;
     return Padding(
       padding: padding,
       child: Row(
@@ -190,11 +194,7 @@ class SectionHeader extends StatelessWidget {
                 ),
                 if (info) ...[
                   const SizedBox(width: 6),
-                  const Icon(
-                    Icons.info_outline_rounded,
-                    size: 16,
-                    color: AppColors.inkFaint,
-                  ),
+                  Icon(Icons.info_outline_rounded, size: 16, color: p.inkFaint),
                 ],
               ],
             ),
@@ -210,10 +210,10 @@ class SectionHeader extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 4),
                 child: Text(
                   trailingLabel!,
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.w600,
-                    color: AppColors.inkSoft,
+                    color: p.inkSoft,
                   ),
                 ),
               ),
@@ -241,13 +241,14 @@ class SegmentedToggle extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final p = context.palette;
     return LayoutBuilder(
       builder: (context, c) {
         final segW = c.maxWidth / labels.length;
         return Container(
           height: height,
           decoration: BoxDecoration(
-            color: AppColors.track,
+            color: p.track,
             borderRadius: BorderRadius.circular(height / 2),
           ),
           child: Stack(
@@ -263,9 +264,9 @@ class SegmentedToggle extends StatelessWidget {
                   padding: const EdgeInsets.all(4),
                   child: DecoratedBox(
                     decoration: BoxDecoration(
-                      color: AppColors.surface,
+                      color: p.surface,
                       borderRadius: BorderRadius.circular(height / 2),
-                      boxShadow: AppColors.softShadow,
+                      boxShadow: p.softShadow,
                     ),
                   ),
                 ),
@@ -286,9 +287,7 @@ class SegmentedToggle extends StatelessWidget {
                               fontWeight: i == index
                                   ? FontWeight.w700
                                   : FontWeight.w500,
-                              color: i == index
-                                  ? AppColors.ink
-                                  : AppColors.inkSoft,
+                              color: i == index ? p.ink : p.inkSoft,
                             ),
                             child: Text(labels[i]),
                           ),

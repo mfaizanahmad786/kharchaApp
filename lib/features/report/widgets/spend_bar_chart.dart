@@ -2,8 +2,8 @@ import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 
-import '../../../core/theme/app_colors.dart';
 import '../../../core/utils/money.dart';
+import '../../../core/theme/app_palette.dart';
 
 /// Daily totals for the selected month. Tapping a bar reveals its value.
 class SpendBarChart extends StatefulWidget {
@@ -39,16 +39,14 @@ class _SpendBarChartState extends State<SpendBarChart>
 
   @override
   Widget build(BuildContext context) {
+    final p = context.palette;
     if (widget.data.isEmpty) {
       return SizedBox(
         height: widget.height,
-        child: const Center(
+        child: Center(
           child: Text(
             'No activity this month.',
-            style: TextStyle(
-              color: AppColors.inkSoft,
-              fontWeight: FontWeight.w500,
-            ),
+            style: TextStyle(color: p.inkSoft, fontWeight: FontWeight.w500),
           ),
         ),
       );
@@ -139,10 +137,10 @@ class _SpendBarChartState extends State<SpendBarChart>
                                         maxWidth: 32,
                                         child: Text(
                                           '${widget.data[i].day.day}',
-                                          style: const TextStyle(
+                                          style: TextStyle(
                                             fontSize: 10,
                                             fontWeight: FontWeight.w600,
-                                            color: AppColors.inkFaint,
+                                            color: p.inkFaint,
                                           ),
                                         ),
                                       )

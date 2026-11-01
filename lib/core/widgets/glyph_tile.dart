@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../theme/app_colors.dart';
+import '../theme/app_palette.dart';
 
 /// The tinted rounded-square icon that fronts every category, account,
 /// budget and goal row.
@@ -24,11 +24,12 @@ class GlyphTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final p = context.palette;
     return Container(
       width: size,
       height: size,
       decoration: BoxDecoration(
-        color: AppColors.tint(color),
+        color: p.tint(color),
         borderRadius: circle ? null : BorderRadius.circular(radius),
         shape: circle ? BoxShape.circle : BoxShape.rectangle,
       ),

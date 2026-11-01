@@ -3,31 +3,37 @@ import 'package:flutter/services.dart';
 
 import 'app_colors.dart';
 import 'app_fonts.dart';
+import 'app_palette.dart';
 
 abstract final class AppTheme {
   static const _font = AppFonts.family;
 
-  static ThemeData light() {
+  static ThemeData light() => _build(AppPalette.light);
+  static ThemeData dark() => _build(AppPalette.dark);
+
+  static ThemeData _build(AppPalette p) {
+    final brightness = p.brightness;
     final base = ThemeData(
       useMaterial3: true,
-      brightness: Brightness.light,
+      brightness: brightness,
       fontFamily: _font,
-      scaffoldBackgroundColor: AppColors.scaffold,
+      scaffoldBackgroundColor: p.scaffold,
       colorScheme:
           ColorScheme.fromSeed(
             seedColor: AppColors.brand,
-            brightness: Brightness.light,
+            brightness: brightness,
           ).copyWith(
             primary: AppColors.brand,
-            surface: AppColors.surface,
-            error: AppColors.expense,
+            surface: p.surface,
+            error: p.expense,
           ),
     );
 
     return base.copyWith(
+      extensions: [p],
       splashFactory: InkSparkle.splashFactory,
-      textTheme: _textTheme(base.textTheme),
-      appBarTheme: const AppBarTheme(
+      textTheme: _textTheme(base.textTheme, p),
+      appBarTheme: AppBarTheme(
         backgroundColor: Colors.transparent,
         surfaceTintColor: Colors.transparent,
         elevation: 0,
@@ -35,50 +41,48 @@ abstract final class AppTheme {
         centerTitle: false,
         systemOverlayStyle: SystemUiOverlayStyle(
           statusBarColor: Colors.transparent,
-          statusBarIconBrightness: Brightness.dark,
-          statusBarBrightness: Brightness.light,
+          statusBarIconBrightness: p.isDark
+              ? Brightness.light
+              : Brightness.dark,
+          statusBarBrightness: brightness,
         ),
       ),
-      bottomSheetTheme: const BottomSheetThemeData(
-        backgroundColor: AppColors.surface,
+      bottomSheetTheme: BottomSheetThemeData(
+        backgroundColor: p.surface,
         surfaceTintColor: Colors.transparent,
-        shape: RoundedRectangleBorder(
+        shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
         ),
       ),
-      dialogTheme: const DialogThemeData(
-        backgroundColor: AppColors.surface,
+      dialogTheme: DialogThemeData(
+        backgroundColor: p.surface,
         surfaceTintColor: Colors.transparent,
-        shape: RoundedRectangleBorder(
+        shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.all(Radius.circular(24)),
         ),
       ),
       snackBarTheme: SnackBarThemeData(
         behavior: SnackBarBehavior.floating,
-        backgroundColor: AppColors.ink,
-        contentTextStyle: const TextStyle(
+        backgroundColor: p.isDark ? p.surfaceMuted : p.ink,
+        contentTextStyle: TextStyle(
           fontFamily: _font,
-          color: Colors.white,
+          color: p.isDark ? p.ink : Colors.white,
           fontWeight: FontWeight.w500,
         ),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       ),
-      dividerTheme: const DividerThemeData(
-        color: AppColors.divider,
-        thickness: 1,
-        space: 1,
-      ),
+      dividerTheme: DividerThemeData(color: p.divider, thickness: 1, space: 1),
     );
   }
 
   /// Each override is merged onto the *applied* base rather than replacing it:
   /// a bare `TextStyle` in `copyWith` would drop the family and colour set by
   /// `apply`, and a null text colour paints white.
-  static TextTheme _textTheme(TextTheme base) {
+  static TextTheme _textTheme(TextTheme base, AppPalette p) {
     final t = base.apply(
       fontFamily: _font,
-      bodyColor: AppColors.ink,
-      displayColor: AppColors.ink,
+      bodyColor: p.ink,
+      displayColor: p.ink,
     );
     return t.copyWith(
       displayLarge: t.displayLarge!.copyWith(
@@ -122,7 +126,7 @@ abstract final class AppTheme {
       bodySmall: t.bodySmall!.copyWith(
         fontSize: 13,
         fontWeight: FontWeight.w500,
-        color: AppColors.inkSoft,
+        color: p.inkSoft,
       ),
       labelLarge: t.labelLarge!.copyWith(
         fontSize: 14,
@@ -135,7 +139,7 @@ abstract final class AppTheme {
       labelSmall: t.labelSmall!.copyWith(
         fontSize: 11,
         fontWeight: FontWeight.w600,
-        color: AppColors.inkFaint,
+        color: p.inkFaint,
       ),
     );
   }

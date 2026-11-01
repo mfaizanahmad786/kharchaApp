@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../core/theme/app_colors.dart';
+import '../../../core/theme/app_palette.dart';
 
 /// A titled group of rows rendered as one rounded card.
 class SettingsGroup extends StatelessWidget {
@@ -11,6 +12,7 @@ class SettingsGroup extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final p = context.palette;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -18,19 +20,19 @@ class SettingsGroup extends StatelessWidget {
           padding: const EdgeInsets.fromLTRB(4, 0, 4, 10),
           child: Text(
             title.toUpperCase(),
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 11.5,
               fontWeight: FontWeight.w700,
               letterSpacing: 0.8,
-              color: AppColors.inkFaint,
+              color: p.inkFaint,
             ),
           ),
         ),
         Container(
           decoration: BoxDecoration(
-            color: AppColors.surface,
+            color: p.surface,
             borderRadius: BorderRadius.circular(20),
-            boxShadow: AppColors.softShadow,
+            boxShadow: p.softShadow,
           ),
           clipBehavior: Clip.antiAlias,
           child: Column(
@@ -73,6 +75,7 @@ class SettingsTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final p = context.palette;
     return Material(
       color: Colors.transparent,
       child: InkWell(
@@ -85,7 +88,7 @@ class SettingsTile extends StatelessWidget {
                 width: 32,
                 height: 32,
                 decoration: BoxDecoration(
-                  color: AppColors.tint(iconColor),
+                  color: p.tint(iconColor),
                   borderRadius: BorderRadius.circular(10),
                 ),
                 child: Icon(icon, size: 17, color: iconColor),
@@ -100,17 +103,17 @@ class SettingsTile extends StatelessWidget {
                       style: TextStyle(
                         fontSize: 15.5,
                         fontWeight: FontWeight.w600,
-                        color: destructive ? AppColors.expense : AppColors.ink,
+                        color: destructive ? p.expense : p.ink,
                       ),
                     ),
                     if (subtitle != null) ...[
                       const SizedBox(height: 2),
                       Text(
                         subtitle!,
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontSize: 13,
                           fontWeight: FontWeight.w500,
-                          color: AppColors.inkFaint,
+                          color: p.inkFaint,
                         ),
                       ),
                     ],
@@ -120,11 +123,7 @@ class SettingsTile extends StatelessWidget {
               if (trailing != null)
                 trailing!
               else if (onTap != null)
-                const Icon(
-                  Icons.chevron_right_rounded,
-                  size: 21,
-                  color: AppColors.inkFaint,
-                ),
+                Icon(Icons.chevron_right_rounded, size: 21, color: p.inkFaint),
             ],
           ),
         ),

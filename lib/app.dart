@@ -13,6 +13,10 @@ class KharchaApp extends ConsumerWidget {
       title: 'Kharcha',
       debugShowCheckedModeBanner: false,
       theme: AppTheme.light(),
+      darkTheme: AppTheme.dark(),
+      // No in-app appearance switch: dark-mode.md warns that an app-specific
+      // setting makes people adjust two places to get one result.
+      themeMode: ThemeMode.system,
       home: const LockGateView(),
       builder: (context, child) {
         // Keep the layout predictable regardless of the system font scale.

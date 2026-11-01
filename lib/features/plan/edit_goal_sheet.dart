@@ -7,6 +7,7 @@ import '../../core/utils/money.dart';
 import '../../core/widgets/icon_color_picker.dart';
 import '../../data/models/models.dart';
 import '../../providers/providers.dart';
+import '../../core/theme/app_palette.dart';
 
 class EditGoalSheet extends ConsumerStatefulWidget {
   const EditGoalSheet({super.key, this.existing});
@@ -118,6 +119,7 @@ class _EditGoalSheetState extends ConsumerState<EditGoalSheet> {
 
   @override
   Widget build(BuildContext context) {
+    final p = context.palette;
     return EditorSheetShell(
       title: widget.existing == null ? 'New Goal' : 'Edit Goal',
       accent: Color(_color),
@@ -151,17 +153,17 @@ class _EditGoalSheetState extends ConsumerState<EditGoalSheet> {
           ],
         ),
         const SizedBox(height: 18),
-        const Text(
+        Text(
           'Deadline',
           style: TextStyle(
             fontSize: 14,
             fontWeight: FontWeight.w700,
-            color: AppColors.inkSoft,
+            color: p.inkSoft,
           ),
         ),
         const SizedBox(height: 8),
         Material(
-          color: AppColors.surface,
+          color: p.surface,
           borderRadius: BorderRadius.circular(16),
           child: InkWell(
             borderRadius: BorderRadius.circular(16),
@@ -170,16 +172,12 @@ class _EditGoalSheetState extends ConsumerState<EditGoalSheet> {
               padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 16),
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(16),
-                boxShadow: AppColors.softShadow,
-                color: AppColors.surface,
+                boxShadow: p.softShadow,
+                color: p.surface,
               ),
               child: Row(
                 children: [
-                  const Icon(
-                    Icons.event_rounded,
-                    size: 19,
-                    color: AppColors.inkSoft,
-                  ),
+                  Icon(Icons.event_rounded, size: 19, color: p.inkSoft),
                   const SizedBox(width: 10),
                   Text(
                     _deadline == null
@@ -194,10 +192,10 @@ class _EditGoalSheetState extends ConsumerState<EditGoalSheet> {
                   if (_deadline != null)
                     GestureDetector(
                       onTap: () => setState(() => _deadline = null),
-                      child: const Icon(
+                      child: Icon(
                         Icons.close_rounded,
                         size: 18,
-                        color: AppColors.inkFaint,
+                        color: p.inkFaint,
                       ),
                     ),
                 ],
@@ -206,12 +204,12 @@ class _EditGoalSheetState extends ConsumerState<EditGoalSheet> {
           ),
         ),
         const SizedBox(height: 18),
-        const Text(
+        Text(
           'Icon',
           style: TextStyle(
             fontSize: 14,
             fontWeight: FontWeight.w700,
-            color: AppColors.inkSoft,
+            color: p.inkSoft,
           ),
         ),
         const SizedBox(height: 8),
@@ -221,12 +219,12 @@ class _EditGoalSheetState extends ConsumerState<EditGoalSheet> {
           onSelect: (v) => setState(() => _icon = v),
         ),
         const SizedBox(height: 18),
-        const Text(
+        Text(
           'Colour',
           style: TextStyle(
             fontSize: 14,
             fontWeight: FontWeight.w700,
-            color: AppColors.inkSoft,
+            color: p.inkSoft,
           ),
         ),
         const SizedBox(height: 8),

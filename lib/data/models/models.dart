@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_icons.dart';
+import '../../core/theme/app_palette.dart';
 
 enum TxType {
   expense,
@@ -381,6 +381,8 @@ class TxnView {
   final int runningBalance;
 
   Color get accent => category.color;
-  Color get amountColor =>
-      txn.type.isIncome ? AppColors.income : AppColors.expense;
+
+  /// The palette comes from the caller: a model has no BuildContext, and
+  /// the positive and negative hues differ between appearances.
+  Color amountColor(AppPalette p) => txn.type.isIncome ? p.income : p.expense;
 }

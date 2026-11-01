@@ -7,6 +7,7 @@ import '../../../core/widgets/glyph_tile.dart';
 import '../../../core/widgets/progress.dart';
 import '../../../data/repository/finance_repository.dart';
 import '../../../providers/providers.dart';
+import '../../../core/theme/app_palette.dart';
 
 /// Budget alerts, reached from the bell in the header. This is where the
 /// "budgets + alerts" feature surfaces: anything at or over its threshold.
@@ -23,6 +24,7 @@ class NotificationsSheet extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final p = context.palette;
     final alerts =
         ref.watch(budgetAlertsProvider).value ?? const <BudgetStatus>[];
     final enabled = ref.watch(settingsProvider.select((s) => s.budgetAlerts));
@@ -31,8 +33,8 @@ class NotificationsSheet extends ConsumerWidget {
       constraints: BoxConstraints(
         maxHeight: MediaQuery.sizeOf(context).height * 0.75,
       ),
-      decoration: const BoxDecoration(
-        color: AppColors.surface,
+      decoration: BoxDecoration(
+        color: p.surface,
         borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
       ),
       padding: EdgeInsets.only(
@@ -46,7 +48,7 @@ class NotificationsSheet extends ConsumerWidget {
             width: 40,
             height: 4,
             decoration: BoxDecoration(
-              color: AppColors.track,
+              color: p.track,
               borderRadius: BorderRadius.circular(2),
             ),
           ),
@@ -58,10 +60,10 @@ class NotificationsSheet extends ConsumerWidget {
                 const Spacer(),
                 Text(
                   enabled ? '${alerts.length} active' : 'Muted',
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 13,
                     fontWeight: FontWeight.w600,
-                    color: AppColors.inkFaint,
+                    color: p.inkFaint,
                   ),
                 ),
               ],
@@ -104,14 +106,15 @@ class _AlertRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final p = context.palette;
     final over = status.isOver;
-    final tone = over ? AppColors.expense : AppColors.warning;
+    final tone = over ? p.expense : AppColors.warning;
     final pct = (status.rawProgress * 100).round();
 
     return Container(
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
-        color: AppColors.tint(tone),
+        color: p.tint(tone),
         borderRadius: BorderRadius.circular(18),
       ),
       child: Row(
@@ -135,10 +138,10 @@ class _AlertRow extends StatelessWidget {
                   over
                       ? 'Over by ${Money.format(status.spent - status.budget.limit, decimals: false)} — $pct% of the limit used.'
                       : '$pct% used. ${Money.format(status.remaining, decimals: false)} left this month.',
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 13,
                     fontWeight: FontWeight.w500,
-                    color: AppColors.inkSoft,
+                    color: p.inkSoft,
                     height: 1.4,
                   ),
                 ),
@@ -171,11 +174,12 @@ class _Placeholder extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final p = context.palette;
     return Padding(
       padding: const EdgeInsets.fromLTRB(32, 26, 32, 40),
       child: Column(
         children: [
-          Icon(icon, size: 42, color: AppColors.inkFaint),
+          Icon(icon, size: 42, color: p.inkFaint),
           const SizedBox(height: 14),
           Text(
             title,
@@ -185,10 +189,10 @@ class _Placeholder extends StatelessWidget {
           Text(
             body,
             textAlign: TextAlign.center,
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 14,
               fontWeight: FontWeight.w500,
-              color: AppColors.inkSoft,
+              color: p.inkSoft,
               height: 1.5,
             ),
           ),

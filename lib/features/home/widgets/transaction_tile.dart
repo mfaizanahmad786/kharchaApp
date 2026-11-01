@@ -5,6 +5,7 @@ import '../../../core/theme/app_dimens.dart';
 import '../../../core/widgets/amount_text.dart';
 import '../../../core/widgets/bordered_card.dart';
 import '../../../data/models/models.dart';
+import '../../../core/theme/app_palette.dart';
 
 /// One row in the Transactions list: a tinted category tile, the title with
 /// its account beneath, and the signed amount over the running balance.
@@ -16,6 +17,7 @@ class TransactionTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final p = context.palette;
     final txn = view.txn;
     final title = txn.note.isNotEmpty ? txn.note : view.category.name;
 
@@ -66,7 +68,7 @@ class TransactionTile extends StatelessWidget {
             children: [
               AmountText(
                 txn.signed,
-                color: view.amountColor,
+                color: view.amountColor(p),
                 style: const TextStyle(
                   fontSize: 17,
                   fontWeight: FontWeight.w700,
@@ -76,7 +78,7 @@ class TransactionTile extends StatelessWidget {
               const SizedBox(height: 4),
               AmountText(
                 view.runningBalance,
-                color: AppColors.inkSoft,
+                color: p.inkSoft,
                 style: const TextStyle(
                   fontSize: 14,
                   fontWeight: FontWeight.w500,
@@ -99,13 +101,10 @@ class _AccountLine extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final p = context.palette;
     return Row(
       children: [
-        const Icon(
-          Icons.subdirectory_arrow_right,
-          size: 14,
-          color: AppColors.inkFaint,
-        ),
+        Icon(Icons.subdirectory_arrow_right, size: 14, color: p.inkFaint),
         const SizedBox(width: 5),
         Container(
           width: 18,
@@ -122,10 +121,10 @@ class _AccountLine extends StatelessWidget {
             view.account.name,
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 14,
               fontWeight: FontWeight.w500,
-              color: AppColors.inkSoft,
+              color: p.inkSoft,
             ),
           ),
         ),
@@ -142,7 +141,8 @@ class _TagLine extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const palette = [AppColors.catBlue, AppColors.income, AppColors.catAmber];
+    final p = context.palette;
+    final tones = [AppColors.catBlue, p.income, AppColors.catAmber];
     return Row(
       children: [
         for (var i = 0; i < tags.length && i < 2; i++) ...[
@@ -150,7 +150,7 @@ class _TagLine extends StatelessWidget {
           Icon(
             i.isEven ? Icons.verified_rounded : Icons.person_rounded,
             size: 13,
-            color: palette[i % palette.length],
+            color: tones[i % tones.length],
           ),
           const SizedBox(width: 4),
           Flexible(
@@ -158,10 +158,10 @@ class _TagLine extends StatelessWidget {
               tags[i],
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
-              style: const TextStyle(
+              style: TextStyle(
                 fontSize: 14,
                 fontWeight: FontWeight.w500,
-                color: AppColors.inkSoft,
+                color: p.inkSoft,
               ),
             ),
           ),
@@ -180,6 +180,7 @@ class DateGroupRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final p = context.palette;
     return Row(
       children: [
         Expanded(
@@ -187,20 +188,20 @@ class DateGroupRow extends StatelessWidget {
             label,
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 15,
               fontWeight: FontWeight.w400,
-              color: AppColors.inkSoft,
+              color: p.inkSoft,
             ),
           ),
         ),
         const SizedBox(width: AppSpacing.sm),
-        const Text(
+        Text(
           'Total',
           style: TextStyle(
             fontSize: 14,
             fontWeight: FontWeight.w400,
-            color: AppColors.inkSoft,
+            color: p.inkSoft,
           ),
         ),
         const SizedBox(width: 6),

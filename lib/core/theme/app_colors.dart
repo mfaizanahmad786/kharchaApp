@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 
-/// Palette lifted from the Kharcha design comps.
+/// Colours that are the same in both appearances.
+///
+/// Anything whose value depends on the surface behind it — ink, surfaces,
+/// borders, shadows, the positive and negative hues — lives in [AppPalette]
+/// and is read from the theme as `context.palette`.
 abstract final class AppColors {
   // Brand
   //
@@ -13,12 +17,7 @@ abstract final class AppColors {
   static const brandLighter = Color(0xFF34D399);
   static const brandSoft = Color(0xFFD1FAE5);
 
-  /// The "For the Period" chip.
-  static const chipBg = Color(0xFFE6F9F0);
-  static const chipBorder = Color(0xFFA7F3D0);
-  static const chipText = Color(0xFF047857);
-
-  /// The header gradient on Home — a soft diagonal wash.
+  /// The header gradient on Home.
   ///
   /// Deeper than the brand ramp used on white: full-white 16pt text needs
   /// 4.5:1, which the lighter greens could not carry. Worst stop here is
@@ -37,40 +36,11 @@ abstract final class AppColors {
   /// left its label at 2.94:1; this carries white at 9.09:1.
   static const headerPill = headerTop;
 
-  // Surfaces
-  static const scaffold = Color(0xFFF5F5F7);
-  static const surface = Color(0xFFFFFFFF);
-  static const surfaceMuted = Color(0xFFF7F7F9);
-  static const track = Color(0xFFEFEFF2);
-  static const divider = Color(0xFFECECEF);
-  static const ink = Color(0xFF111111);
-  static const inkSoft = Color(0xFF6B6B76);
-  static const inkFaint = Color(0xFF74747E);
-
-  /// Hairline borders carry the card edges on Home, in place of shadows.
-  static const border = Color(0xFFECECF2);
-  static const borderSoft = Color(0xFFE5E5EC);
-
-  /// The inactive tab in the bottom bar.
-  static const navInactive = Color(0xFF6E6E78);
-
-  /// The muted trailing action on the black insight banner.
-  static const onDarkMuted = Color(0xFF9A9AA5);
-
-  /// Tints behind the income and expense glyphs.
-  static const incomeTint = Color(0xFFEAF3FF);
-  static const expenseTint = Color(0xFFFDEDEC);
-
-  // Semantic
-  static const income = brandDark;
-  static const expense = Color(0xFFE0314B);
+  /// Warning state on goals and budgets.
   static const warning = Color(0xFFE8743B);
-  static const badgeGreenBg = brandSoft;
-  static const badgeGreenFg = brandDark;
-  static const badgeRedBg = Color(0xFFFDE8EB);
-  static const badgeRedFg = Color(0xFFE0314B);
 
-  /// Category accents, matched to the donut chart in the Report comp.
+  /// Category accents. A chart needs distinct hues whatever the brand is, so
+  /// these stay fixed; a category's own colour is user data besides.
   static const catPurple = Color(0xFF8B5CF6);
   static const catBlue = Color(0xFF4A9BF0);
   static const catGreen = Color(0xFF4CBF7F);
@@ -89,20 +59,5 @@ abstract final class AppColors {
     catTeal,
     catAmber,
     catIndigo,
-  ];
-
-  /// Soft tinted background used behind category/account glyphs.
-  static Color tint(Color c) =>
-      Color.alphaBlend(c.withValues(alpha: 0.12), Colors.white);
-
-  // Elevation
-  static const cardShadow = <BoxShadow>[
-    BoxShadow(color: Color(0x0D1A1A2E), blurRadius: 18, offset: Offset(0, 6)),
-  ];
-  static const softShadow = <BoxShadow>[
-    BoxShadow(color: Color(0x0A1A1A2E), blurRadius: 10, offset: Offset(0, 3)),
-  ];
-  static const navShadow = <BoxShadow>[
-    BoxShadow(color: Color(0x141A1A2E), blurRadius: 24, offset: Offset(0, -2)),
   ];
 }

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import '../../core/theme/app_colors.dart';
+import '../../core/theme/app_palette.dart';
 
 /// The filled/empty dots above a PIN keypad.
 class PinDots extends StatelessWidget {
@@ -20,7 +21,8 @@ class PinDots extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final tone = error ? AppColors.expense : color;
+    final p = context.palette;
+    final tone = error ? p.expense : color;
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
@@ -96,14 +98,11 @@ class _Key extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final p = context.palette;
     Widget content;
     switch (label) {
       case 'del':
-        content = const Icon(
-          Icons.backspace_outlined,
-          size: 22,
-          color: AppColors.ink,
-        );
+        content = Icon(Icons.backspace_outlined, size: 22, color: p.ink);
       case 'bio':
         content = enabled
             ? const Icon(
@@ -115,10 +114,10 @@ class _Key extends StatelessWidget {
       default:
         content = Text(
           label,
-          style: const TextStyle(
+          style: TextStyle(
             fontSize: 26,
             fontWeight: FontWeight.w600,
-            color: AppColors.ink,
+            color: p.ink,
           ),
         );
     }
@@ -132,7 +131,7 @@ class _Key extends StatelessWidget {
             ? Material(
                 color: label == 'del' || label == 'bio'
                     ? Colors.transparent
-                    : AppColors.surface,
+                    : p.surface,
                 borderRadius: BorderRadius.circular(20),
                 child: InkWell(
                   borderRadius: BorderRadius.circular(20),

@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../core/theme/app_colors.dart';
 import '../home/home_screen.dart';
 import '../plan/plan_screen.dart';
 import '../report/report_screen.dart';
 import '../settings/settings_screen.dart';
 import '../transaction/add_transaction_sheet.dart';
 import 'bottom_nav.dart';
+import '../../core/theme/app_palette.dart';
 
 /// Lets any descendant jump tabs — used by "Details >" on Home, for instance.
 class ShellNavigator extends InheritedWidget {
@@ -56,6 +56,7 @@ class _AppShellState extends ConsumerState<AppShell> {
 
   @override
   Widget build(BuildContext context) {
+    final p = context.palette;
     return ShellNavigator(
       go: _go,
       child: PopScope(
@@ -67,7 +68,7 @@ class _AppShellState extends ConsumerState<AppShell> {
           }
         },
         child: Scaffold(
-          backgroundColor: AppColors.scaffold,
+          backgroundColor: p.scaffold,
           extendBody: true,
           body: IndexedStack(
             index: _index,

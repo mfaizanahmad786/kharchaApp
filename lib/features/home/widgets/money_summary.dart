@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
-import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_dimens.dart';
 import '../../../core/widgets/amount_text.dart';
 import '../../../core/widgets/bordered_card.dart';
+import '../../../core/theme/app_palette.dart';
 
 /// The Income / Expenses pair under "Your Money". The amount is solid black:
 /// unlike the balance in the header, nothing here is dimmed.
@@ -27,6 +27,7 @@ class MoneySummaryCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final p = context.palette;
     return BorderedCard(
       onTap: onTap,
       padding: const EdgeInsets.all(AppSpacing.lg),
@@ -45,10 +46,10 @@ class MoneySummaryCard extends StatelessWidget {
             label,
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 15,
               fontWeight: FontWeight.w500,
-              color: AppColors.inkSoft,
+              color: p.inkSoft,
             ),
           ),
           const SizedBox(height: 6),

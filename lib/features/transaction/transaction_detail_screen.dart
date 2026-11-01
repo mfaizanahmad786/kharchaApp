@@ -11,6 +11,7 @@ import '../../data/models/models.dart';
 import '../../providers/providers.dart';
 import 'add_transaction_sheet.dart';
 import '../../core/theme/app_fonts.dart';
+import '../../core/theme/app_palette.dart';
 
 final _detailProvider = FutureProvider.family<TxnView?, String>((
   ref,
@@ -35,21 +36,22 @@ class TransactionDetailScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final p = context.palette;
     final view = ref.watch(_detailProvider(id)).value;
 
     return Scaffold(
-      backgroundColor: AppColors.scaffold,
+      backgroundColor: p.scaffold,
       appBar: AppBar(
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back_rounded, color: AppColors.ink),
+          icon: Icon(Icons.arrow_back_rounded, color: p.ink),
           onPressed: () => Navigator.of(context).pop(),
         ),
         title: const Text('Transaction'),
-        titleTextStyle: const TextStyle(
+        titleTextStyle: TextStyle(
           fontFamily: AppFonts.family,
           fontSize: 20,
           fontWeight: FontWeight.w700,
-          color: AppColors.ink,
+          color: p.ink,
         ),
       ),
       body: view == null
@@ -67,6 +69,7 @@ class _Body extends ConsumerWidget {
   final TxnView view;
 
   Future<void> _confirmDelete(BuildContext context, WidgetRef ref) async {
+    final p = context.palette;
     final ok = await showDialog<bool>(
       context: context,
       useRootNavigator: true,
@@ -76,17 +79,11 @@ class _Body extends ConsumerWidget {
         actions: [
           TextButton(
             onPressed: () => Navigator.of(ctx).pop(false),
-            child: const Text(
-              'Cancel',
-              style: TextStyle(color: AppColors.inkSoft),
-            ),
+            child: Text('Cancel', style: TextStyle(color: p.inkSoft)),
           ),
           TextButton(
             onPressed: () => Navigator.of(ctx).pop(true),
-            child: const Text(
-              'Delete',
-              style: TextStyle(color: AppColors.expense),
-            ),
+            child: Text('Delete', style: TextStyle(color: p.expense)),
           ),
         ],
       ),
@@ -98,6 +95,7 @@ class _Body extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final p = context.palette;
     final txn = view.txn;
 
     return ListView(
@@ -117,7 +115,7 @@ class _Body extends ConsumerWidget {
               AmountText(
                 txn.signed,
                 showSign: true,
-                color: view.amountColor,
+                color: view.amountColor(p),
                 style: const TextStyle(
                   fontSize: 38,
                   fontWeight: FontWeight.w800,
@@ -128,8 +126,8 @@ class _Body extends ConsumerWidget {
               const SizedBox(height: 8),
               TagPill(
                 label: txn.type.isIncome ? 'In' : 'Out',
-                background: AppColors.tint(view.amountColor),
-                foreground: view.amountColor,
+                background: p.tint(view.amountColor(p)),
+                foreground: view.amountColor(p),
               ),
             ],
           ),
@@ -209,11 +207,8 @@ class _Body extends ConsumerWidget {
                   icon: const Icon(Icons.delete_outline_rounded, size: 20),
                   label: const Text('Delete'),
                   style: OutlinedButton.styleFrom(
-                    foregroundColor: AppColors.expense,
-                    side: const BorderSide(
-                      color: AppColors.badgeRedBg,
-                      width: 1.5,
-                    ),
+                    foregroundColor: p.expense,
+                    side: BorderSide(color: p.badgeRedBg, width: 1.5),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(16),
                     ),
@@ -269,18 +264,19 @@ class _Row extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final p = context.palette;
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 13),
       child: Row(
         children: [
-          Icon(icon, size: 18, color: AppColors.inkFaint),
+          Icon(icon, size: 18, color: p.inkFaint),
           const SizedBox(width: 12),
           Text(
             label,
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 14,
               fontWeight: FontWeight.w500,
-              color: AppColors.inkSoft,
+              color: p.inkSoft,
             ),
           ),
           const Spacer(),
