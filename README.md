@@ -39,6 +39,8 @@ turns amber at their alert threshold and red once the limit is passed.
 **Settings** — profile, a global "hide amounts" mask, budget alerts, PIN and
 biometric app lock, and category / account management.
 
+Everythins is offline
+
 Adding or editing a transaction uses a custom numeric keypad so the category
 picker and the running total stay visible while you type.
 
