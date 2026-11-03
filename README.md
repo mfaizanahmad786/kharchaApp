@@ -13,7 +13,7 @@ The toolchain is the stock Flutter one; no extra setup beyond the Android SDK.
 ```bash
 flutter pub get
 flutter run                     # debug, on a connected device or emulator
-flutter test                    # 35 unit + widget tests
+flutter test                    # 41 unit + widget tests
 flutter build apk --release     # signed with the debug key — see Shipping
 ```
 
@@ -21,9 +21,9 @@ Requires Flutter 3.38+ (Dart 3.10) and JDK 17. `minSdk` is 24, `targetSdk` 36.
 
 ## What is in it
 
-**Home** — a violet balance header over a sheet of summary cards, then the
-month's transactions grouped by day, each row carrying the running balance at
-that point in time.
+**Home** — a green balance header over a sheet of summary cards (In and Out
+for the month), then the month's transactions grouped by day, each row carrying
+the running balance at that point in time.
 
 **Report** — expenses or income for the month as a donut or a daily bar chart,
 with a per-category breakdown showing each category's share and its change
@@ -31,10 +31,11 @@ against the previous calendar month. Both charts are hand-drawn with
 `CustomPainter`: the comps call for rounded arc caps, gaps between slices and a
 hatched "other" wedge, none of which a charting package does out of the box.
 
-**Plan** — savings goals and monthly budgets. A goal's bar fills to what you
-have actually saved and hatches the gap to where the schedule says you should
-be, with an off-target warning when you fall behind. Budgets show a ring that
-turns amber at their alert threshold and red once the limit is passed.
+**Plan** — savings goals and monthly budgets. One goal is pinned and featured
+at the top; its bar fills to what you have actually saved and hatches the gap
+to where the schedule says you should be, with an off-target warning when you
+fall behind. Budgets show a ring that turns amber at their alert threshold and
+red once the limit is passed, and say so in words as well as colour.
 
 **Settings** — profile, a global "hide amounts" mask, budget alerts, PIN and
 biometric app lock, and category / account management.
@@ -64,8 +65,17 @@ lib/
   point. Building `IconData` from a stored int would defeat Flutter's icon
   tree-shaking; keeping the table lets the release build drop 99% of the
   Material icon font.
-- **Inter** is bundled as an asset rather than fetched at runtime, so the app
-  renders identically with no network.
+- **Plus Jakarta Sans** is bundled as static 400–800 cuts, instanced from the
+  variable font so `fontWeight` resolves without `fontVariations`. It is an
+  asset rather than a runtime fetch: `google_fonts` would have to download the
+  face, and this app declares no `INTERNET` permission, so it would silently
+  fall back to Roboto.
+- **Both appearances** follow the system setting. A `static const` cannot
+  adapt, so every colour whose value depends on the surface behind it lives in
+  an `AppPalette` theme extension read as `context.palette`; `AppColors` keeps
+  only what does not change. Every dark foreground clears 4.5:1 against both
+  the page and the card, and elevation reads through lightness rather than
+  shadow.
 - The data layer takes an injectable `DatabaseFactory`, which is how the
   repository tests run against an in-memory database.
 
@@ -96,13 +106,15 @@ device.
 ## Tests
 
 ```
-test/money_test.dart        formatting, grouping, parsing, compact forms
-test/repository_test.dart   balances, running totals, breakdowns, budget
-                            thresholds, goal contributions — on a real
-                            in-memory SQLite database
-test/home_screen_test.dart  Home layout, including regression guards for two
-                            bugs that rendered the screen blank or invisible
+test/money_test.dart              formatting, grouping, parsing, compact forms
+test/repository_test.dart         balances, running totals, breakdowns, budget
+                                  thresholds, goal pinning and contributions —
+                                  on a real in-memory SQLite database
+test/home_screen_test.dart        Home layout, including regression guards for
+                                  two bugs that rendered the screen blank or
+                                  invisible
+test/text_prompt_dialog_test.dart a dialog that outlives its own controller
 ```
 
-Widget tests load the bundled Inter font: the default test font measures every
-glyph as a square, which invents overflows the real app never has.
+Widget tests load the bundled font: the default test font measures every glyph
+as a square, which invents overflows the real app never has.
