@@ -171,6 +171,7 @@ class _BellButton extends StatelessWidget {
                   Icons.notifications_rounded,
                   size: 22,
                   color: Colors.white,
+                  semanticLabel: 'Budget alerts',
                 ),
               ),
             ),
@@ -211,45 +212,49 @@ class _Avatar extends StatelessWidget {
               .map((w) => w[0].toUpperCase())
               .join();
 
-    return GestureDetector(
-      onTap: onTap,
-      child: SizedBox(
-        width: AppSizes.avatar,
-        height: AppSizes.avatar,
-        child: Stack(
-          clipBehavior: Clip.none,
-          children: [
-            CircleAvatar(
-              radius: AppSizes.avatar / 2,
-              backgroundColor: const Color(0xFFFCD9A8),
-              child: Text(
-                initials,
-                style: const TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.w600,
-                  color: Color(0xFF8A5A24),
+    return Semantics(
+      label: 'Your profile and settings',
+      button: true,
+      child: GestureDetector(
+        onTap: onTap,
+        child: SizedBox(
+          width: AppSizes.avatar,
+          height: AppSizes.avatar,
+          child: Stack(
+            clipBehavior: Clip.none,
+            children: [
+              CircleAvatar(
+                radius: AppSizes.avatar / 2,
+                backgroundColor: const Color(0xFFFCD9A8),
+                child: Text(
+                  initials,
+                  style: const TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.w600,
+                    color: Color(0xFF8A5A24),
+                  ),
                 ),
               ),
-            ),
-            Positioned(
-              right: -1,
-              bottom: -1,
-              child: Container(
-                width: 22,
-                height: 22,
-                decoration: BoxDecoration(
-                  color: AppColors.brand,
-                  shape: BoxShape.circle,
-                  border: Border.all(color: Colors.white, width: 2),
-                ),
-                child: const Icon(
-                  Icons.account_balance_wallet_rounded,
-                  size: 11,
-                  color: Colors.white,
+              Positioned(
+                right: -1,
+                bottom: -1,
+                child: Container(
+                  width: 22,
+                  height: 22,
+                  decoration: BoxDecoration(
+                    color: AppColors.brand,
+                    shape: BoxShape.circle,
+                    border: Border.all(color: Colors.white, width: 2),
+                  ),
+                  child: const Icon(
+                    Icons.account_balance_wallet_rounded,
+                    size: 11,
+                    color: Colors.white,
+                  ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

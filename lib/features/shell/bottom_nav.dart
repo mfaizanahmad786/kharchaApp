@@ -164,6 +164,7 @@ class _AddButton extends StatelessWidget {
                       Icons.add_rounded,
                       color: Colors.white,
                       size: 32,
+                      semanticLabel: 'Add transaction',
                     ),
                   ),
                 ),
