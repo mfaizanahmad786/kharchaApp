@@ -40,7 +40,9 @@ red once the limit is passed, and say so in words as well as colour.
 **Settings** — profile, a global "hide amounts" mask, budget alerts, PIN and
 biometric app lock, and category / account management.
 
-Everythins is offline
+Everything is offline. There is no `INTERNET` permission in the release
+manifest, so the app cannot phone home even by accident — your ledger
+never leaves the handset.
 
 Adding or editing a transaction uses a custom numeric keypad so the category
 picker and the running total stay visible while you type.
