@@ -94,6 +94,35 @@ lib/
 - **No CSV export and no recurring transactions** — both were explicitly out of
   scope.
 
+## Accessibility
+
+Contrast figures below are WCAG ratios computed from the tokens, not eyeballed
+from a screenshot.
+
+- **Contrast.** Every foreground clears its threshold in both appearances —
+  4.5:1 for text up to 17pt, 3:1 for larger or bold. The header gradient is
+  deliberately deeper than the brand ramp used on white, because white 16pt
+  text could not carry 4.5:1 over the lighter greens; the worst stop is now
+  4.74:1. In dark, every foreground clears 4.5:1 against both the page and
+  the card.
+- **Targets.** Controls keep their drawn size but sit in a hit area of at
+  least 48dp, which is Material's floor and above Apple's 44.
+- **Never colour alone.** A tripped budget carries an icon and the words
+  "Near limit" or "Over limit", not just an amber ring. Money in and out are
+  separated by sign as well as hue.
+- **Labels.** Icon-only controls carry a tooltip or a semantic label, so
+  TalkBack announces them.
+- **Appearance** follows the system setting. There is no in-app toggle, by
+  design: one setting should not need adjusting in two places.
+
+Two known gaps, both deliberate rather than overlooked:
+
+- Text scaling is capped at 1.2x in `app.dart`. Lifting the cap is one line;
+  making every layout survive 2x is the real work, and the transactions
+  header is the first thing that collides.
+- Screen-reader coverage is partial. Home's controls are named; the other
+  screens have not been walked end to end.
+
 ## Shipping
 
 The release build is currently signed with the debug key so that
