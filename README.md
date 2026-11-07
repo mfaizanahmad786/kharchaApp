@@ -123,6 +123,25 @@ Two known gaps, both deliberate rather than overlooked:
 - Screen-reader coverage is partial. Home's controls are named; the other
   screens have not been walked end to end.
 
+## What it does not do
+
+Worth knowing before you rely on it.
+
+- **No transfers between accounts.** A transaction is money in or money out,
+  so moving cash into the bank has to be recorded as an expense on one and
+  income on the other, which overstates both of the month's totals.
+- **No export or import.** The ledger is a SQLite file inside the app's
+  sandbox and there is no way to get it out from inside the app. The manifest
+  does not configure backup either way, so Android's default applies — which
+  depends on the device's own backup settings and is not something to count
+  on. Losing the handset means losing the data.
+- **No recurring transactions.** The salary and rent in the sample data are
+  ordinary rows written once, not a rule that keeps firing.
+- **One currency.** Amounts are Pakistani rupees throughout, with no
+  conversion anywhere.
+- **Deleting a transaction is confirmed but not reversible.** There is no
+  undo.
+
 ## Shipping
 
 The release build is currently signed with the debug key so that
