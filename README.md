@@ -81,6 +81,33 @@ lib/
 - The data layer takes an injectable `DatabaseFactory`, which is how the
   repository tests run against an in-memory database.
 
+## The data model
+
+Five tables in one SQLite file, `kharcha.db`, currently at schema version 2.
+
+| Table | Holds |
+| --- | --- |
+| `accounts` | where money sits: name, glyph, colour, opening balance |
+| `categories` | what money is for, each typed income or expense |
+| `txns` | one amount, its type, its category and account, a date, a note and tags |
+| `budgets` | a monthly ceiling, optionally scoped to one category, with an alert threshold |
+| `goals` | a savings target, what has been put aside, an optional deadline, and whether it is pinned |
+
+Three things are worth knowing before changing any of it:
+
+- **Amounts are integers of paisa**, never doubles. `Money` owns the
+  conversion in both directions, so no rounding error can reach a balance.
+- **A transaction's `amount` is always positive**; `type` carries the
+  direction, and `Txn.signed` is the only place that applies the sign.
+- **A category cannot be deleted while transactions point at it.** The
+  foreign key is `ON DELETE RESTRICT` and the repository checks first, so the
+  UI can say so rather than fail.
+
+`txns` is indexed on date, category and account, which is what every screen
+reads it by. Schema changes go in `_migrate`; version 2 added the goal
+`pinned` column and pinned whichever goal already sorted first, so an
+upgrade keeps a featured goal instead of suddenly having none.
+
 ## Decisions worth knowing
 
 - **Currency is PKR only.** The comps show dollars; the app shows `₨`, per the
