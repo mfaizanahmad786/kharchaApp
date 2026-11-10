@@ -5,6 +5,7 @@ import '../../../core/theme/app_dimens.dart';
 import '../../../core/theme/app_palette.dart';
 import '../../../core/utils/app_date.dart';
 import '../../../core/widgets/amount_text.dart';
+import '../../../core/widgets/rolling_amount.dart';
 import '../../../core/widgets/bordered_card.dart';
 import '../../../providers/providers.dart';
 
@@ -49,7 +50,7 @@ class SpentThisMonth extends ConsumerWidget {
           FittedBox(
             fit: BoxFit.scaleDown,
             alignment: Alignment.centerLeft,
-            child: AmountText(
+            child: RollingAmount(
               spend.value?.current ?? 0,
               style: const TextStyle(
                 fontSize: 36,

@@ -4,7 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_dimens.dart';
 import '../../../core/utils/money.dart';
-import '../../../core/widgets/amount_text.dart';
+import '../../../core/widgets/rolling_amount.dart';
 import '../../../core/widgets/month_picker_sheet.dart';
 import '../../../providers/providers.dart';
 import 'header_sheen.dart';
@@ -72,7 +72,7 @@ class HomeHeader extends ConsumerWidget {
               const SizedBox(height: 4),
               FittedBox(
                 fit: BoxFit.scaleDown,
-                child: AmountText(
+                child: RollingAmount(
                   balance.value ?? 0,
                   color: Colors.white,
                   style: const TextStyle(
