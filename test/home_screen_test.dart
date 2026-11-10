@@ -76,6 +76,9 @@ void main() {
           monthTotalsProvider.overrideWith(
             (ref) => const Totals(income: 42788000, expense: 21624577),
           ),
+          monthSpendProvider.overrideWith(
+            (ref) => (current: 21624577, previous: 18000000),
+          ),
           budgetAlertsProvider.overrideWith((ref) => const <BudgetStatus>[]),
           groupedTransactionsProvider.overrideWith(
             (ref) => [
@@ -93,14 +96,15 @@ void main() {
     await tester.pumpAndSettle();
   }
 
-  testWidgets('renders the header, money cards and transactions', (t) async {
+  testWidgets('renders the header, the month spend and transactions', (
+    t,
+  ) async {
     await pumpHome(t);
 
     expect(find.text('Current Balance'), findsOneWidget);
     expect(find.text('Your Money'), findsOneWidget);
     expect(find.text('Transactions'), findsOneWidget);
-    expect(find.text('In'), findsOneWidget);
-    expect(find.text('Out'), findsOneWidget);
+    expect(find.text('Spent this month'), findsOneWidget);
     expect(find.byType(TransactionTile), findsOneWidget);
     expect(find.text('Cafes'), findsOneWidget);
   });

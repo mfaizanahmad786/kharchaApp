@@ -13,7 +13,7 @@ import '../shell/bottom_nav.dart';
 import '../transaction/transaction_detail_screen.dart';
 import '../transaction/transactions_screen.dart';
 import 'widgets/home_header.dart';
-import 'widgets/money_summary.dart';
+import 'widgets/spent_this_month.dart';
 import 'widgets/notifications_sheet.dart';
 import 'widgets/transaction_tile.dart';
 import 'widgets/transactions_skeleton.dart';
@@ -54,7 +54,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     final p = context.palette;
-    final totals = ref.watch(monthTotalsProvider);
     final sections = ref.watch(groupedTransactionsProvider);
 
     return AnnotatedRegion<SystemUiOverlayStyle>(
@@ -104,37 +103,11 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                           ),
                         ),
                         const SizedBox(height: AppSpacing.lg),
-                        Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Expanded(
-                              child: MoneySummaryCard(
-                                label: 'In',
-                                amount: totals.value?.income ?? 0,
-                                icon: Icons.savings_rounded,
-                                tint: p.incomeTint,
-                                iconColor: AppColors.catBlue,
-                                onTap: () => TransactionsScreen.open(
-                                  context,
-                                  initial: TxFilter.income,
-                                ),
-                              ),
-                            ),
-                            const SizedBox(width: AppSpacing.cardGap),
-                            Expanded(
-                              child: MoneySummaryCard(
-                                label: 'Out',
-                                amount: totals.value?.expense ?? 0,
-                                icon: Icons.account_balance_wallet_rounded,
-                                tint: p.expenseTint,
-                                iconColor: p.expense,
-                                onTap: () => TransactionsScreen.open(
-                                  context,
-                                  initial: TxFilter.expense,
-                                ),
-                              ),
-                            ),
-                          ],
+                        SpentThisMonth(
+                          onTap: () => TransactionsScreen.open(
+                            context,
+                            initial: TxFilter.expense,
+                          ),
                         ),
                         const SizedBox(height: AppSpacing.xxl),
                         _TransactionsHeader(

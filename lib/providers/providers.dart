@@ -146,6 +146,38 @@ final monthTotalsProvider = FutureProvider<Totals>((ref) async {
   return ref.watch(repositoryProvider).totals(range.from, range.to);
 });
 
+/// Spending in the selected month, next to the same stretch of the month
+/// before. Comparing a half-finished month against a whole one would always
+/// flatter the present, so the baseline stops at the same elapsed point.
+final monthSpendProvider = FutureProvider<({int current, int previous})>((
+  ref,
+) async {
+  ref.watch(revisionProvider);
+  final repo = ref.watch(repositoryProvider);
+  final month = ref.watch(selectedMonthProvider);
+
+  final start = AppDate.startOfMonth(month);
+  final monthEnd = AppDate.endOfMonth(month);
+  final now = DateTime.now();
+  final end = now.isBefore(monthEnd) ? now : monthEnd;
+
+  final previousStart = AppDate.addMonths(start, -1);
+  final previousMonthEnd = AppDate.endOfMonth(previousStart);
+  final sameSpan = previousStart.add(end.difference(start));
+  final previousEnd = sameSpan.isAfter(previousMonthEnd)
+      ? previousMonthEnd
+      : sameSpan;
+
+  return (
+    current: await repo.sumFor(from: start, to: end, type: TxType.expense),
+    previous: await repo.sumFor(
+      from: previousStart,
+      to: previousEnd,
+      type: TxType.expense,
+    ),
+  );
+});
+
 final accountsProvider = FutureProvider<List<Account>>((ref) async {
   ref.watch(revisionProvider);
   return ref.watch(repositoryProvider).accounts();
