@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'core/theme/app_theme.dart';
 import 'features/lock/lock_gate_view.dart';
+import 'providers/providers.dart';
 
 class KharchaApp extends ConsumerWidget {
   const KharchaApp({super.key});
@@ -14,9 +15,9 @@ class KharchaApp extends ConsumerWidget {
       debugShowCheckedModeBanner: false,
       theme: AppTheme.light(),
       darkTheme: AppTheme.dark(),
-      // No in-app appearance switch: dark-mode.md warns that an app-specific
-      // setting makes people adjust two places to get one result.
-      themeMode: ThemeMode.system,
+      // Defaults to System, so the phone's own setting still wins unless
+      // someone deliberately overrides it here.
+      themeMode: ref.watch(settingsProvider.select((s) => s.themeMode)),
       home: const LockGateView(),
       builder: (context, child) {
         // Keep the layout predictable regardless of the system font scale.

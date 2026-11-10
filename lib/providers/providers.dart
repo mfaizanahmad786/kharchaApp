@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart' show ThemeMode;
 import 'package:flutter/foundation.dart' show immutable;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -287,20 +288,24 @@ class SettingsState {
     required this.userName,
     required this.hideAmounts,
     required this.budgetAlerts,
+    required this.themeMode,
   });
 
   final String userName;
   final bool hideAmounts;
   final bool budgetAlerts;
+  final ThemeMode themeMode;
 
   SettingsState copyWith({
     String? userName,
     bool? hideAmounts,
     bool? budgetAlerts,
+    ThemeMode? themeMode,
   }) => SettingsState(
     userName: userName ?? this.userName,
     hideAmounts: hideAmounts ?? this.hideAmounts,
     budgetAlerts: budgetAlerts ?? this.budgetAlerts,
+    themeMode: themeMode ?? this.themeMode,
   );
 }
 
@@ -312,6 +317,7 @@ class SettingsController extends Notifier<SettingsState> {
       userName: s.userName,
       hideAmounts: s.hideAmounts,
       budgetAlerts: s.budgetAlerts,
+      themeMode: s.themeMode,
     );
   }
 
@@ -328,6 +334,11 @@ class SettingsController extends Notifier<SettingsState> {
   Future<void> setBudgetAlerts(bool v) async {
     await ref.read(settingsStoreProvider).setBudgetAlerts(v);
     state = state.copyWith(budgetAlerts: v);
+  }
+
+  Future<void> setThemeMode(ThemeMode v) async {
+    await ref.read(settingsStoreProvider).setThemeMode(v);
+    state = state.copyWith(themeMode: v);
   }
 }
 

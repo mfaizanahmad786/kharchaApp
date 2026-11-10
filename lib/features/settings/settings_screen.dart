@@ -55,6 +55,21 @@ class SettingsScreen extends ConsumerWidget {
               SettingsGroup(
                 title: 'Preferences',
                 children: [
+                  SettingsChoice(
+                    icon: Icons.contrast_rounded,
+                    iconColor: AppColors.brand,
+                    title: 'Appearance',
+                    subtitle: switch (settings.themeMode) {
+                      ThemeMode.light => 'Always light',
+                      ThemeMode.dark => 'Always dark',
+                      ThemeMode.system => 'Following your phone',
+                    },
+                    labels: const ['System', 'Light', 'Dark'],
+                    index: ThemeMode.values.indexOf(settings.themeMode),
+                    onChanged: (i) => ref
+                        .read(settingsProvider.notifier)
+                        .setThemeMode(ThemeMode.values[i]),
+                  ),
                   SettingsSwitch(
                     icon: Icons.visibility_off_rounded,
                     iconColor: AppColors.catIndigo,

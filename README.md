@@ -139,8 +139,10 @@ from a screenshot.
   separated by sign as well as hue.
 - **Labels.** Icon-only controls carry a tooltip or a semantic label, so
   TalkBack announces them.
-- **Appearance** follows the system setting. There is no in-app toggle, by
-  design: one setting should not need adjusting in two places.
+- **Appearance** follows the system setting by default. Settings also offers
+  System / Light / Dark for anyone who wants the app to differ from their
+  phone; leaving it on System is what `dark-mode.md` asks for, and that is
+  the default.
 
 Two known gaps, both deliberate rather than overlooked:
 

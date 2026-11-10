@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_palette.dart';
+import '../../../core/widgets/pills.dart';
 
 /// A titled group of rows rendered as one rounded card.
 class SettingsGroup extends StatelessWidget {
@@ -165,6 +166,87 @@ class SettingsSwitch extends StatelessWidget {
         value: value,
         onChanged: onChanged,
         activeTrackColor: AppColors.brand,
+      ),
+    );
+  }
+}
+
+/// A settings row whose control is a choice of three rather than a switch.
+class SettingsChoice extends StatelessWidget {
+  const SettingsChoice({
+    super.key,
+    required this.icon,
+    required this.iconColor,
+    required this.title,
+    required this.labels,
+    required this.index,
+    required this.onChanged,
+    this.subtitle,
+  });
+
+  final IconData icon;
+  final Color iconColor;
+  final String title;
+  final String? subtitle;
+  final List<String> labels;
+  final int index;
+  final ValueChanged<int> onChanged;
+
+  @override
+  Widget build(BuildContext context) {
+    final p = context.palette;
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(14, 13, 16, 15),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Container(
+                width: 32,
+                height: 32,
+                decoration: BoxDecoration(
+                  color: p.tint(iconColor),
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Icon(icon, size: 17, color: iconColor),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      title,
+                      style: const TextStyle(
+                        fontSize: 15.5,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    if (subtitle != null) ...[
+                      const SizedBox(height: 2),
+                      Text(
+                        subtitle!,
+                        style: TextStyle(
+                          fontSize: 13,
+                          fontWeight: FontWeight.w500,
+                          color: p.inkFaint,
+                        ),
+                      ),
+                    ],
+                  ],
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 12),
+          SegmentedToggle(
+            labels: labels,
+            index: index,
+            height: 42,
+            onChanged: onChanged,
+          ),
+        ],
       ),
     );
   }
