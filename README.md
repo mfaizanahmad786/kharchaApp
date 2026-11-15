@@ -182,6 +182,29 @@ keystore and a `key.properties`, then point `signingConfigs.release` at it;
 `flutter build apk --split-per-abi` (or an app bundle) is much smaller per
 device.
 
+### Updating a build you have already installed
+
+There is no way to push a change into an installed release build: Flutter
+compiles Dart ahead of time for release, so every change means a new APK.
+Installing it over the top keeps the database and the preferences, as long as
+the application id and the signing key both match — `adb install -r <apk>`, or
+`flutter install --release` with the phone plugged in.
+
+The signing key is the part that bites. While the release build is signed with
+the debug key, that key lives in `~/.android/debug.keystore` on one machine:
+build from a different machine and the install is rejected. Swapping in a real
+keystore later has the same effect on any phone already carrying a
+debug-signed build — Android refuses the upgrade, and the uninstall it forces
+takes the data with it. Create the keystore before the first build you install
+somewhere you care about.
+
+While developing there is no need to reinstall at all: `flutter run` over USB
+or wireless debugging hot-reloads straight onto the phone.
+
+Bump `version:` in `pubspec.yaml` for each build you hand out. Nothing here
+enforces it, but a version that never changes makes two APKs impossible to
+tell apart.
+
 ## Tests
 
 ```
@@ -193,6 +216,11 @@ test/home_screen_test.dart        Home layout, including regression guards for
                                   two bugs that rendered the screen blank or
                                   invisible
 test/text_prompt_dialog_test.dart a dialog that outlives its own controller
+test/rolling_amount_test.dart     the odometer on the balance: which way the
+                                  digits travel, and that a settled figure is
+                                  one text node again
+test/settings_store_test.dart     preferences, including the fallback when a
+                                  stored theme name is not one we recognise
 ```
 
 Widget tests load the bundled font: the default test font measures every glyph
