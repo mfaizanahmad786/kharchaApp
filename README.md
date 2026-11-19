@@ -4,6 +4,8 @@ An offline-first personal expense tracker for Android, built in Flutter.
 Everything lives in a SQLite file on the handset — there is no backend, no
 account, and no `INTERNET` permission in the release manifest.
 
+No google/apple sign in
+
 <!-- Screens: Home, Report, Plan, Settings -->
 
 ## Running it
